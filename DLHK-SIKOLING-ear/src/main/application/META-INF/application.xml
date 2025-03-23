@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd" version="7">
+  <display-name>DLHK-SIKOLING-ear</display-name>
+  <module>
+    <ejb>com.cso-DLHK-SIKOLING-ejb-1.0.jar</ejb>
+  </module>
+  <module>
+    <web>
+      <web-uri>com.cso-DLHK-SIKOLING-web-1.0.war</web-uri>
+      <context-root>/api-sikoling</context-root>
+    </web>
+  </module>
+</application>
