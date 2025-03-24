@@ -1,27 +1,27 @@
 package com.cso.sikoling.abstraction.service.alamat;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.Propinsi;
+import com.cso.sikoling.abstraction.entity.Kabupaten;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PropinsiServiceBasic implements AlamatService<Propinsi> {
+public class KabupatenServiceBasic implements AlamatService<Kabupaten> {
     
-    private final Repository<Propinsi, QueryParamFilters, Filter> repository;
+    private final Repository<Kabupaten, QueryParamFilters, Filter> repository;
 
-    public PropinsiServiceBasic(Repository repository) {
+    public KabupatenServiceBasic(Repository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Propinsi save(Propinsi t) throws SQLException {
+    public Kabupaten save(Kabupaten t) throws SQLException {
         return repository.save(t);
     }
 
     @Override
-    public Propinsi update(Propinsi t) throws SQLException {
+    public Kabupaten update(Kabupaten t) throws SQLException {
         return repository.update(t);
     }
     
@@ -32,7 +32,7 @@ public class PropinsiServiceBasic implements AlamatService<Propinsi> {
     }
 
     @Override
-    public List<Propinsi> getDaftarData(QueryParamFilters queryParamFilters) {
+    public List<Kabupaten> getDaftarData(QueryParamFilters queryParamFilters) {
         return repository.getDaftarData(queryParamFilters);
     }
 
@@ -42,7 +42,7 @@ public class PropinsiServiceBasic implements AlamatService<Propinsi> {
     }
 
     @Override
-    public Propinsi updateId(String idLama, Propinsi t) throws SQLException {
+    public Kabupaten updateId(String idLama, Kabupaten t) throws SQLException {
         return repository.updateId(idLama, t);
     }
 

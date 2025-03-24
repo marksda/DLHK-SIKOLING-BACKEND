@@ -1,6 +1,5 @@
 package com.cso.sikolingrestful.resources.alamat;
 
-import com.cso.sikoling.abstraction.service.alamat.PropinsiService;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -20,10 +19,11 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.cso.sikoling.abstraction.service.alamat.AlamatService;
+import com.cso.sikoling.abstraction.entity.Propinsi;
 
 @Stateless
 @LocalBean
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class PropinsiResource {
     
     @Inject
-    private PropinsiService propinsiService;
+    private AlamatService<Propinsi> propinsiService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
