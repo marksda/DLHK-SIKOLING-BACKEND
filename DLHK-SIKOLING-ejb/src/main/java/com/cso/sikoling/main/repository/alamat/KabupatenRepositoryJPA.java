@@ -110,7 +110,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
+                        case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -146,7 +146,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
                                 cq.orderBy(cb.desc(root.get("nama")));
                             }
                         }
-                        case "propinsi" -> {
+                        case "id_propinsi" -> {
                             if(sort.getValue().equals("ASC")) {
                                 cq.orderBy(cb.asc(root.get("propinsi").get("nama")));
                             }
@@ -179,7 +179,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
                     .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("PropinsiData.findAll", KabupatenData.class)
+            return entityManager.createNamedQuery("KabupatenData.findAll", KabupatenData.class)
                  .getResultList()
                  .stream()
                  .map(d -> convertKabupatenDataToKabupaten(d))
@@ -205,7 +205,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
+                case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
