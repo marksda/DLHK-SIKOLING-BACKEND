@@ -1,5 +1,6 @@
 package com.cso.sikoling.main.repository;
 
+import com.cso.sikoling.main.repository.alamat.KabupatenRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
@@ -23,4 +24,10 @@ public class RepositoryProvider {
     public PropinsiRepositoryJPA getPropinsiRepositoryJPA(EntityManager entityManager) {
         return new PropinsiRepositoryJPA(entityManager);
     }
+    
+    @Produces
+    public KabupatenRepositoryJPA getKabupatenRepositoryJPA(EntityManager entityManager) {
+        return new KabupatenRepositoryJPA(entityManager);
+    }
+    
 }

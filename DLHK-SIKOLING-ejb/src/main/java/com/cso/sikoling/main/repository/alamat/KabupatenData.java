@@ -23,7 +23,8 @@ import java.util.Collection;
 @NamedQueries({
     @NamedQuery(name = "KabupatenData.findAll", query = "SELECT k FROM KabupatenData k"),
     @NamedQuery(name = "KabupatenData.findById", query = "SELECT k FROM KabupatenData k WHERE k.id = :id"),
-    @NamedQuery(name = "KabupatenData.findByNama", query = "SELECT k FROM KabupatenData k WHERE k.nama = :nama")})
+    @NamedQuery(name = "KabupatenData.findByNama", query = "SELECT k FROM KabupatenData k WHERE k.nama = :nama"),
+    @NamedQuery(name = "KabupatenData.updateId", query = "UPDATE KabupatenData SET id = :idBaru WHERE id = :idLama")})
 public class KabupatenData implements Serializable {
 
     private static final long serialVersionUID = 1L;

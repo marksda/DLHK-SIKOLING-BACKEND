@@ -1,8 +1,8 @@
 package com.cso.sikoling.main.repository.alamat;
 
 import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.Kabupaten;
 import com.cso.sikoling.abstraction.entity.Paging;
-import com.cso.sikoling.abstraction.entity.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.repository.Repository;
@@ -21,55 +21,35 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFilters, Filter> {
+public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public PropinsiRepositoryJPA(EntityManager entityManager) {
+    public KabupatenRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
-    }
-    
+    }    
+
     @Override
-    public Propinsi save(Propinsi t) throws SQLException {   
+    public Kabupaten save(Kabupaten t) throws SQLException {
         try {
-            PropinsiData propinsiData = convertPropinsiToPropinsiData(t);
-            entityManager.persist(propinsiData);
+            KabupatenData kabupatenData = convertKabupatenToKabupatenData(t);
+            entityManager.persist(kabupatenData);
             entityManager.flush();             
-            return convertPropinsiDataToPropinsi(propinsiData);  
+            return convertKabupatenDataToKabupaten(kabupatenData);  
         } catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data propinsi");
-        }        
+            throw new SQLException("Duplikasi data kabupaten");
+        }    
     }
 
     @Override
-    public Propinsi update(Propinsi t) throws SQLException {
+    public Kabupaten update(Kabupaten t) throws SQLException {
         
         try {
-            PropinsiData propinsiData = convertPropinsiToPropinsiData(t);  
-            propinsiData = entityManager.merge(propinsiData);
-            return convertPropinsiDataToPropinsi(propinsiData);   
+            KabupatenData kabupatenData = convertKabupatenToKabupatenData(t);  
+            kabupatenData = entityManager.merge(kabupatenData);
+            return convertKabupatenDataToKabupaten(kabupatenData);   
         } catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
-        }
-        
-    }
-
-    @Override
-    public Propinsi updateId(String idLama, Propinsi t) throws SQLException {
-        
-        Query query = entityManager.createNamedQuery("PropinsiData.updateId");
-        query.setParameter("idBaru", t.getId());
-        query.setParameter("idLama", idLama);
-        try {
-            int updateCount = query.executeUpdate();
-            if(updateCount > 0) {
-                return update(t);
-            }
-            else {
-                throw new SQLException("Gagal mengupdate id propinsi");
-            }
-        } catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id propinsi");
         }
         
     }
@@ -78,14 +58,14 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
     public boolean delete(String id) throws SQLException {
         
         try {
-            PropinsiData propinsiData = entityManager.find(PropinsiData.class, id);
-            if(propinsiData != null) {
-                entityManager.remove(propinsiData);	
+            KabupatenData kabupatenData = entityManager.find(KabupatenData.class, id);
+            if(kabupatenData != null) {
+                entityManager.remove(kabupatenData);	
                 entityManager.flush();
                 return true;
             }
             else {
-                throw new SQLException("propinsi dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException("kabupaten dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         } catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -94,12 +74,31 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
     }
 
     @Override
-    public List<Propinsi> getDaftarData(QueryParamFilters q) {
+    public Kabupaten updateId(String idLama, Kabupaten t) throws SQLException {
+        
+        Query query = entityManager.createNamedQuery("KabupatenData.updateId");
+        query.setParameter("idBaru", t.getId());
+        query.setParameter("idLama", idLama);
+        try {
+            int updateCount = query.executeUpdate();
+            if(updateCount > 0) {
+                return update(t);
+            }
+            else {
+                throw new SQLException("Gagal mengupdate id kabupaten");
+            }
+        } catch (PersistenceException e) {
+            throw new SQLException("Dulpikasi id kabupaten");
+        }
+    }
+
+    @Override
+    public List<Kabupaten> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PropinsiData> cq = cb.createQuery(PropinsiData.class);
-            Root<PropinsiData> root = cq.from(PropinsiData.class);		
+            CriteriaQuery<KabupatenData> cq = cb.createQuery(KabupatenData.class);
+            Root<KabupatenData> root = cq.from(KabupatenData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -153,7 +152,7 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             }
 
 
-            TypedQuery<PropinsiData> typedQuery;	
+            TypedQuery<KabupatenData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -166,15 +165,15 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             }
 
             return typedQuery.getResultList()
-                            .stream()
-                            .map(d -> convertPropinsiDataToPropinsi(d))
-                            .collect(Collectors.toList());
+                    .stream()
+                    .map(d -> convertKabupatenDataToKabupaten(d))
+                    .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("PropinsiData.findAll", PropinsiData.class)
+            return entityManager.createNamedQuery("PropinsiData.findAll", KabupatenData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertPropinsiDataToPropinsi(d))
+                 .map(d -> convertKabupatenDataToKabupaten(d))
                             .collect(Collectors.toList());
         }
         
@@ -185,7 +184,7 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<PropinsiData> root = cq.from(PropinsiData.class);		
+        Root<KabupatenData> root = cq.from(KabupatenData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -213,26 +212,26 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
         
     }
     
-    private Propinsi convertPropinsiDataToPropinsi(PropinsiData d) {
-        Propinsi propinsi = null;
+    private Kabupaten convertKabupatenDataToKabupaten(KabupatenData d) {
+        Kabupaten kabupaten = null;
 		
         if(d != null) {
-            propinsi = new Propinsi(d.getId(), d.getNama());
+            kabupaten = new Kabupaten(d.getId(), d.getNama());
         }
 
-        return propinsi;	
+        return kabupaten;	
     }
     
-    private PropinsiData convertPropinsiToPropinsiData(Propinsi t) {
-        PropinsiData propinsiData = null;
+    private KabupatenData convertKabupatenToKabupatenData(Kabupaten t) {
+        KabupatenData kabupatenData = null;
 		
         if(t != null) {
-            propinsiData = new PropinsiData();
-            propinsiData.setId(t.getId());
-            propinsiData.setNama(t.getNama());
+            kabupatenData = new KabupatenData();
+            kabupatenData.setId(t.getId());
+            kabupatenData.setNama(t.getNama());
         }
 
-        return propinsiData;
+        return kabupatenData;
     }
 
 }
