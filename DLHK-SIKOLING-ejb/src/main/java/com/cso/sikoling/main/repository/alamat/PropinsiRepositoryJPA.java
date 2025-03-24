@@ -5,7 +5,7 @@ import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
-import com.cso.sikoling.abstraction.repository.PropinsiRepository;
+import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class PropinsiRepositoryJPA implements PropinsiRepository {
+public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
