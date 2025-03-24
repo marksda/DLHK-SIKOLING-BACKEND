@@ -23,7 +23,11 @@ public class Propinsi implements Serializable {
 
     @Override
     public String toString() {
-        return super.toString(); 
+        if(id == null) {
+            return null;
+        }			
+
+        return "Propinsi{" + "id=" + this.id + ", nama=" + this.nama + "}";	    
     }
 
     @Override
