@@ -18,13 +18,13 @@ import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 public class RestfulProvider {
 
     @Produces
-    public AlamatService getPropinsiService(
+    public AlamatService<Propinsi> getPropinsiService(
             @Infrastructure Repository<Propinsi, QueryParamFilters, Filter> propinsiRepository) {
         return new PropinsiServiceBasic(propinsiRepository);
     }
     
     @Produces
-    public AlamatService getKabupatenService(
+    public AlamatService<Kabupaten> getKabupatenService(
             @Infrastructure Repository<Kabupaten, QueryParamFilters, Filter> kabupatenRepository) {
         return new KabupatenServiceBasic(kabupatenRepository);
     }
