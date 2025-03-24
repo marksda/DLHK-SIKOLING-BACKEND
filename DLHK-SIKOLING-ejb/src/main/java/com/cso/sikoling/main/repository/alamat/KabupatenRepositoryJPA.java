@@ -110,6 +110,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -143,6 +144,14 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("nama")));
+                            }
+                        }
+                        case "propinsi" -> {
+                            if(sort.getValue().equals("ASC")) {
+                                cq.orderBy(cb.asc(root.get("propinsi").get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("propinsi").get("nama")));
                             }
                         }
                         default -> {
@@ -196,6 +205,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
