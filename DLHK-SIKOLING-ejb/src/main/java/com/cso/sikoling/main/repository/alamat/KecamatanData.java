@@ -13,6 +13,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,19 +28,24 @@ import java.util.Collection;
 public class KecamatanData implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{7}")
     @Size(min = 1, max = 7)
     @Column(name = "id")
     private String id;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kecamatan")
     private Collection<DesaData> desaDataCollection;
+    
     @JoinColumn(name = "kabupaten", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private KabupatenData kabupaten;

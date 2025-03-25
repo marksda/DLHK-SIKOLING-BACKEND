@@ -96,7 +96,7 @@ public class KecamatanResource {
             }
         }
         else {
-            throw new IllegalArgumentException("id kecamatan harus digit");
+            throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
         }  
         
     }
@@ -123,7 +123,7 @@ public class KecamatanResource {
             }
         }
         else {
-            throw new IllegalArgumentException("id kecamatan harus digit");
+            throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
         }
         
     } 
@@ -146,7 +146,7 @@ public class KecamatanResource {
             return model;
         }
         else {
-            throw new IllegalArgumentException("id kecamatan harus digit");
+            throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
         }        
         
     }

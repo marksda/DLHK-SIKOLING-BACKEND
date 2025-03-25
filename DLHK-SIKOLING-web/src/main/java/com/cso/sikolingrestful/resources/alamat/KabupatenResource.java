@@ -89,14 +89,14 @@ public class KabupatenResource {
                     return new KabupatenDTO(kabupatenService.update(kabupatenDTO.toKabupaten()));
                 }
                 else {
-                    throw new IllegalArgumentException("id kabupaten sama");
+                    throw new IllegalArgumentException("id lama dan baru kabupaten harus sama");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json kabupaten harus disertakan di body put request");
             }
         }
         else {
-            throw new IllegalArgumentException("id kabupaten harus digit");
+            throw new IllegalArgumentException("id kabupaten harus bilangan panjang 4 digit");
         }  
         
     }
@@ -123,7 +123,7 @@ public class KabupatenResource {
             }
         }
         else {
-            throw new IllegalArgumentException("id kabupaten harus digit");
+            throw new IllegalArgumentException("id kabupaten harus bilangan panjang 4 digit");
         }
         
     } 
@@ -146,7 +146,7 @@ public class KabupatenResource {
             return model;
         }
         else {
-            throw new IllegalArgumentException("id propinsi harus digit");
+            throw new IllegalArgumentException("id propinsi harus bilangan panjang 4 digit");
         }        
         
     }

@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,11 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             entityManager.persist(desaData);
             entityManager.flush();             
             return convertDesaDataToDesa(desaData);  
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data desa");
         }    
     }
@@ -48,7 +53,11 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             DesaData desaData = convertDesaToDesaData(t);  
             desaData = entityManager.merge(desaData);
             return convertDesaDataToDesa(desaData);   
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
         }
         
@@ -67,7 +76,11 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             else {
                 throw new SQLException("desa dengan id:".concat(id).concat(" tidak ditemukan"));
             }
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
         }
         
@@ -87,7 +100,11 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             else {
                 throw new SQLException("Gagal mengupdate id desa");
             }
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id desa");
         }
     }

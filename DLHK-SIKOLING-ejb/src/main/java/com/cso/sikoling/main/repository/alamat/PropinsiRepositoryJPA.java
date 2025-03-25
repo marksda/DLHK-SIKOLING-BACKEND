@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,11 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             entityManager.persist(propinsiData);
             entityManager.flush();             
             return convertPropinsiDataToPropinsi(propinsiData);  
-        } catch (PersistenceException e) {
+        } 
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 2 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
         }        
     }
@@ -48,7 +53,11 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             PropinsiData propinsiData = convertPropinsiToPropinsiData(t);  
             propinsiData = entityManager.merge(propinsiData);
             return convertPropinsiDataToPropinsi(propinsiData);   
-        } catch (PersistenceException e) {
+        }         
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 2 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
         }
         
@@ -68,7 +77,11 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             else {
                 throw new SQLException("Gagal mengupdate id propinsi");
             }
-        } catch (PersistenceException e) {
+        }
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 2 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id propinsi");
         }
         
@@ -87,7 +100,11 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             else {
                 throw new SQLException("propinsi dengan id:".concat(id).concat(" tidak ditemukan"));
             }
-        } catch (PersistenceException e) {
+        }
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 2 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
         }
         

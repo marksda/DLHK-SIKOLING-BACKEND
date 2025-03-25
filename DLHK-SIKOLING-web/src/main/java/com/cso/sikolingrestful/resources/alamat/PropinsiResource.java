@@ -89,14 +89,14 @@ public class PropinsiResource {
                     return new PropinsiDTO(propinsiService.update(propinsiDTO.toPropinsi()));
                 }
                 else {
-                    throw new IllegalArgumentException("id propinsi hasrus berbeda");
+                    throw new IllegalArgumentException("id propinsi harus berbeda");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
             }
         }
         else {
-            throw new IllegalArgumentException("id propinsi harus digit");
+            throw new IllegalArgumentException("id propinsi harus bilangan panjang 2 digit");
         }  
         
     }
@@ -123,7 +123,7 @@ public class PropinsiResource {
             }
         }
         else {
-            throw new IllegalArgumentException("id propinsi harus digit");
+            throw new IllegalArgumentException("id propinsi harus bilangan panjang 2 digit");
         }
         
     } 
@@ -146,7 +146,7 @@ public class PropinsiResource {
             return model;
         }
         else {
-            throw new IllegalArgumentException("id propinsi harus digit");
+            throw new IllegalArgumentException("id propinsi harus bilanagan panjang 2 digit");
         }        
         
     }

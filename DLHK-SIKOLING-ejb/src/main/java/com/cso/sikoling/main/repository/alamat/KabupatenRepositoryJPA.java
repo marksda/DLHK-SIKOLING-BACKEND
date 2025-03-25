@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,11 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
             entityManager.persist(kabupatenData);
             entityManager.flush();             
             return convertKabupatenDataToKabupaten(kabupatenData);  
-        } catch (PersistenceException e) {
+        } 
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 4 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data kabupaten");
         }    
     }
@@ -48,7 +53,11 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
             KabupatenData kabupatenData = convertKabupatenToKabupatenData(t);  
             kabupatenData = entityManager.merge(kabupatenData);
             return convertKabupatenDataToKabupaten(kabupatenData);   
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException(cstVltException.getMessage());
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
         }
         
@@ -67,7 +76,11 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
             else {
                 throw new SQLException("kabupaten dengan id:".concat(id).concat(" tidak ditemukan"));
             }
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 4 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
         }
         
@@ -87,7 +100,11 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
             else {
                 throw new SQLException("Gagal mengupdate id kabupaten");
             }
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 4 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id kabupaten");
         }
     }
@@ -226,7 +243,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
         Kabupaten kabupaten = null;
 		
         if(d != null) {
-            kabupaten = new Kabupaten(d.getId(), d.getNama());
+            kabupaten = new Kabupaten(d.getId(), d.getNama(), d.getPropinsi().getId());
         }
 
         return kabupaten;	
@@ -236,9 +253,13 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
         KabupatenData kabupatenData = null;
 		
         if(t != null) {
+            PropinsiData propinsiData = new PropinsiData();
+            propinsiData.setId(t.getId_propinsi());
+            
             kabupatenData = new KabupatenData();
             kabupatenData.setId(t.getId());
             kabupatenData.setNama(t.getNama());
+            kabupatenData.setPropinsi(propinsiData);
         }
 
         return kabupatenData;

@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,11 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             entityManager.persist(kecamatanData);
             entityManager.flush();             
             return convertKecamatanDataToKecamatan(kecamatanData);  
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data kecamatan");
         }    
     }
@@ -48,7 +53,11 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             KecamatanData kecamatanData = convertKecamatanToKecamatanData(t);  
             kecamatanData = entityManager.merge(kecamatanData);
             return convertKecamatanDataToKecamatan(kecamatanData);   
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
         }
         
@@ -67,7 +76,11 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             else {
                 throw new SQLException("kecamatan dengan id:".concat(id).concat(" tidak ditemukan"));
             }
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
         }
         
@@ -87,7 +100,11 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             else {
                 throw new SQLException("Gagal mengupdate id kecamatan");
             }
-        } catch (PersistenceException e) {
+        }  
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+        }
+        catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id kecamatan");
         }
     }

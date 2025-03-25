@@ -11,6 +11,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -24,12 +25,15 @@ import java.io.Serializable;
 public class DesaData implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{10}")
     @Size(min = 1, max = 10)
     @Column(name = "id")
     private String id;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)

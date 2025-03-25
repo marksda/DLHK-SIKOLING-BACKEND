@@ -96,7 +96,7 @@ public class DesaResource {
             }
         }
         else {
-            throw new IllegalArgumentException("id desa harus digit");
+            throw new IllegalArgumentException("id desa harus bilangan panjang 10 digit");
         }  
         
     }
@@ -124,7 +124,7 @@ public class DesaResource {
             }
         }
         else {
-            throw new IllegalArgumentException("id desa harus digit");
+            throw new IllegalArgumentException("id desa harus bilangan panjang 10 digit");
         }
         
     } 
@@ -147,7 +147,7 @@ public class DesaResource {
             return model;
         }
         else {
-            throw new IllegalArgumentException("id desa harus digit");
+            throw new IllegalArgumentException("id desa harus bilangan panjang 10 digit");
         }        
         
     }

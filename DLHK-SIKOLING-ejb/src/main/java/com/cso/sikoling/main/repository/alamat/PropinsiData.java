@@ -10,6 +10,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
@@ -22,19 +23,22 @@ import java.util.Collection;
     @NamedQuery(name = "PropinsiData.findByNama", query = "SELECT p FROM PropinsiData p WHERE p.nama = :nama"),
     @NamedQuery(name = "PropinsiData.updateId", query = "UPDATE PropinsiData SET id = :idBaru WHERE id = :idLama")})
 public class PropinsiData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "propinsi")
     private Collection<KabupatenData> kabupatenDataCollection;
-
-    private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
-    @NotNull
+    @NotNull    
+    @Pattern(regexp="[\\d]{2}")
     @Size(min = 1, max = 2)
     @Column(name = "id")
     private String id;
