@@ -1,6 +1,8 @@
 package com.cso.sikoling.main.repository;
 
+import com.cso.sikoling.main.repository.alamat.DesaRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KabupatenRepositoryJPA;
+import com.cso.sikoling.main.repository.alamat.KecamatanRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
@@ -28,6 +30,16 @@ public class RepositoryProvider {
     @Produces
     public KabupatenRepositoryJPA getKabupatenRepositoryJPA(EntityManager entityManager) {
         return new KabupatenRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public KecamatanRepositoryJPA getKecamatanRepositoryJPA(EntityManager entityManager) {
+        return new KecamatanRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public DesaRepositoryJPA getDesaRepositoryJPA(EntityManager entityManager) {
+        return new DesaRepositoryJPA(entityManager);
     }
     
 }

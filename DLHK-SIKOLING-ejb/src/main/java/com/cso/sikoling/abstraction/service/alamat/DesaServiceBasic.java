@@ -1,27 +1,27 @@
 package com.cso.sikoling.abstraction.service.alamat;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.Kecamatan;
+import com.cso.sikoling.abstraction.entity.Desa;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 
-public class KecamatanServiceBasic implements AlamatService<Kecamatan> {
+public class DesaServiceBasic implements AlamatService<Desa> {
     
-    private final Repository<Kecamatan, QueryParamFilters, Filter> repository;
+    private final Repository<Desa, QueryParamFilters, Filter> repository;
 
-    public KecamatanServiceBasic(Repository repository) {
+    public DesaServiceBasic(Repository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Kecamatan save(Kecamatan t) throws SQLException {
+    public Desa save(Desa t) throws SQLException {
         return repository.save(t);
     }
 
     @Override
-    public Kecamatan update(Kecamatan t) throws SQLException {
+    public Desa update(Desa t) throws SQLException {
         return repository.update(t);
     }
     
@@ -31,7 +31,7 @@ public class KecamatanServiceBasic implements AlamatService<Kecamatan> {
     }
 
     @Override
-    public List<Kecamatan> getDaftarData(QueryParamFilters queryParamFilters) {
+    public List<Desa> getDaftarData(QueryParamFilters queryParamFilters) {
         return repository.getDaftarData(queryParamFilters);
     }
 
@@ -41,7 +41,7 @@ public class KecamatanServiceBasic implements AlamatService<Kecamatan> {
     }
 
     @Override
-    public Kecamatan updateId(String idLama, Kecamatan t) throws SQLException {
+    public Desa updateId(String idLama, Desa t) throws SQLException {
         return repository.updateId(idLama, t);
     }
 

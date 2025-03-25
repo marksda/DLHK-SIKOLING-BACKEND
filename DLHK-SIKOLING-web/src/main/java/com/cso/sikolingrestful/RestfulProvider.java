@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful;
 
+import com.cso.sikoling.abstraction.entity.Desa;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Kabupaten;
 import com.cso.sikoling.abstraction.entity.Kecamatan;
@@ -12,6 +13,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
 import com.cso.sikoling.abstraction.service.alamat.AlamatService;
+import com.cso.sikoling.abstraction.service.alamat.DesaServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
 
@@ -35,6 +37,12 @@ public class RestfulProvider {
     public AlamatService<Kecamatan> getKecamatanService(
             @Infrastructure Repository<Kecamatan, QueryParamFilters, Filter> kecamatanRepository) {
         return new KecamatanServiceBasic(kecamatanRepository);
+    }
+    
+    @Produces
+    public AlamatService<Desa> getDesaService(
+            @Infrastructure Repository<Desa, QueryParamFilters, Filter> desaRepository) {
+        return new DesaServiceBasic(desaRepository);
     }
     
 }
