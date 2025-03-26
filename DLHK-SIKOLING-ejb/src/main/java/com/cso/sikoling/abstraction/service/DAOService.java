@@ -1,11 +1,11 @@
-package com.cso.sikoling.abstraction.service.alamat;
+package com.cso.sikoling.abstraction.service;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface AlamatService<T> {
+public interface DAOService<T> {
     T save(T t) throws SQLException;
     T update(T t) throws SQLException;
     T updateId(String idLama, T t) throws SQLException;

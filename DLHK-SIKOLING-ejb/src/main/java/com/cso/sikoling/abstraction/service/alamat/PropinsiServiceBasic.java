@@ -1,5 +1,6 @@
 package com.cso.sikoling.abstraction.service.alamat;
 
+import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
@@ -7,7 +8,7 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PropinsiServiceBasic implements AlamatService<Propinsi> {
+public class PropinsiServiceBasic implements DAOService<Propinsi> {
     
     private final Repository<Propinsi, QueryParamFilters, Filter> repository;
 

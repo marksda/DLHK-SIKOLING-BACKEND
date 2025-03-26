@@ -12,35 +12,35 @@ import com.cso.sikoling.main.Infrastructure;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
-import com.cso.sikoling.abstraction.service.alamat.AlamatService;
 import com.cso.sikoling.abstraction.service.alamat.DesaServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
+import com.cso.sikoling.abstraction.service.DAOService;
 
 @Stateless
 @LocalBean
 public class RestfulProvider {
 
     @Produces
-    public AlamatService<Propinsi> getPropinsiService(
+    public DAOService<Propinsi> getPropinsiService(
             @Infrastructure Repository<Propinsi, QueryParamFilters, Filter> propinsiRepository) {
         return new PropinsiServiceBasic(propinsiRepository);
     }
     
     @Produces
-    public AlamatService<Kabupaten> getKabupatenService(
+    public DAOService<Kabupaten> getKabupatenService(
             @Infrastructure Repository<Kabupaten, QueryParamFilters, Filter> kabupatenRepository) {
         return new KabupatenServiceBasic(kabupatenRepository);
     }
     
     @Produces
-    public AlamatService<Kecamatan> getKecamatanService(
+    public DAOService<Kecamatan> getKecamatanService(
             @Infrastructure Repository<Kecamatan, QueryParamFilters, Filter> kecamatanRepository) {
         return new KecamatanServiceBasic(kecamatanRepository);
     }
     
     @Produces
-    public AlamatService<Desa> getDesaService(
+    public DAOService<Desa> getDesaService(
             @Infrastructure Repository<Desa, QueryParamFilters, Filter> desaRepository) {
         return new DesaServiceBasic(desaRepository);
     }

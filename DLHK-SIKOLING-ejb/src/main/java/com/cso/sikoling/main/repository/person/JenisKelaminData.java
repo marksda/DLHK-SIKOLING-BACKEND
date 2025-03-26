@@ -24,15 +24,18 @@ import java.util.Collection;
 public class JenisKelaminData implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1)
     @Column(name = "id")
     private String id;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @OneToMany(mappedBy = "sex")
     private Collection<PersonData> personDataCollection;
 

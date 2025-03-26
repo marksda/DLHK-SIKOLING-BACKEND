@@ -22,8 +22,8 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.service.alamat.AlamatService;
 import com.cso.sikoling.abstraction.entity.Desa;
+import com.cso.sikoling.abstraction.service.DAOService;
 
 @Stateless
 @LocalBean
@@ -31,7 +31,7 @@ import com.cso.sikoling.abstraction.entity.Desa;
 public class DesaResource {
     
     @Inject
-    private AlamatService<Desa> desaService;
+    private DAOService<Desa> desaService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
