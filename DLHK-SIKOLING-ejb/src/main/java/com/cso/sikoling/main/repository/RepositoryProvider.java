@@ -4,6 +4,7 @@ import com.cso.sikoling.main.repository.alamat.DesaRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KabupatenRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KecamatanRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
+import com.cso.sikoling.main.repository.person.JenisKelaminRepositoryJPA;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
@@ -42,4 +43,8 @@ public class RepositoryProvider {
         return new DesaRepositoryJPA(entityManager);
     }
     
+    @Produces
+    public JenisKelaminRepositoryJPA getJenisKelaminRepositoryJPA(EntityManager entityManager) {
+        return new JenisKelaminRepositoryJPA(entityManager);
+    }
 }
