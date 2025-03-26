@@ -10,6 +10,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
@@ -20,7 +21,8 @@ import java.util.Collection;
 @NamedQueries({
     @NamedQuery(name = "JenisKelaminData.findAll", query = "SELECT d FROM JenisKelaminData d"),
     @NamedQuery(name = "DataJenisKelaminData.findById", query = "SELECT d FROM JenisKelaminData d WHERE d.id = :id"),
-    @NamedQuery(name = "JenisKelaminData.findByNama", query = "SELECT d FROM JenisKelaminData d WHERE d.nama = :nama")})
+    @NamedQuery(name = "JenisKelaminData.findByNama", query = "SELECT d FROM JenisKelaminData d WHERE d.nama = :nama"),
+    @NamedQuery(name = "JenisKelaminData.updateId", query = "UPDATE JenisKelaminData SET id = :idBaru WHERE id = :idLama")})
 public class JenisKelaminData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,6 +30,7 @@ public class JenisKelaminData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{1}")
     @Size(min = 1, max = 1)
     @Column(name = "id")
     private String id;
