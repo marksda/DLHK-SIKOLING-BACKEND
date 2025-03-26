@@ -21,7 +21,8 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "DesaData.findAll", query = "SELECT d FROM DesaData d"),
     @NamedQuery(name = "DesaData.findById", query = "SELECT d FROM DesaData d WHERE d.id = :id"),
-    @NamedQuery(name = "DesaData.findByNama", query = "SELECT d FROM DesaData d WHERE d.nama = :nama")})
+    @NamedQuery(name = "DesaData.findByNama", query = "SELECT d FROM DesaData d WHERE d.nama = :nama"),
+    @NamedQuery(name = "DesaData.updateId", query = "UPDATE DesaData SET id = :idBaru WHERE id = :idLama")})
 public class DesaData implements Serializable {
 
     private static final long serialVersionUID = 1L;
