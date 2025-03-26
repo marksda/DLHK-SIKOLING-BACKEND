@@ -30,7 +30,6 @@ public class JenisKelaminData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Pattern(regexp="[\\d]{1}")
     @Size(min = 1, max = 1)
     @Column(name = "id")
     private String id;

@@ -27,7 +27,7 @@ import com.cso.sikoling.abstraction.service.DAOService;
 
 @Stateless
 @LocalBean
-@Path("jenisKelamin")
+@Path("jenis_kelamin")
 public class JenisKelaminResource {
     
     @Inject
@@ -79,25 +79,18 @@ public class JenisKelaminResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JenisKelaminDTO update(@PathParam("idLama") String idLama, JenisKelaminDTO jenisKelaminDTO) throws SQLException {
-                
-        boolean isDigit = idLama.matches("[0-9]+");
-
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(jenisKelaminDTO.getId());
-                if(isIdSame) {
-                    return new JenisKelaminDTO(jenisKelaminService.update(jenisKelaminDTO.toJenisKelamin()));
-                }
-                else {
-                    throw new IllegalArgumentException("id jenisKelamin harus berbeda");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json jenisKelamin harus disertakan di body put request");
+         
+        try {                
+            boolean isIdSame = idLama.equals(jenisKelaminDTO.getId());
+            if(isIdSame) {
+                return new JenisKelaminDTO(jenisKelaminService.update(jenisKelaminDTO.toJenisKelamin()));
             }
+            else {
+                throw new IllegalArgumentException("id jenisKelamin harus berbeda");
+            }
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("data json jenisKelamin harus disertakan di body put request");
         }
-        else {
-            throw new IllegalArgumentException("id jenisKelamin harus bilangan panjang 1 digit");
-        }  
         
     }
     
@@ -106,24 +99,18 @@ public class JenisKelaminResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JenisKelaminDTO updateId(@PathParam("idLama") String idLama, JenisKelaminDTO jenisKelaminDTO) throws SQLException {
-        boolean isDigit = idLama.matches("[0-9]+");
+        
+        try {                
+            boolean isIdSame = idLama.equals(jenisKelaminDTO.getId());
 
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(jenisKelaminDTO.getId());
-                
-                if(!isIdSame) {
-                    return new JenisKelaminDTO(jenisKelaminService.updateId(idLama, jenisKelaminDTO.toJenisKelamin()));
-                }
-                else {
-                    throw new IllegalArgumentException("id jenisKelamin sama");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json jenisKelamin harus disertakan di body put request");
+            if(!isIdSame) {
+                return new JenisKelaminDTO(jenisKelaminService.updateId(idLama, jenisKelaminDTO.toJenisKelamin()));
             }
-        }
-        else {
-            throw new IllegalArgumentException("id jenisKelamin harus bilangan panjang 1 digit");
+            else {
+                throw new IllegalArgumentException("id jenisKelamin sama");
+            }
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("data json jenisKelamin harus disertakan di body put request");
         }
         
     } 
@@ -134,20 +121,11 @@ public class JenisKelaminResource {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idJenisKelamin") String idJenisKelamin) throws SQLException {
         
-        boolean isDigit = idJenisKelamin.matches("[0-9]+");
-        
-        if(isDigit) {		
-            
-            JsonObject model = Json.createObjectBuilder()
-                    .add("status", jenisKelaminService.delete(idJenisKelamin) == true ? "sukses" : "gagal")
-                    .build();
-            
-            
-            return model;
-        }
-        else {
-            throw new IllegalArgumentException("id jenisKelamin harus bilanagan panjang 1 digit");
-        }        
+        JsonObject model = Json.createObjectBuilder()
+                .add("status", jenisKelaminService.delete(idJenisKelamin) == true ? "sukses" : "gagal")
+                .build();
+
+        return model;
         
     }
     
