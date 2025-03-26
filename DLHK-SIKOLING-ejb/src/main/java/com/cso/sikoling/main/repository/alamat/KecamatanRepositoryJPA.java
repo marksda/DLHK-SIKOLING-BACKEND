@@ -39,7 +39,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             return convertKecamatanDataToKecamatan(kecamatanData);  
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+            throw new SQLException("id kabupaten harus ada di table kabupaten dan berupa bilangan dengan panjang 7 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data kecamatan");
@@ -55,7 +55,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             return convertKecamatanDataToKecamatan(kecamatanData);   
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+            throw new SQLException("id kabupaten harus ada di table kabupaten dan berupa bilangan dengan panjang 7 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data propinsi");
@@ -78,7 +78,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             }
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+            throw new SQLException("id kabupaten harus ada di table kabupaten dan berupa bilangan dengan panjang 7 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -102,7 +102,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             }
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 7 digit");
+            throw new SQLException("id kabupaten harus ada di table kabupaten dan berupa bilangan dengan panjang 7 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id kecamatan");
@@ -127,7 +127,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
+                        case "id_kabupaten" -> daftarPredicate.add(cb.equal(root.get("kabupaten").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -163,12 +163,12 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
                                 cq.orderBy(cb.desc(root.get("nama")));
                             }
                         }
-                        case "id_propinsi" -> {
+                        case "id_kabupaten" -> {
                             if(sort.getValue().equals("ASC")) {
-                                cq.orderBy(cb.asc(root.get("propinsi").get("nama")));
+                                cq.orderBy(cb.asc(root.get("kabupaten").get("id")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("propinsi").get("nama")));
+                                cq.orderBy(cb.desc(root.get("kabupaten").get("id")));
                             }
                         }
                         default -> {
@@ -222,7 +222,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
+                case "id_kabupaten" -> daftarPredicate.add(cb.equal(root.get("kabupaten").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
@@ -243,7 +243,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
         Kecamatan kecamatan = null;
 		
         if(d != null) {
-            kecamatan = new Kecamatan(d.getId(), d.getNama());
+            kecamatan = new Kecamatan(d.getId(), d.getNama(), d.getKabupaten().getId());
         }
 
         return kecamatan;	
@@ -253,9 +253,11 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
         KecamatanData kecamatanData = null;
 		
         if(t != null) {
+            KabupatenData kabupatenData = new KabupatenData(t.getId_kabupaten());
             kecamatanData = new KecamatanData();
             kecamatanData.setId(t.getId());
             kecamatanData.setNama(t.getNama());
+            kecamatanData.setKabupaten(kabupatenData);
         }
 
         return kecamatanData;

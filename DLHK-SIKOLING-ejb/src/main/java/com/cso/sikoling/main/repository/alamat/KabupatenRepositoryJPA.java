@@ -165,10 +165,10 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
                         }
                         case "id_propinsi" -> {
                             if(sort.getValue().equals("ASC")) {
-                                cq.orderBy(cb.asc(root.get("propinsi").get("nama")));
+                                cq.orderBy(cb.asc(root.get("propinsi").get("id")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("propinsi").get("nama")));
+                                cq.orderBy(cb.desc(root.get("propinsi").get("id")));
                             }
                         }
                         default -> {

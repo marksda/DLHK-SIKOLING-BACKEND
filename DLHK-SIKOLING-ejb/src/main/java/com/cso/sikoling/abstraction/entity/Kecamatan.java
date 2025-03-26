@@ -3,15 +3,16 @@ package com.cso.sikoling.abstraction.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-
 public class Kecamatan implements Serializable {
 
     private final String id;
     private final String nama;
+    private final String id_kabupaten;
 
-    public Kecamatan(String id, String nama) {
+    public Kecamatan(String id, String nama, String id_kabupaten) {
         this.id = id;
         this.nama = nama;
+        this.id_kabupaten = id_kabupaten;
     }
 
     public String getId() {
@@ -21,17 +22,25 @@ public class Kecamatan implements Serializable {
     public String getNama() {
         return nama;
     }
+
+    public String getId_kabupaten() {
+        return id_kabupaten;
+    }    
     
     @Override
     public int hashCode() {
+        
         int hash = 7;
         hash = 13 * hash + Objects.hashCode(this.id);
         hash = 13 * hash + Objects.hashCode(this.nama);
+        hash = 13 * hash + Objects.hashCode(this.id_kabupaten);
         return hash;
+        
     }
 
     @Override
     public boolean equals(Object obj) {
+        
         if (this == obj) {
             return true;
         }
@@ -50,12 +59,13 @@ public class Kecamatan implements Serializable {
             return false;
         }
 
-        return this.nama.equals(other.nama);
+        return this.nama.equals(other.id_kabupaten);
+        
     }
 
     @Override
     public String toString() {
-        return "Kecamatan{" + "id=" + id + "nama=" + nama + "}";
+        return "Kecamatan{" + "id=" + id + ", nama=" + nama + ", id_kabupaten=" + this.id_kabupaten + "}";
     }
         
 }

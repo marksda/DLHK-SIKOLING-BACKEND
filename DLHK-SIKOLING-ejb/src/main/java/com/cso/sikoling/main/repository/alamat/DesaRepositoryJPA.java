@@ -39,7 +39,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             return convertDesaDataToDesa(desaData);  
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data desa");
@@ -55,10 +55,10 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             return convertDesaDataToDesa(desaData);   
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data propinsi");
+            throw new SQLException("Duplikasi data desa");
         }
         
     }
@@ -78,7 +78,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             }
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -102,7 +102,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             }
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id propinsi harus bilangan dan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id desa");
@@ -127,7 +127,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
+                        case "id_kecamatan" -> daftarPredicate.add(cb.equal(root.get("kecamatan").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -163,12 +163,12 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
                                 cq.orderBy(cb.desc(root.get("nama")));
                             }
                         }
-                        case "id_propinsi" -> {
+                        case "id_kecamatan" -> {
                             if(sort.getValue().equals("ASC")) {
-                                cq.orderBy(cb.asc(root.get("propinsi").get("nama")));
+                                cq.orderBy(cb.asc(root.get("kecamatan").get("id")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("propinsi").get("nama")));
+                                cq.orderBy(cb.desc(root.get("kecamatan").get("id")));
                             }
                         }
                         default -> {
@@ -222,7 +222,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
+                case "id_kecamatan" -> daftarPredicate.add(cb.equal(root.get("kecamatan").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
@@ -243,7 +243,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
         Desa desa = null;
 		
         if(d != null) {
-            desa = new Desa(d.getId(), d.getNama());
+            desa = new Desa(d.getId(), d.getNama(), d.getKecamatan().getId());
         }
 
         return desa;	
@@ -253,9 +253,11 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
         DesaData desaData = null;
 		
         if(t != null) {
+            KecamatanData kecamatanData = new KecamatanData(t.getId_kecamatan());
             desaData = new DesaData();
             desaData.setId(t.getId());
             desaData.setNama(t.getNama());
+            desaData.setKecamatan(kecamatanData);
         }
 
         return desaData;

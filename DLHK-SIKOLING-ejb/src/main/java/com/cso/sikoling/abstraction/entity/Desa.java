@@ -8,10 +8,12 @@ public class Desa implements Serializable {
     
     private final String id;
     private final String nama;
+    private final String id_kecamatan;
 
-    public Desa(String id, String nama) {
+    public Desa(String id, String nama, String id_kecamatan) {
         this.id = id;
         this.nama = nama;
+        this.id_kecamatan = id_kecamatan;
     }
     
     public String getId() {
@@ -22,12 +24,17 @@ public class Desa implements Serializable {
         return nama;
     }
 
+    public String getId_kecamatan() {
+        return id_kecamatan;
+    }
+
     @Override
     public int hashCode() {
         
         int hash = 7;
         hash = 13 * hash + Objects.hashCode(this.id);
         hash = 13 * hash + Objects.hashCode(this.nama);
+        hash = 13 * hash + Objects.hashCode(this.id_kecamatan);
         return hash;
         
     }
@@ -53,17 +60,13 @@ public class Desa implements Serializable {
             return false;
         }
 
-        if (!this.nama.equals(other.nama)) {
-            return false;
-        }
-
-        return true;
+        return this.id_kecamatan.equals(other.id_kecamatan);
         
     }
 
     @Override
     public String toString() {
-        return "Desa{" + "id=" + id + "nama=" + nama + "}";
+        return "Desa{" + "id=" + id + ", id_kecamatan=" + this.id_kecamatan + ", nama" + this.nama + "}";
     }
 
 }
