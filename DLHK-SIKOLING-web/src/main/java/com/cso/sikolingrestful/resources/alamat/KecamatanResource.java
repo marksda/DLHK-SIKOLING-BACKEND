@@ -89,7 +89,7 @@ public class KecamatanResource {
                     return new KecamatanDTO(kecamatanService.update(kecamatanDTO.toKecamatan()));
                 }
                 else {
-                    throw new IllegalArgumentException("id kecamatan sama");
+                    throw new IllegalArgumentException("id lama dan baru kabupaten harus sama");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json kecamatan harus disertakan di body put request");
@@ -116,7 +116,7 @@ public class KecamatanResource {
                     return new KecamatanDTO(kecamatanService.updateId(idLama, kecamatanDTO.toKecamatan()));
                 }
                 else {
-                    throw new IllegalArgumentException("id kecamatan sama");
+                    throw new IllegalArgumentException("id lama dan baru kabupaten harus beda");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json kecamatan harus disertakan di body put request");

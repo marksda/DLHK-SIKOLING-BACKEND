@@ -7,19 +7,22 @@ public class DesaDTO {
     
     private String id;
     private String nama;
+    private String id_kecamatan;
 
     public DesaDTO() {
     }
 
-    public DesaDTO(String id, String nama) {
+    public DesaDTO(String id, String nama, String id_kecamatan) {
         this.id = id;
         this.nama = nama;
+        this.id_kecamatan = id_kecamatan;
     }
     
     public DesaDTO(Desa t) {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
+            this.id_kecamatan = t.getId_kecamatan();
         }		
     }
 
@@ -38,26 +41,39 @@ public class DesaDTO {
     public void setNama(String nama) {
         this.nama = nama;
     }
+
+    public String getId_kecamatan() {
+        return id_kecamatan;
+    }
+
+    public void setId_kecamatan(String id_kecamatan) {
+        this.id_kecamatan = id_kecamatan;
+    }
     
     public Desa toDesa() {
         if( this.id == null || this.nama == null) {
             throw new IllegalArgumentException("format data json desa tidak sesuai");
         }
         else {
-            return new Desa(this.id, this.nama);
+            return new Desa(this.id, this.nama, this.id_kecamatan);
         }
     }
     
     @Override
     public int hashCode() {
+        
         int hash = 753;
-        hash = 73 * hash + Objects.hashCode(id );
-        hash = 73 * hash + Objects.hashCode(nama);
+        hash = 73 * hash + Objects.hashCode(this.id );
+        hash = 73 * hash + Objects.hashCode(this.nama);
+        hash = 73 * hash + Objects.hashCode(this.id_kecamatan);
+        
         return hash;
+        
     }
 
     @Override
     public boolean equals(Object obj) {
+        
         if (this == obj) {
             return true;
         }
@@ -74,16 +90,20 @@ public class DesaDTO {
         if (this.id == null ? other.id != null : !this.id.equals(other.id)) {
             return false;
         }
-        return !(this.nama == null ? other.nama != null : !this.nama.equals(other.nama));
+        
+        return !(this.id_kecamatan == null ? other.id_kecamatan != null : !this.id_kecamatan.equals(other.id_kecamatan));
+        
     }
 
     @Override
     public String toString() {
+        
         if(id == null) {
             return null;
         }			
 
-        return "DesaDTO{" + "id=" + this.id + ", nama=" + this.nama + "}";	    
+        return "DesaDTO{" + "id=" + this.id + ", id_kecamatan=" + this.id_kecamatan + ", nama=" + this.nama + "}";	
+        
     }
 
 }

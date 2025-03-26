@@ -116,7 +116,7 @@ public class KabupatenResource {
                     return new KabupatenDTO(kabupatenService.updateId(idLama, kabupatenDTO.toKabupaten()));
                 }
                 else {
-                    throw new IllegalArgumentException("id kabupaten sama");
+                    throw new IllegalArgumentException("id lama dan baru kabupaten harus beda");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json kabupaten harus disertakan di body put request");
@@ -146,7 +146,7 @@ public class KabupatenResource {
             return model;
         }
         else {
-            throw new IllegalArgumentException("id propinsi harus bilangan panjang 4 digit");
+            throw new IllegalArgumentException("id kabupaten harus bilangan panjang 4 digit");
         }        
         
     }
