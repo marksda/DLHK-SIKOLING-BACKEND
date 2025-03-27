@@ -39,10 +39,10 @@ public class KategoriSkalaUsahaRepositoryJPA implements Repository<KategoriSkala
             return convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(kategoriSkalaUsahaData);  
         } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategoriSkalaUsaha harus bilangan dan panjang 2 digit");
+            throw new SQLException("id kategori skala usaha harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data kategoriSkalaUsaha");
+            throw new SQLException("Duplikasi data kategori skala usaha");
         }        
     }
 
@@ -55,10 +55,10 @@ public class KategoriSkalaUsahaRepositoryJPA implements Repository<KategoriSkala
             return convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(kategoriSkalaUsahaData);   
         }         
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategoriSkalaUsaha harus bilangan dan panjang 2 digit");
+            throw new SQLException("id kategori skala usaha harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data kategoriSkalaUsaha");
+            throw new SQLException("Duplikasi data kategori skala usaha");
         }
         
     }
@@ -75,14 +75,14 @@ public class KategoriSkalaUsahaRepositoryJPA implements Repository<KategoriSkala
                 return update(t);
             }
             else {
-                throw new SQLException("Gagal mengupdate id kategoriSkalaUsaha");
+                throw new SQLException("Gagal mengupdate id kategori skala usaha");
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategoriSkalaUsaha harus bilangan dan panjang 2 digit");
+            throw new SQLException("id kategori skala usaha harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id kategoriSkalaUsaha");
+            throw new SQLException("Dulpikasi id kategori skala usaha");
         }
         
     }
@@ -98,11 +98,11 @@ public class KategoriSkalaUsahaRepositoryJPA implements Repository<KategoriSkala
                 return true;
             }
             else {
-                throw new SQLException("kategoriSkalaUsaha dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException("kategori skala usaha dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategoriSkalaUsaha harus bilangan dan panjang 2 digit");
+            throw new SQLException("id kategori skala usaha harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());

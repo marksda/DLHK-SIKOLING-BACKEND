@@ -69,7 +69,7 @@ public class KategoriSkalaUsahaResource {
             return new KategoriSkalaUsahaDTO(kategoriSkalaUsahaService.save(kategoriSkalaUsahaDTO.toKategoriSkalaUsaha()));
         } 
         catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json kategoriSkalaUsaha harus disertakan di body post request");
+            throw new IllegalArgumentException("data json kategori skala usaha harus disertakan di body post request");
         }    
         
     }
@@ -86,10 +86,10 @@ public class KategoriSkalaUsahaResource {
                 return new KategoriSkalaUsahaDTO(kategoriSkalaUsahaService.update(kategoriSkalaUsahaDTO.toKategoriSkalaUsaha()));
             }
             else {
-                throw new IllegalArgumentException("id kategoriSkalaUsaha harus sama");
+                throw new IllegalArgumentException("id kategori skala usaha harus sama");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json kategoriSkalaUsaha harus disertakan di body put request");
+            throw new IllegalArgumentException("data json kategori skala usaha harus disertakan di body put request");
         }
         
     }
@@ -110,7 +110,7 @@ public class KategoriSkalaUsahaResource {
                 throw new IllegalArgumentException("id lama dan baru jenis kelamin harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json jenis kelamin harus disertakan di body put request");
+            throw new IllegalArgumentException("data json kategori skala usaha harus disertakan di body put request");
         }
         
     } 
