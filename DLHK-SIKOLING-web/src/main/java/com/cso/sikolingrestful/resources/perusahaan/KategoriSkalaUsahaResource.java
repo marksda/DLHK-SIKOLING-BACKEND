@@ -107,7 +107,7 @@ public class KategoriSkalaUsahaResource {
                 return new KategoriSkalaUsahaDTO(kategoriSkalaUsahaService.updateId(idLama, kategoriSkalaUsahaDTO.toKategoriSkalaUsaha()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru jenis kelamin harus beda");
+                throw new IllegalArgumentException("id lama dan baru kategori skala usaha harus beda");
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json kategori skala usaha harus disertakan di body put request");

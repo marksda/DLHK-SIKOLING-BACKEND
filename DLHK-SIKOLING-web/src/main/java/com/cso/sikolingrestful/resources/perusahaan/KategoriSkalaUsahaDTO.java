@@ -4,7 +4,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import java.util.Objects;
 
 public class KategoriSkalaUsahaDTO {
-    
+
     private String id;	
     private String nama;
     private String singkatan;
@@ -52,12 +52,21 @@ public class KategoriSkalaUsahaDTO {
     }
     
     public KategoriSkalaUsaha toKategoriSkalaUsaha() {
+        
         if( this.id == null || this.nama == null) {
-            throw new IllegalArgumentException("format data json jenis kelamin tidak sesuai");
+            throw new IllegalArgumentException("format data json kategori skala usaha tidak sesuai");
         }
         else {
-            return new KategoriSkalaUsaha(this.id, this.nama, this.singkatan);
+            boolean isDigit = this.id.matches("[0-9]+");
+            
+            if(isDigit) {            
+                return new KategoriSkalaUsaha(this.id, this.nama, this.singkatan);
+            }
+            else {
+                throw new IllegalArgumentException("id kategori skala usaha harus bilangan panjang 2 digit");
+            }
         }
+        
     }
     
     @Override
