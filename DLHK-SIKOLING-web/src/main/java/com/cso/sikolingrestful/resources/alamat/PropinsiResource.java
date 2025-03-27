@@ -79,25 +79,18 @@ public class PropinsiResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public PropinsiDTO update(@PathParam("idLama") String idLama, PropinsiDTO propinsiDTO) throws SQLException {
-                
-        boolean isDigit = idLama.matches("[0-9]+");
-
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(propinsiDTO.getId());
-                if(isIdSame) {
-                    return new PropinsiDTO(propinsiService.update(propinsiDTO.toPropinsi()));
-                }
-                else {
-                    throw new IllegalArgumentException("id lama dan baru propinsi harus sama");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
+        
+        try {                
+            boolean isIdSame = idLama.equals(propinsiDTO.getId());
+            if(isIdSame) {
+                return new PropinsiDTO(propinsiService.update(propinsiDTO.toPropinsi()));
             }
+            else {
+                throw new IllegalArgumentException("id lama dan baru propinsi harus sama");
+            }
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
         }
-        else {
-            throw new IllegalArgumentException("id propinsi harus bilangan panjang 2 digit");
-        }  
         
     }
     
@@ -106,24 +99,18 @@ public class PropinsiResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public PropinsiDTO updateId(@PathParam("idLama") String idLama, PropinsiDTO propinsiDTO) throws SQLException {
-        boolean isDigit = idLama.matches("[0-9]+");
+        
+        try {                
+            boolean isIdSame = idLama.equals(propinsiDTO.getId());
 
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(propinsiDTO.getId());
-                
-                if(!isIdSame) {
-                    return new PropinsiDTO(propinsiService.updateId(idLama, propinsiDTO.toPropinsi()));
-                }
-                else {
-                    throw new IllegalArgumentException("id lama dan baru propinsi harus beda");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
+            if(!isIdSame) {
+                return new PropinsiDTO(propinsiService.updateId(idLama, propinsiDTO.toPropinsi()));
             }
-        }
-        else {
-            throw new IllegalArgumentException("id propinsi harus bilangan panjang 2 digit");
+            else {
+                throw new IllegalArgumentException("id lama dan baru propinsi harus beda");
+            }
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
         }
         
     } 

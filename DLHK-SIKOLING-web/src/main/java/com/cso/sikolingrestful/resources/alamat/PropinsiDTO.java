@@ -45,7 +45,13 @@ public class PropinsiDTO {
             throw new IllegalArgumentException("format data json propinsi tidak sesuai");
         }
         else {
-            return new Propinsi(this.id, this.nama);
+            boolean isDigit = this.id.matches("[0-9]+");
+            if(isDigit) {
+                return new Propinsi(this.id, this.nama);
+            }
+            else {
+                throw new IllegalArgumentException("id propinsi harus bilangan panjang 2 digit");
+            }
         }
     }
     

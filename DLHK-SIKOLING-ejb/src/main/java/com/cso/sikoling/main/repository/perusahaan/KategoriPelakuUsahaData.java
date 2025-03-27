@@ -22,22 +22,26 @@ import java.util.Collection;
 @NamedQueries({
     @NamedQuery(name = "KategoriPelakuUsahaData.findAll", query = "SELECT k FROM KategoriPelakuUsahaData k"),
     @NamedQuery(name = "KategoriPelakuUsahaData.findByNama", query = "SELECT k FROM KategoriPelakuUsahaData k WHERE k.nama = :nama"),
-    @NamedQuery(name = "KategoriPelakuUsahaData.findById", query = "SELECT k FROM KategoriPelakuUsahaData k WHERE k.id = :id")})
+    @NamedQuery(name = "KategoriPelakuUsahaData.findById", query = "SELECT k FROM KategoriPelakuUsahaData k WHERE k.id = :id"),
+    @NamedQuery(name = "KategoriPelakuUsahaData.updateId", query = "UPDATE KategoriPelakuUsahaData SET id = :idBaru WHERE id = :idLama")})
 public class KategoriPelakuUsahaData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 4)
     @Column(name = "id")
     private String id;
+    
     @JoinColumn(name = "skala_usaha", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private KategoriSkalaUsahaData skalaUsaha;
+    
     @OneToMany(mappedBy = "kategoriPelakuUsaha")
     private Collection<DetailPelakuUsahaData> detailPelakuUsahaDataCollection;
 

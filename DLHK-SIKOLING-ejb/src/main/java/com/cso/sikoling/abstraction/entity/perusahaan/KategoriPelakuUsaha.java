@@ -7,24 +7,24 @@ public class KategoriPelakuUsaha implements Serializable {
     
     private final String id;
     private final String nama;
-    private final KategoriSkalaUsaha kategoriSkalaUsaha;
+    private final String id_kategori_skala_usaha;
 
-    public KategoriPelakuUsaha(String id, String nama, KategoriSkalaUsaha kategoriSkalaUsaha) {
-            this.id = id;
-            this.nama = nama;
-            this.kategoriSkalaUsaha = kategoriSkalaUsaha;
+    public KategoriPelakuUsaha(String id, String nama, String id_kategori_skala_usaha) {
+        this.id = id;
+        this.nama = nama;
+        this.id_kategori_skala_usaha = id_kategori_skala_usaha;
     }
 
     public String getId() {
-            return id;
+        return id;
     }
 
     public String getNama() {
-            return nama;
+        return nama;
     }
 
-    public KategoriSkalaUsaha getKategoriSkalaUsaha() {
-        return kategoriSkalaUsaha;
+    public String getId_kategori_skala_usaha() {
+        return id_kategori_skala_usaha;
     }
 
     @Override
@@ -33,6 +33,7 @@ public class KategoriPelakuUsaha implements Serializable {
         int hash = 71;
         hash = 13 * hash + Objects.hashCode(this.id);
         hash = 13 * hash + Objects.hashCode(this.nama);
+        
         return hash;
 
     }
