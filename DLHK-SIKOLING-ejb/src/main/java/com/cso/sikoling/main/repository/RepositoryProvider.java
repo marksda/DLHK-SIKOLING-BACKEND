@@ -6,6 +6,7 @@ import com.cso.sikoling.main.repository.alamat.KecamatanRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
 import com.cso.sikoling.main.repository.person.JenisKelaminRepositoryJPA;
 import com.cso.sikoling.main.repository.person.PersonRepositoryJPA;
+import com.cso.sikoling.main.repository.perusahaan.KategoriSkalaUsahaRepositoryJPA;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
@@ -52,5 +53,10 @@ public class RepositoryProvider {
     @Produces
     public PersonRepositoryJPA getPersonRepositoryJPA(EntityManager entityManager) {
         return new PersonRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public KategoriSkalaUsahaRepositoryJPA getKategoriSkalaUsahaRepositoryJPA(EntityManager entityManager) {
+        return new KategoriSkalaUsahaRepositoryJPA(entityManager);
     }
 }

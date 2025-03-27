@@ -11,6 +11,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
@@ -22,24 +23,30 @@ import java.util.Collection;
     @NamedQuery(name = "KategoriSkalaUsahaData.findAll", query = "SELECT k FROM KategoriSkalaUsahaData k"),
     @NamedQuery(name = "KategoriSkalaUsahaData.findById", query = "SELECT k FROM KategoriSkalaUsahaData k WHERE k.id = :id"),
     @NamedQuery(name = "KategoriSkalaUsahaData.findByNama", query = "SELECT k FROM KategoriSkalaUsahaData k WHERE k.nama = :nama"),
-    @NamedQuery(name = "KategoriSkalaUsahaData.findBySingkatan", query = "SELECT k FROM KategoriSkalaUsahaData k WHERE k.singkatan = :singkatan")})
+    @NamedQuery(name = "KategoriSkalaUsahaData.findBySingkatan", query = "SELECT k FROM KategoriSkalaUsahaData k WHERE k.singkatan = :singkatan"),
+    @NamedQuery(name = "KategoriSkalaUsahaData.updateId", query = "UPDATE KategoriSkalaUsahaData SET id = :idBaru WHERE id = :idLama")})
 public class KategoriSkalaUsahaData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{2}")
     @Size(min = 1, max = 2)
     @Column(name = "id")
     private String id;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @Size(max = 2147483647)
     @Column(name = "singkatan")
     private String singkatan;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "skalaUsaha")
     private Collection<KategoriPelakuUsahaData> kategoriPelakuUsahaDataCollection;
+    
     @OneToMany(mappedBy = "skalaUsaha")
     private Collection<PerusahaanData> perusahaanDataCollection;
 

@@ -89,7 +89,7 @@ public class PropinsiResource {
                     return new PropinsiDTO(propinsiService.update(propinsiDTO.toPropinsi()));
                 }
                 else {
-                    throw new IllegalArgumentException("id propinsi harus berbeda");
+                    throw new IllegalArgumentException("id lama dan baru propinsi harus sama");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
@@ -116,7 +116,7 @@ public class PropinsiResource {
                     return new PropinsiDTO(propinsiService.updateId(idLama, propinsiDTO.toPropinsi()));
                 }
                 else {
-                    throw new IllegalArgumentException("id propinsi sama");
+                    throw new IllegalArgumentException("id lama dan baru propinsi harus beda");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");

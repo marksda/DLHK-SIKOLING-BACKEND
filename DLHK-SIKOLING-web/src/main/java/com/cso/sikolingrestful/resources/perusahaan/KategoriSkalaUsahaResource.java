@@ -1,4 +1,4 @@
-package com.cso.sikolingrestful.resources.person;
+package com.cso.sikolingrestful.resources.perusahaan;
 
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
@@ -22,35 +22,35 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.service.DAOService;
 
 @Stateless
 @LocalBean
-@Path("person")
-public class PersonResource {
+@Path("kategori_skala_usaha")
+public class KategoriSkalaUsahaResource {
     
     @Inject
-    private DAOService<Person> personService;
+    private DAOService<KategoriSkalaUsaha> kategoriSkalaUsahaService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<PersonDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<KategoriSkalaUsahaDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return personService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                return kategoriSkalaUsahaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
                         .stream()
-                        .map(t -> new PersonDTO(t))
+                        .map(t -> new KategoriSkalaUsahaDTO(t))
                         .collect(Collectors.toList());
             }
             else {
-                return personService.getDaftarData(null)
+                return kategoriSkalaUsahaService.getDaftarData(null)
                         .stream()
-                        .map(t -> new PersonDTO(t))
+                        .map(t -> new KategoriSkalaUsahaDTO(t))
                         .collect(Collectors.toList());
             }             
         } 
@@ -63,13 +63,13 @@ public class PersonResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PersonDTO save(PersonDTO personDTO) throws SQLException { 
+    public KategoriSkalaUsahaDTO save(KategoriSkalaUsahaDTO kategoriSkalaUsahaDTO) throws SQLException { 
         
         try {            
-            return new PersonDTO(personService.save(personDTO.toPerson()));
+            return new KategoriSkalaUsahaDTO(kategoriSkalaUsahaService.save(kategoriSkalaUsahaDTO.toKategoriSkalaUsaha()));
         } 
         catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json person harus disertakan di body post request");
+            throw new IllegalArgumentException("data json kategoriSkalaUsaha harus disertakan di body post request");
         }    
         
     }
@@ -78,18 +78,18 @@ public class PersonResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PersonDTO update(@PathParam("idLama") String idLama, PersonDTO personDTO) throws SQLException {
+    public KategoriSkalaUsahaDTO update(@PathParam("idLama") String idLama, KategoriSkalaUsahaDTO kategoriSkalaUsahaDTO) throws SQLException {
          
         try {                
-            boolean isIdSame = idLama.equals(personDTO.getId());
+            boolean isIdSame = idLama.equals(kategoriSkalaUsahaDTO.getId());
             if(isIdSame) {
-                return new PersonDTO(personService.update(personDTO.toPerson()));
+                return new KategoriSkalaUsahaDTO(kategoriSkalaUsahaService.update(kategoriSkalaUsahaDTO.toKategoriSkalaUsaha()));
             }
             else {
-                throw new IllegalArgumentException("id person harus sama");
+                throw new IllegalArgumentException("id kategoriSkalaUsaha harus sama");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json person harus disertakan di body put request");
+            throw new IllegalArgumentException("data json kategoriSkalaUsaha harus disertakan di body put request");
         }
         
     }
@@ -98,31 +98,31 @@ public class PersonResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PersonDTO updateId(@PathParam("idLama") String idLama, PersonDTO personDTO) throws SQLException {
+    public KategoriSkalaUsahaDTO updateId(@PathParam("idLama") String idLama, KategoriSkalaUsahaDTO kategoriSkalaUsahaDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(personDTO.getId());
+            boolean isIdSame = idLama.equals(kategoriSkalaUsahaDTO.getId());
 
             if(!isIdSame) {
-                return new PersonDTO(personService.updateId(idLama, personDTO.toPerson()));
+                return new KategoriSkalaUsahaDTO(kategoriSkalaUsahaService.updateId(idLama, kategoriSkalaUsahaDTO.toKategoriSkalaUsaha()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru person harus beda");
+                throw new IllegalArgumentException("id lama dan baru jenis kelamin harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json person harus disertakan di body put request");
+            throw new IllegalArgumentException("data json jenis kelamin harus disertakan di body put request");
         }
         
     } 
     
-    @Path("/{idPerson}")
+    @Path("/{idKategoriSkalaUsaha}")
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject delete(@PathParam("idPerson") String idPerson) throws SQLException {
+    public JsonObject delete(@PathParam("idKategoriSkalaUsaha") String idKategoriSkalaUsaha) throws SQLException {
         
         JsonObject model = Json.createObjectBuilder()
-                .add("status", personService.delete(idPerson) == true ? "sukses" : "gagal")
+                .add("status", kategoriSkalaUsahaService.delete(idKategoriSkalaUsaha) == true ? "sukses" : "gagal")
                 .build();
 
         return model;

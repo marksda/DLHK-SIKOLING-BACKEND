@@ -89,7 +89,7 @@ public class DesaResource {
                     return new DesaDTO(desaService.update(desaDTO.toDesa()));
                 }
                 else {
-                    throw new IllegalArgumentException("id lama dan baru kabupaten harus sama");
+                    throw new IllegalArgumentException("id kabupaten harus sama");
                 }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("data json desa harus disertakan di body put request");

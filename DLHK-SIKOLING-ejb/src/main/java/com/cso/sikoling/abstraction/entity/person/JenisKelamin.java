@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class JenisKelamin implements Serializable {
     
-    private static final long serialVersionUID = -282279736287619565L;
     private final String id;
     private final String nama;
 
@@ -21,10 +20,6 @@ public class JenisKelamin implements Serializable {
 
     public String getNama() {
         return nama;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
     }
 
     @Override

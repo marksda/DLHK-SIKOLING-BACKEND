@@ -86,7 +86,7 @@ public class JenisKelaminResource {
                 return new JenisKelaminDTO(jenisKelaminService.update(jenisKelaminDTO.toJenisKelamin()));
             }
             else {
-                throw new IllegalArgumentException("id jenisKelamin harus berbeda");
+                throw new IllegalArgumentException("id jenisKelamin harus sama");
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json jenisKelamin harus disertakan di body put request");
@@ -107,10 +107,10 @@ public class JenisKelaminResource {
                 return new JenisKelaminDTO(jenisKelaminService.updateId(idLama, jenisKelaminDTO.toJenisKelamin()));
             }
             else {
-                throw new IllegalArgumentException("id jenisKelamin sama");
+                throw new IllegalArgumentException("id lama dan baru jenis kelamin harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json jenisKelamin harus disertakan di body put request");
+            throw new IllegalArgumentException("data json jenis kelamin harus disertakan di body put request");
         }
         
     } 

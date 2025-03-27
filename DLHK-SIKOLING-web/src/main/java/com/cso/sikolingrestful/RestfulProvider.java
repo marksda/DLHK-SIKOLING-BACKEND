@@ -8,6 +8,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
@@ -20,6 +21,7 @@ import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
 import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.service.person.JenisKelaminServiceBasic;
 import com.cso.sikoling.abstraction.service.person.PersonServiceBasic;
+import com.cso.sikoling.abstraction.service.perusahaan.KategoriSkalaUsahaServiceBasic;
 
 @Stateless
 @LocalBean
@@ -59,6 +61,12 @@ public class RestfulProvider {
     public DAOService<Person> getPersonService(
             @Infrastructure Repository<Person, QueryParamFilters, Filter> personRepository) {
         return new PersonServiceBasic(personRepository);
+    }
+    
+    @Produces
+    public DAOService<KategoriSkalaUsaha> getKategoriSkalaUsahaService(
+            @Infrastructure Repository<KategoriSkalaUsaha, QueryParamFilters, Filter> kategoriSkalaUsahaRepository) {
+        return new KategoriSkalaUsahaServiceBasic(kategoriSkalaUsahaRepository);
     }
     
 }
