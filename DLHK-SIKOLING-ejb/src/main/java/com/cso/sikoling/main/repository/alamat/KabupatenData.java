@@ -55,6 +55,11 @@ public class KabupatenData implements Serializable {
     public KabupatenData(String id) {
         this.id = id;
     }
+    
+    public KabupatenData(String id, String nama) {
+        this.id = id;
+        this.nama = nama;
+    }
 
     public String getId() {
         return id;

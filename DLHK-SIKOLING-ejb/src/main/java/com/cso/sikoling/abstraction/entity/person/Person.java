@@ -9,14 +9,16 @@ public class Person implements Serializable {
     
     private final String id;
     private final String nama;
+    private final JenisKelamin jenisKelamin;
     private final Alamat alamat;
     private final String scanKTP;
     private final Kontak kontak;
     private final Boolean statusVerified;
 
-    public Person(String id, String nama, Alamat alamat, String scanKTP, Kontak kontak, Boolean statusVerified) {
+    public Person(String id, String nama, JenisKelamin jenisKelamin, Alamat alamat, String scanKTP, Kontak kontak, Boolean statusVerified) {
         this.id = id;
         this.nama = nama;
+        this.jenisKelamin = jenisKelamin;
         this.alamat = alamat;
         this.scanKTP = scanKTP;
         this.kontak = kontak;
@@ -46,7 +48,12 @@ public class Person implements Serializable {
     public Boolean getStatusVerified() {
         return statusVerified;
     }
+
+    public JenisKelamin getJenisKelamin() {
+        return jenisKelamin;
+    }
     
+    @Override
     public int hashCode() {
         
         int hash = 83;

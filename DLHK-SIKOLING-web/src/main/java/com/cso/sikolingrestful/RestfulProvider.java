@@ -7,6 +7,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
 import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.person.Person;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
@@ -18,6 +19,7 @@ import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
 import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.service.person.JenisKelaminServiceBasic;
+import com.cso.sikoling.abstraction.service.person.PersonServiceBasic;
 
 @Stateless
 @LocalBean
@@ -51,6 +53,12 @@ public class RestfulProvider {
     public DAOService<JenisKelamin> getJenisKelaminService(
             @Infrastructure Repository<JenisKelamin, QueryParamFilters, Filter> jenisKelaminRepository) {
         return new JenisKelaminServiceBasic(jenisKelaminRepository);
+    }
+    
+    @Produces
+    public DAOService<Person> getPersonService(
+            @Infrastructure Repository<Person, QueryParamFilters, Filter> personRepository) {
+        return new PersonServiceBasic(personRepository);
     }
     
 }
