@@ -2,7 +2,7 @@ package com.cso.sikolingrestful.resources.alamat;
 
 
 import java.util.Objects;
-import com.cso.sikoling.abstraction.entity.Propinsi;
+import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 
 public class PropinsiDTO {
     

@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.Desa;
+import com.cso.sikoling.abstraction.entity.alamat.Desa;
 import com.cso.sikoling.abstraction.service.DAOService;
 
 @Stateless

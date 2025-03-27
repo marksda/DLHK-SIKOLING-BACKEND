@@ -2,7 +2,7 @@ package com.cso.sikolingrestful.resources.person;
 
 
 import java.util.Objects;
-import com.cso.sikoling.abstraction.entity.JenisKelamin;
+import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
 
 public class JenisKelaminDTO {
     

@@ -1,7 +1,7 @@
 package com.cso.sikolingrestful.resources.alamat;
 
 import java.util.Objects;
-import com.cso.sikoling.abstraction.entity.Desa;
+import com.cso.sikoling.abstraction.entity.alamat.Desa;
 
 public class DesaDTO {
     

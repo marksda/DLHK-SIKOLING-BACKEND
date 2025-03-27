@@ -1,5 +1,5 @@
 
-package com.cso.sikoling.abstraction.entity;
+package com.cso.sikoling.abstraction.entity.alamat;
 
 import java.io.Serializable;
 import java.util.Objects;

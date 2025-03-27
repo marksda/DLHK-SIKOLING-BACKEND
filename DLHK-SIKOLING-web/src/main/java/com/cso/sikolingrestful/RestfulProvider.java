@@ -1,11 +1,11 @@
 package com.cso.sikolingrestful;
 
-import com.cso.sikoling.abstraction.entity.Desa;
+import com.cso.sikoling.abstraction.entity.alamat.Desa;
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.JenisKelamin;
-import com.cso.sikoling.abstraction.entity.Kabupaten;
-import com.cso.sikoling.abstraction.entity.Kecamatan;
-import com.cso.sikoling.abstraction.entity.Propinsi;
+import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
+import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
+import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
+import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;

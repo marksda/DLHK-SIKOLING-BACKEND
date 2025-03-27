@@ -1,20 +1,21 @@
-package com.cso.sikoling.abstraction.entity;
+package com.cso.sikoling.abstraction.entity.alamat;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Kecamatan implements Serializable {
 
+public class Desa implements Serializable {
+    
     private final String id;
     private final String nama;
-    private final String id_kabupaten;
+    private final String id_kecamatan;
 
-    public Kecamatan(String id, String nama, String id_kabupaten) {
+    public Desa(String id, String nama, String id_kecamatan) {
         this.id = id;
         this.nama = nama;
-        this.id_kabupaten = id_kabupaten;
+        this.id_kecamatan = id_kecamatan;
     }
-
+    
     public String getId() {
         return id;
     }
@@ -23,17 +24,17 @@ public class Kecamatan implements Serializable {
         return nama;
     }
 
-    public String getId_kabupaten() {
-        return id_kabupaten;
-    }    
-    
+    public String getId_kecamatan() {
+        return id_kecamatan;
+    }
+
     @Override
     public int hashCode() {
         
         int hash = 7;
         hash = 13 * hash + Objects.hashCode(this.id);
         hash = 13 * hash + Objects.hashCode(this.nama);
-        hash = 13 * hash + Objects.hashCode(this.id_kabupaten);
+        hash = 13 * hash + Objects.hashCode(this.id_kecamatan);
         return hash;
         
     }
@@ -53,19 +54,19 @@ public class Kecamatan implements Serializable {
             return false;
         }
 
-        final Kecamatan other = (Kecamatan) obj;
+        final Desa other = (Desa) obj;
 
         if (!this.id.equals(other.id)) {
             return false;
         }
 
-        return this.nama.equals(other.id_kabupaten);
+        return this.id_kecamatan.equals(other.id_kecamatan);
         
     }
 
     @Override
     public String toString() {
-        return "Kecamatan{" + "id=" + id + ", nama=" + nama + ", id_kabupaten=" + this.id_kabupaten + "}";
+        return "Desa{" + "id=" + id + ", id_kecamatan=" + this.id_kecamatan + ", nama" + this.nama + "}";
     }
-        
+
 }

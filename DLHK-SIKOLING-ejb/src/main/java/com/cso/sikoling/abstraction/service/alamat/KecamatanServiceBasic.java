@@ -2,7 +2,7 @@ package com.cso.sikoling.abstraction.service.alamat;
 
 import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.Kecamatan;
+import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;

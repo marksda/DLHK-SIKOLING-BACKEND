@@ -1,7 +1,7 @@
 package com.cso.sikolingrestful.resources.alamat;
 
 import java.util.Objects;
-import com.cso.sikoling.abstraction.entity.Kecamatan;
+import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 
 public class KecamatanDTO {
     

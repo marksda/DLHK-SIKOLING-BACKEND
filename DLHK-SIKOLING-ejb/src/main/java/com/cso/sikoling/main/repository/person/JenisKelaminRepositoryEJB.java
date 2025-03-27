@@ -1,7 +1,7 @@
 package com.cso.sikoling.main.repository.person;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.JenisKelamin;
+import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.Infrastructure;
