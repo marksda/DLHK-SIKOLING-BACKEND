@@ -21,7 +21,8 @@ import java.util.Collection;
     @NamedQuery(name = "KategoriModelPerizinanData.findAll", query = "SELECT k FROM KategoriModelPerizinanData k"),
     @NamedQuery(name = "KategoriModelPerizinanData.findById", query = "SELECT k FROM KategoriModelPerizinanData k WHERE k.id = :id"),
     @NamedQuery(name = "KategoriModelPerizinanData.findByNama", query = "SELECT k FROM KategoriModelPerizinanData k WHERE k.nama = :nama"),
-    @NamedQuery(name = "KategoriModelPerizinanData.findBySingkatan", query = "SELECT k FROM KategoriModelPerizinanData k WHERE k.singkatan = :singkatan")})
+    @NamedQuery(name = "KategoriModelPerizinanData.findBySingkatan", query = "SELECT k FROM KategoriModelPerizinanData k WHERE k.singkatan = :singkatan"),
+    @NamedQuery(name = "KategoriModelPerizinanData.updateId", query = "UPDATE KategoriModelPerizinanData SET id = :idBaru WHERE id = :idLama")})
 public class KategoriModelPerizinanData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,12 +32,15 @@ public class KategoriModelPerizinanData implements Serializable {
     @Size(min = 1, max = 1)
     @Column(name = "id")
     private String id;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @Size(max = 2147483647)
     @Column(name = "singkatan")
     private String singkatan;
+    
     @OneToMany(mappedBy = "modelPerizinan")
     private Collection<PerusahaanData> perusahaanDataCollection;
 
