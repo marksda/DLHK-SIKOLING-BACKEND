@@ -53,7 +53,7 @@ public class KategoriSkalaUsahaDTO {
     
     public KategoriSkalaUsaha toKategoriSkalaUsaha() {
         
-        if( this.id == null || this.nama == null) {
+        if( this.id == null ) {
             throw new IllegalArgumentException("format data json kategori skala usaha tidak sesuai");
         }
         else {

@@ -45,7 +45,20 @@ public class KategoriModelPerizinanDTO {
     }
 	
     public KategoriModelPerizinan toKategoriModelPerizinan() {
-        return new KategoriModelPerizinan(id, nama, singkatan);
+        if( this.id == null) {
+            throw new IllegalArgumentException("format data json kategori model perizinan tidak sesuai");
+        }
+        else {
+            boolean isDigit = this.id.matches("[0-9]+");
+            
+            if(isDigit) {  
+                return new KategoriModelPerizinan(this.id, this.nama, this.singkatan);
+            }
+            else {
+                throw new IllegalArgumentException("id kategori model perizinan harus bilangan panjang 1 digit");
+            }
+        }
+        
     }
 
     @Override

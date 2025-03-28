@@ -50,7 +50,7 @@ public class KategoriPelakuUsahaDTO {
     }
     
     public KategoriPelakuUsaha toKategoriPelakuUsaha() {
-        if( this.id == null || this.nama == null) {
+        if( this.id == null ) {
             throw new IllegalArgumentException("format data json kategori pelaku usaha tidak sesuai");
         }
         else {
