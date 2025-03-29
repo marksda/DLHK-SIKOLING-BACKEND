@@ -12,6 +12,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
@@ -23,24 +24,31 @@ import java.util.Collection;
     @NamedQuery(name = "DetailPelakuUsahaData.findAll", query = "SELECT d FROM DetailPelakuUsahaData d"),
     @NamedQuery(name = "DetailPelakuUsahaData.findById", query = "SELECT d FROM DetailPelakuUsahaData d WHERE d.id = :id"),
     @NamedQuery(name = "DetailPelakuUsahaData.findByNama", query = "SELECT d FROM DetailPelakuUsahaData d WHERE d.nama = :nama"),
-    @NamedQuery(name = "DetailPelakuUsahaData.findBySingkatan", query = "SELECT d FROM DetailPelakuUsahaData d WHERE d.singkatan = :singkatan")})
+    @NamedQuery(name = "DetailPelakuUsahaData.findBySingkatan", query = "SELECT d FROM DetailPelakuUsahaData d WHERE d.singkatan = :singkatan"),
+    @NamedQuery(name = "DetailPelakuUsahaData.updateId", query = "UPDATE DetailPelakuUsahaData SET id = :idBaru WHERE id = :idLama")})
 public class DetailPelakuUsahaData implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{6}")
     @Size(min = 1, max = 6)
     @Column(name = "id")
     private String id;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @Size(max = 2147483647)
     @Column(name = "singkatan")
     private String singkatan;
+    
     @OneToMany(mappedBy = "pelakuUsaha")
     private Collection<PerusahaanData> perusahaanDataCollection;
+    
     @JoinColumn(name = "kategori_pelaku_usaha", referencedColumnName = "id")
     @ManyToOne
     private KategoriPelakuUsahaData kategoriPelakuUsaha;

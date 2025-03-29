@@ -10,6 +10,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
@@ -29,6 +30,7 @@ public class KategoriModelPerizinanData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{1}")
     @Size(min = 1, max = 1)
     @Column(name = "id")
     private String id;
