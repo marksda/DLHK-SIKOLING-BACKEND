@@ -129,8 +129,8 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "id_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
-                        case "id_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
+                        case "id_kategori_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
+                        case "id_kategori_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -217,8 +217,8 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "id_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
-                case "id_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
+                case "id_kategori_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
+                case "id_kategori_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
