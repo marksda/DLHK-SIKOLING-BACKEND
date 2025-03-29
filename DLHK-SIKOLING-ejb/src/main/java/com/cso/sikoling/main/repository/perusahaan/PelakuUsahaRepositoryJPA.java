@@ -69,7 +69,7 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
     @Override
     public PelakuUsaha updateId(String idLama, PelakuUsaha t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("PelakuUsahaData.updateId");
+        Query query = entityManager.createNamedQuery("DetailPelakuUsahaData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
