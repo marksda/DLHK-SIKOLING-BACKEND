@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 
 
 public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryParamFilters, Filter> {
@@ -36,7 +37,8 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
         try {
             DetailPelakuUsahaData pelakuUsahaData = convertPelakuUsahaToPelakuUsahaData(t);
             entityManager.persist(pelakuUsahaData);
-            entityManager.flush();             
+            entityManager.flush();  
+            
             return convertPelakuUsahaDataToPelakuUsaha(pelakuUsahaData);  
         } 
         catch(ConstraintViolationException cstVltException) {
@@ -244,7 +246,9 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
                     new KategoriPelakuUsaha(
                             kategoriPelakuUsahaData.getId(), 
                             kategoriPelakuUsahaData.getNama(), 
-                            kategoriPelakuUsahaData.getSkalaUsaha().getId()) : null;
+                            kategoriPelakuUsahaData.getSkalaUsaha() != null ?
+                                    kategoriPelakuUsahaData.getSkalaUsaha().getId():null) 
+                    : null;
             
             pelakuUsaha = new PelakuUsaha(
                 d.getId(), 
@@ -264,7 +268,14 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
             pelakuUsahaData = new DetailPelakuUsahaData();
             pelakuUsahaData.setId(t.getId());
             pelakuUsahaData.setNama(t.getNama());
-            pelakuUsahaData.setSingkatan(t.getSingkatan());
+            pelakuUsahaData.setSingkatan(t.getSingkatan());              
+            KategoriPelakuUsahaData kategoriPelakuUsahaData = new KategoriPelakuUsahaData();
+            kategoriPelakuUsahaData.setId(t.getKategori_pelaku_usaha().getId());
+            kategoriPelakuUsahaData.setNama(t.getKategori_pelaku_usaha().getNama());            
+            KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData();
+            kategoriSkalaUsahaData.setId(t.getKategori_pelaku_usaha().getId_kategori_skala_usaha());
+            kategoriPelakuUsahaData.setSkalaUsaha(kategoriSkalaUsahaData);            
+            pelakuUsahaData.setKategoriPelakuUsaha(kategoriPelakuUsahaData);            
         }
 
         return pelakuUsahaData;

@@ -8,20 +8,20 @@ public class PelakuUsaha implements Serializable {
     private final String id;
     private final String nama;
     private final String singkatan;
-    private final KategoriPelakuUsaha kategoriPelakuUsaha;
+    private final KategoriPelakuUsaha kategori_pelaku_usaha;
 
-    public PelakuUsaha(String id, String nama, String singkatan, KategoriPelakuUsaha kategoriPelakuUsaha) {
+    public PelakuUsaha(String id, String nama, String singkatan, KategoriPelakuUsaha kategori_pelaku_usaha) {
 
         this.id = id;
         this.nama = nama;
         this.singkatan = singkatan;
-        this.kategoriPelakuUsaha = kategoriPelakuUsaha;
+        this.kategori_pelaku_usaha = kategori_pelaku_usaha;
 
     }
     
 
-    public KategoriPelakuUsaha getKategoriPelakuUsaha() {
-        return kategoriPelakuUsaha;
+    public KategoriPelakuUsaha getKategori_pelaku_usaha() {
+        return kategori_pelaku_usaha;
     }
 
     public String getId() {

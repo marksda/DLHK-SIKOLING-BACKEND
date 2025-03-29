@@ -8,7 +8,7 @@ public class PelakuUsahaDTO {
     private String id;
     private String nama;
     private String singkatan;
-    private KategoriPelakuUsahaDTO kategoriPelakuUsaha;
+    private KategoriPelakuUsahaDTO kategori_pelaku_usaha;
 
     public PelakuUsahaDTO() {
     }
@@ -17,7 +17,7 @@ public class PelakuUsahaDTO {
         this.id = t.getId();
         this.nama = t.getNama();
         this.singkatan = t.getSingkatan();
-        this.kategoriPelakuUsaha = t.getKategoriPelakuUsaha() != null ? new KategoriPelakuUsahaDTO(t.getKategoriPelakuUsaha()):null;
+        this.kategori_pelaku_usaha = t.getKategori_pelaku_usaha() != null ? new KategoriPelakuUsahaDTO(t.getKategori_pelaku_usaha()):null;
     }
 
     public String getId() {
@@ -44,12 +44,12 @@ public class PelakuUsahaDTO {
         this.singkatan = singkatan;
     }
 
-    public KategoriPelakuUsahaDTO getKategoriPelakuUsaha() {
-        return kategoriPelakuUsaha;
+    public KategoriPelakuUsahaDTO getKategori_pelaku_usaha() {
+        return kategori_pelaku_usaha;
     }
 
-    public void setKategoriPelakuUsaha(KategoriPelakuUsahaDTO kategoriPelakuUsaha) {
-        this.kategoriPelakuUsaha = kategoriPelakuUsaha;
+    public void setKategori_pelaku_usaha(KategoriPelakuUsahaDTO kategori_pelaku_usaha) {
+        this.kategori_pelaku_usaha = kategori_pelaku_usaha;
     }
 
     public PelakuUsaha toPelakuUsaha() {
@@ -63,7 +63,7 @@ public class PelakuUsahaDTO {
             if(isDigit) {  
                 return new PelakuUsaha(
                     id, nama, singkatan, 
-                    kategoriPelakuUsaha != null ? kategoriPelakuUsaha.toKategoriPelakuUsaha():null
+                    kategori_pelaku_usaha != null ? kategori_pelaku_usaha.toKategoriPelakuUsaha():null
                 );
             }
             else {
