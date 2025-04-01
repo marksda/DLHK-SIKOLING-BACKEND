@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Filter implements Serializable {
+    
     private final String field_name;
     private final String value;
 

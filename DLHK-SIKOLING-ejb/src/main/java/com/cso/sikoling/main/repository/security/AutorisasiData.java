@@ -31,38 +31,48 @@ import java.util.Date;
     @NamedQuery(name = "AutorisasiData.findByIsVerified", query = "SELECT a FROM AutorisasiData a WHERE a.isVerified = :isVerified"),
     @NamedQuery(name = "AutorisasiData.findByUserName", query = "SELECT a FROM AutorisasiData a WHERE a.userName = :userName"),
     @NamedQuery(name = "AutorisasiData.findById", query = "SELECT a FROM AutorisasiData a WHERE a.id = :id"),
-    @NamedQuery(name = "AutorisasiData.findByTanggalRegistrasi", query = "SELECT a FROM AutorisasiData a WHERE a.tanggalRegistrasi = :tanggalRegistrasi")})
+    @NamedQuery(name = "AutorisasiData.findByTanggalRegistrasi", query = "SELECT a FROM AutorisasiData a WHERE a.tanggalRegistrasi = :tanggalRegistrasi"),
+    @NamedQuery(name = "AutorisasiData.updateId", query = "UPDATE AutorisasiData SET id = :idBaru WHERE id = :idLama")})
 public class AutorisasiData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Size(max = 2147483647)
     @Column(name = "id_lama")
     private String idLama;
+    
     @Column(name = "status_internal")
     private Boolean statusInternal;
+    
     @Column(name = "is_verified")
     private Boolean isVerified;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "user_name")
     private String userName;
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "id")
     private String id;
+    
     @Column(name = "tanggal_registrasi")
     @Temporal(TemporalType.DATE)
     private Date tanggalRegistrasi;
+    
     @OneToMany(mappedBy = "kreator")
     private Collection<PerusahaanData> perusahaanDataCollection;
+    
     @OneToMany(mappedBy = "verifikator")
     private Collection<PerusahaanData> perusahaanDataCollection1;
+    
     @JoinColumn(name = "hak_akses", referencedColumnName = "id")
     @ManyToOne
     private HakAksesData hakAkses;
+    
     @JoinColumn(name = "person", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private PersonData person;

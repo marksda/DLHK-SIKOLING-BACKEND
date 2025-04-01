@@ -10,6 +10,8 @@ import com.cso.sikoling.main.repository.perusahaan.KategoriModelPerizinanReposit
 import com.cso.sikoling.main.repository.perusahaan.KategoriPelakuUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.KategoriSkalaUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.PelakuUsahaRepositoryJPA;
+import com.cso.sikoling.main.repository.security.AutorisasiRepositoryJPA;
+import com.cso.sikoling.main.repository.security.HakAksesRepositoryJPA;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
@@ -76,6 +78,16 @@ public class RepositoryProvider {
     @Produces
     public PelakuUsahaRepositoryJPA getPelakuUsahaRepositoryJPA(EntityManager entityManager) {
         return new PelakuUsahaRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public HakAksesRepositoryJPA getHakAksesRepositoryJPA(EntityManager entityManager) {
+        return new HakAksesRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public AutorisasiRepositoryJPA getAutorisasiRepositoryJPA(EntityManager entityManager) {
+        return new AutorisasiRepositoryJPA(entityManager);
     }
     
 }

@@ -36,7 +36,8 @@ import java.util.Date;
     @NamedQuery(name = "PerusahaanData.findByEmail", query = "SELECT p FROM PerusahaanData p WHERE p.email = :email"),
     @NamedQuery(name = "PerusahaanData.findByTanggalRegistrasi", query = "SELECT p FROM PerusahaanData p WHERE p.tanggalRegistrasi = :tanggalRegistrasi"),
     @NamedQuery(name = "PerusahaanData.findByNpwp", query = "SELECT p FROM PerusahaanData p WHERE p.npwp = :npwp"),
-    @NamedQuery(name = "PerusahaanData.findByIdLama", query = "SELECT p FROM PerusahaanData p WHERE p.idLama = :idLama")})
+    @NamedQuery(name = "PerusahaanData.findByIdLama", query = "SELECT p FROM PerusahaanData p WHERE p.idLama = :idLama"),
+    @NamedQuery(name = "PerusahaanData.updateId", query = "UPDATE PerusahaanData SET id = :idBaru WHERE id = :idLama")})
 public class PerusahaanData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,60 +47,78 @@ public class PerusahaanData implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "id")
     private String id;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
     @Size(max = 2147483647)
     @Column(name = "detail_alamat")
     private String detailAlamat;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "status_verifikasi")
     private boolean statusVerifikasi;
+    
     @Size(max = 2147483647)
     @Column(name = "telepone")
     private String telepone;
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    
     @Size(max = 2147483647)
     @Column(name = "fax")
     private String fax;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    
     @Size(max = 2147483647)
     @Column(name = "email")
     private String email;
+    
     @Column(name = "tanggal_registrasi")
     @Temporal(TemporalType.DATE)
     private Date tanggalRegistrasi;
+    
     @Size(max = 2147483647)
     @Column(name = "npwp")
     private String npwp;
+    
     @Size(max = 2147483647)
     @Column(name = "id_lama")
     private String idLama;
+    
     @JoinColumn(name = "kreator", referencedColumnName = "id")
     @ManyToOne
     private AutorisasiData kreator;
+    
     @JoinColumn(name = "verifikator", referencedColumnName = "id")
     @ManyToOne
     private AutorisasiData verifikator;
+    
     @JoinColumn(name = "desa", referencedColumnName = "id")
     @ManyToOne
     private DesaData desa;
+    
     @JoinColumn(name = "pelaku_usaha", referencedColumnName = "id")
     @ManyToOne
     private DetailPelakuUsahaData pelakuUsaha;
+    
     @JoinColumn(name = "kabupaten", referencedColumnName = "id")
     @ManyToOne
     private KabupatenData kabupaten;
+    
     @JoinColumn(name = "model_perizinan", referencedColumnName = "id")
     @ManyToOne
     private KategoriModelPerizinanData modelPerizinan;
+    
     @JoinColumn(name = "skala_usaha", referencedColumnName = "id")
     @ManyToOne
     private KategoriSkalaUsahaData skalaUsaha;
+    
     @JoinColumn(name = "kecamatan", referencedColumnName = "id")
     @ManyToOne
     private KecamatanData kecamatan;
+    
     @JoinColumn(name = "propinsi", referencedColumnName = "id")
     @ManyToOne
     private PropinsiData propinsi;

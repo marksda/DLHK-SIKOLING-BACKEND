@@ -12,6 +12,8 @@ import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
+import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
@@ -28,6 +30,8 @@ import com.cso.sikoling.abstraction.service.perusahaan.KategoriModelPerizinanSer
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriSkalaUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriPelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
+import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
+import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
 
 @Stateless
 @LocalBean
@@ -91,6 +95,18 @@ public class RestfulProvider {
     public DAOService<PelakuUsaha> getPelakuUsahaService(
             @Infrastructure Repository<PelakuUsaha, QueryParamFilters, Filter> pelakuUsahaRepository) {
         return new PelakuUsahaServiceBasic(pelakuUsahaRepository);
+    }
+    
+    @Produces
+    public DAOService<HakAkses> getHakAksesService(
+            @Infrastructure Repository<HakAkses, QueryParamFilters, Filter> hakAksesRepository) {
+        return new HakAksesServiceBasic(hakAksesRepository);
+    }
+    
+    @Produces
+    public DAOService<Autorisasi> getAutorisasiService(
+            @Infrastructure Repository<Autorisasi, QueryParamFilters, Filter> autorisasiRepository) {
+        return new AutorisasiServiceBasic(autorisasiRepository);
     }
     
 }

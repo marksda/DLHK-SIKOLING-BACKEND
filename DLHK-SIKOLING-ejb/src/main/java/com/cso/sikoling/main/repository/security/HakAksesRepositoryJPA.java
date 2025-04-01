@@ -1,8 +1,8 @@
-package com.cso.sikoling.main.repository.perusahaan;
+package com.cso.sikoling.main.repository.security;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
-import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.repository.Repository;
@@ -20,55 +20,53 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
 
 
-public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryParamFilters, Filter> {
+public class HakAksesRepositoryJPA implements Repository<HakAkses, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public PelakuUsahaRepositoryJPA(EntityManager entityManager) {
+    public HakAksesRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public PelakuUsaha save(PelakuUsaha t) throws SQLException {   
+    public HakAkses save(HakAkses t) throws SQLException {   
         try {
-            DetailPelakuUsahaData pelakuUsahaData = convertPelakuUsahaToPelakuUsahaData(t);
-            entityManager.persist(pelakuUsahaData);
-            entityManager.flush();  
-            
-            return convertPelakuUsahaDataToPelakuUsaha(pelakuUsahaData);  
+            HakAksesData hakAksesData = convertHakAksesToHakAksesData(t);
+            entityManager.persist(hakAksesData);
+            entityManager.flush();             
+            return convertHakAksesDataToHakAkses(hakAksesData);  
         } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id pelaku usaha harus bilangan dan panjang 6 digit");
+            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data pelaku usaha");
+            throw new SQLException("Duplikasi data hak akses");
         }        
     }
 
     @Override
-    public PelakuUsaha update(PelakuUsaha t) throws SQLException {
+    public HakAkses update(HakAkses t) throws SQLException {
         
         try {
-            DetailPelakuUsahaData pelakuUsahaData = convertPelakuUsahaToPelakuUsahaData(t);  
-            pelakuUsahaData = entityManager.merge(pelakuUsahaData);
-            return convertPelakuUsahaDataToPelakuUsaha(pelakuUsahaData);   
+            HakAksesData hakAksesData = convertHakAksesToHakAksesData(t);  
+            hakAksesData = entityManager.merge(hakAksesData);
+            return convertHakAksesDataToHakAkses(hakAksesData);   
         }         
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id pelaku usaha harus bilangan dan panjang 6 digit");
+            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data pelaku usaha");
+            throw new SQLException("Duplikasi data hak akses");
         }
         
     }
 
     @Override
-    public PelakuUsaha updateId(String idLama, PelakuUsaha t) throws SQLException {
+    public HakAkses updateId(String idLama, HakAkses t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("DetailPelakuUsahaData.updateId");
+        Query query = entityManager.createNamedQuery("HakAksesData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
@@ -77,14 +75,14 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
                 return update(t);
             }
             else {
-                throw new SQLException("Gagal mengupdate id pelaku usaha");
+                throw new SQLException("Gagal mengupdate id hak akses");
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id pelaku usaha harus bilangan dan panjang 6 digit");
+            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id pelaku usaha");
+            throw new SQLException("Dulpikasi id hak akses");
         }
         
     }
@@ -93,18 +91,18 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
     public boolean delete(String id) throws SQLException {
         
         try {
-            DetailPelakuUsahaData pelakuUsahaData = entityManager.find(DetailPelakuUsahaData.class, id);
-            if(pelakuUsahaData != null) {
-                entityManager.remove(pelakuUsahaData);	
+            HakAksesData hakAksesData = entityManager.find(HakAksesData.class, id);
+            if(hakAksesData != null) {
+                entityManager.remove(hakAksesData);	
                 entityManager.flush();
                 return true;
             }
             else {
-                throw new SQLException("pelaku usaha dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException("hak akses dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id pelaku usaha harus bilangan dan panjang 6 digit");
+            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -113,12 +111,12 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
     }
 
     @Override
-    public List<PelakuUsaha> getDaftarData(QueryParamFilters q) {
+    public List<HakAkses> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<DetailPelakuUsahaData> cq = cb.createQuery(DetailPelakuUsahaData.class);
-            Root<DetailPelakuUsahaData> root = cq.from(DetailPelakuUsahaData.class);		
+            CriteriaQuery<HakAksesData> cq = cb.createQuery(HakAksesData.class);
+            Root<HakAksesData> root = cq.from(HakAksesData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -130,8 +128,6 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "id_kategori_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
-                        case "id_kategori_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -174,7 +170,7 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
             }
 
 
-            TypedQuery<DetailPelakuUsahaData> typedQuery;	
+            TypedQuery<HakAksesData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -188,14 +184,14 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
 
             return typedQuery.getResultList()
                             .stream()
-                            .map(d -> convertPelakuUsahaDataToPelakuUsaha(d))
+                            .map(d -> convertHakAksesDataToHakAkses(d))
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("DetailPelakuUsahaData.findAll", DetailPelakuUsahaData.class)
+            return entityManager.createNamedQuery("HakAksesData.findAll", HakAksesData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertPelakuUsahaDataToPelakuUsaha(d))
+                 .map(d -> convertHakAksesDataToHakAkses(d))
                             .collect(Collectors.toList());
         }
         
@@ -206,7 +202,7 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<DetailPelakuUsahaData> root = cq.from(DetailPelakuUsahaData.class);		
+        Root<HakAksesData> root = cq.from(HakAksesData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -218,8 +214,6 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "id_kategori_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
-                case "id_kategori_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
@@ -236,48 +230,27 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
         
     }
     
-    private PelakuUsaha convertPelakuUsahaDataToPelakuUsaha(DetailPelakuUsahaData d) {
-        PelakuUsaha pelakuUsaha = null;
+    private HakAkses convertHakAksesDataToHakAkses(HakAksesData d) {
+        HakAkses hakAkses = null;
 		
         if(d != null) {
-            KategoriPelakuUsahaData kategoriPelakuUsahaData = d.getKategoriPelakuUsaha();
-            KategoriPelakuUsaha kategoriPelakuUsaha = kategoriPelakuUsahaData != null ?
-                    new KategoriPelakuUsaha(
-                            kategoriPelakuUsahaData.getId(), 
-                            kategoriPelakuUsahaData.getNama(), 
-                            kategoriPelakuUsahaData.getSkalaUsaha() != null ?
-                                    kategoriPelakuUsahaData.getSkalaUsaha().getId():null) 
-                    : null;
-            
-            pelakuUsaha = new PelakuUsaha(
-                d.getId(), 
-                d.getNama(), 
-                d.getSingkatan(),
-                kategoriPelakuUsaha
-            );
+            hakAkses = new HakAkses(d.getId(), d.getNama(), d.getKeterangan());
         }
 
-        return pelakuUsaha;	
+        return hakAkses;	
     }
     
-    private DetailPelakuUsahaData convertPelakuUsahaToPelakuUsahaData(PelakuUsaha t) {
-        DetailPelakuUsahaData pelakuUsahaData = null;
+    private HakAksesData convertHakAksesToHakAksesData(HakAkses t) {
+        HakAksesData hakAksesData = null;
 		
         if(t != null) {
-            pelakuUsahaData = new DetailPelakuUsahaData();
-            pelakuUsahaData.setId(t.getId());
-            pelakuUsahaData.setNama(t.getNama());
-            pelakuUsahaData.setSingkatan(t.getSingkatan());              
-            KategoriPelakuUsahaData kategoriPelakuUsahaData = new KategoriPelakuUsahaData();
-            kategoriPelakuUsahaData.setId(t.getKategori_pelaku_usaha().getId());
-            kategoriPelakuUsahaData.setNama(t.getKategori_pelaku_usaha().getNama());            
-            KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData();
-            kategoriSkalaUsahaData.setId(t.getKategori_pelaku_usaha().getId_kategori_skala_usaha());
-            kategoriPelakuUsahaData.setSkalaUsaha(kategoriSkalaUsahaData);            
-            pelakuUsahaData.setKategoriPelakuUsaha(kategoriPelakuUsahaData);            
+            hakAksesData = new HakAksesData();
+            hakAksesData.setId(t.getId());
+            hakAksesData.setNama(t.getNama());
+            hakAksesData.setKeterangan(t.getKeterangan());
         }
 
-        return pelakuUsahaData;
+        return hakAksesData;
     }
 
 }
