@@ -18,6 +18,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,7 +129,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
                         default -> {
                         }
                     }			
@@ -156,12 +157,12 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
                                 cq.orderBy(cb.desc(root.get("id")));
                             }
                         }
-                        case "nama" -> {
+                        case "user_name" -> {
                             if(sort.getValue().equals("asc")) {
-                                cq.orderBy(cb.asc(root.get("nama")));
+                                cq.orderBy(cb.asc(root.get("userName")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("nama")));
+                                cq.orderBy(cb.desc(root.get("userName")));
                             }
                         }
                         default -> {
@@ -214,7 +215,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
                 default -> {
                 }
             }			
