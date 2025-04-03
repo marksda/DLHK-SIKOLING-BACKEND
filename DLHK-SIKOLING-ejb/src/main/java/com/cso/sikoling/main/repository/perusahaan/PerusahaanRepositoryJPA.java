@@ -274,7 +274,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new KategoriPelakuUsaha(
                         kategoriPelakuUsahaData.getId(), 
                         kategoriPelakuUsahaData.getNama(), 
-                        kategoriPelakuUsahaData.getSkalaUsaha().getId()
+                        kategoriPelakuUsahaData.getSkalaUsaha() != null ?
+                                kategoriPelakuUsahaData.getSkalaUsaha().getId() : null
                     ) 
                     : null;
             
@@ -300,7 +301,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new Kabupaten(
                         kabupatenData.getId(), 
                         kabupatenData.getNama(), 
-                        kabupatenData.getPropinsi().getId()
+                        kabupatenData.getPropinsi() != null ?
+                                kabupatenData.getPropinsi().getId() : null
                     )
                     : null;
             
@@ -309,7 +311,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new Kecamatan(
                         kecamatanData.getId(), 
                         kecamatanData.getNama(), 
-                        kecamatanData.getKabupaten().getId()
+                        kecamatanData.getKabupaten() != null ?
+                                kecamatanData.getKabupaten().getId() : null
                     )
                     : null;
             
@@ -318,7 +321,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new Desa(
                         desaData.getId(), 
                         desaData.getNama(), 
-                        desaData.getKecamatan().getId()
+                        desaData.getKecamatan() != null ?
+                                desaData.getKecamatan().getId() : null
                     )
                     : null;
                     
