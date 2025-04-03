@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -44,6 +45,7 @@ public class PerusahaanData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{8}")
     @Size(min = 1, max = 2147483647)
     @Column(name = "id")
     private String id;
