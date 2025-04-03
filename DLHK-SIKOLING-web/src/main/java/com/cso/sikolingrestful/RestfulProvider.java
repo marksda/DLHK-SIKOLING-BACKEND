@@ -12,6 +12,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.repository.Repository;
@@ -30,6 +31,7 @@ import com.cso.sikoling.abstraction.service.perusahaan.KategoriModelPerizinanSer
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriSkalaUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriPelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
+import com.cso.sikoling.abstraction.service.perusahaan.PerusahaanServiceBasic;
 import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
 import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
 
@@ -107,6 +109,12 @@ public class RestfulProvider {
     public DAOService<Autorisasi> getAutorisasiService(
             @Infrastructure Repository<Autorisasi, QueryParamFilters, Filter> autorisasiRepository) {
         return new AutorisasiServiceBasic(autorisasiRepository);
+    }
+    
+    @Produces
+    public DAOService<Perusahaan> getPerusahaanService(
+            @Infrastructure Repository<Perusahaan, QueryParamFilters, Filter> perusahaanRepository) {
+        return new PerusahaanServiceBasic(perusahaanRepository);
     }
     
 }

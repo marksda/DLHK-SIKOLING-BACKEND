@@ -17,7 +17,8 @@ public class PelakuUsahaDTO {
         this.id = t.getId();
         this.nama = t.getNama();
         this.singkatan = t.getSingkatan();
-        this.kategori_pelaku_usaha = t.getKategori_pelaku_usaha() != null ? new KategoriPelakuUsahaDTO(t.getKategori_pelaku_usaha()):null;
+        this.kategori_pelaku_usaha = t.getKategori_pelaku_usaha() != null ? 
+                new KategoriPelakuUsahaDTO(t.getKategori_pelaku_usaha()) : null;
     }
 
     public String getId() {

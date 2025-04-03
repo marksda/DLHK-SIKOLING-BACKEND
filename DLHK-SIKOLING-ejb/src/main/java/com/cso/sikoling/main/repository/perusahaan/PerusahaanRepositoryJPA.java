@@ -370,11 +370,11 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
             DesaData desaData = new DesaData(t.getAlamat().getDesa().getId());
             perusahaanData.setDesa(desaData);
             perusahaanData.setDetailAlamat(t.getAlamat().getKeterangan());
-            KategoriModelPerizinanData kategoriModelPerizinanData = new KategoriModelPerizinanData(t.getKategoriModelPerizinan().getId());
+            KategoriModelPerizinanData kategoriModelPerizinanData = new KategoriModelPerizinanData(t.getKategori_model_erizinan().getId());
             perusahaanData.setModelPerizinan(kategoriModelPerizinanData);
-            KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData(t.getKategoriSkalaUsaha().getId());
+            KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData(t.getKategori_skala_usaha().getId());
             perusahaanData.setSkalaUsaha(kategoriSkalaUsahaData);
-            DetailPelakuUsahaData pelakuUsahaData = new DetailPelakuUsahaData(t.getPelakuUsaha().getId());
+            DetailPelakuUsahaData pelakuUsahaData = new DetailPelakuUsahaData(t.getPelaku_usaha().getId());
             perusahaanData.setPelakuUsaha(pelakuUsahaData);            
             perusahaanData.setStatusVerifikasi(false);
             perusahaanData.setTelepone(t.getKontak().getTelepone());

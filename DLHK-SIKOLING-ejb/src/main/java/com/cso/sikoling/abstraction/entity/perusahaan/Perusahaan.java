@@ -9,27 +9,27 @@ public class Perusahaan implements Serializable {
     
     private final String id;	
     private final String nama;
-    private final KategoriModelPerizinan kategoriModelPerizinan;
-    private final KategoriSkalaUsaha kategoriSkalaUsaha;	
-    private final PelakuUsaha pelakuUsaha;
+    private final KategoriModelPerizinan kategori_model_erizinan;
+    private final KategoriSkalaUsaha kategori_skala_usaha;	
+    private final PelakuUsaha pelaku_usaha;
     private final Alamat alamat;
     private final Kontak kontak;
 
-    public Perusahaan(String id, String nama, KategoriModelPerizinan kategoriModelPerizinan, 
-        KategoriSkalaUsaha kategoriSkalaUsaha, PelakuUsaha pelakuUsaha, Alamat alamat, Kontak kontak) {
+    public Perusahaan(String id, String nama, KategoriModelPerizinan kategori_model_erizinan, 
+        KategoriSkalaUsaha kategori_skala_usaha, PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak) {
         
         this.id = id;
         this.nama = nama;
-        this.kategoriModelPerizinan = kategoriModelPerizinan;
-        this.kategoriSkalaUsaha = kategoriSkalaUsaha;
-        this.pelakuUsaha = pelakuUsaha;
+        this.kategori_model_erizinan = kategori_model_erizinan;
+        this.kategori_skala_usaha = kategori_skala_usaha;
+        this.pelaku_usaha = pelaku_usaha;
         this.alamat = alamat;
         this.kontak = kontak;
         
     }
 
-    public KategoriModelPerizinan getKategoriModelPerizinan() {
-        return kategoriModelPerizinan;
+    public KategoriModelPerizinan getKategori_model_erizinan() {
+        return kategori_model_erizinan;
     }
 
     public String getId() {
@@ -48,12 +48,12 @@ public class Perusahaan implements Serializable {
         return kontak;
     }
 
-    public KategoriSkalaUsaha getKategoriSkalaUsaha() {
-        return kategoriSkalaUsaha;
+    public KategoriSkalaUsaha getKategori_skala_usaha() {
+        return kategori_skala_usaha;
     }
 
-    public PelakuUsaha getPelakuUsaha() {
-        return pelakuUsaha;
+    public PelakuUsaha getPelaku_usaha() {
+        return pelaku_usaha;
     }
 	
     @Override
@@ -93,7 +93,7 @@ public class Perusahaan implements Serializable {
         return "Perusahaan{ id="
                 .concat(this.id)
                 .concat(", nama=")
-                .concat(this.pelakuUsaha.getSingkatan())
+                .concat(this.pelaku_usaha.getSingkatan())
                 .concat(". ")
                 .concat(this.nama)
                 .concat("}");

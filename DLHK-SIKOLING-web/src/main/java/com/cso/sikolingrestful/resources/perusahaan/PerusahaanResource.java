@@ -22,35 +22,35 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.service.DAOService;
 
 @Stateless
 @LocalBean
-@Path("pelaku_usaha")
-public class PelakuUsahaResource {
+@Path("perusahaan")
+public class PerusahaanResource {
     
     @Inject
-    private DAOService<PelakuUsaha> pelakuUsahaService;
+    private DAOService<Perusahaan> perusahaanService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<PelakuUsahaDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<PerusahaanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return pelakuUsahaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                return perusahaanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
                         .stream()
-                        .map(t -> new PelakuUsahaDTO(t))
+                        .map(t -> new PerusahaanDTO(t))
                         .collect(Collectors.toList());
             }
             else {
-                return pelakuUsahaService.getDaftarData(null)
+                return perusahaanService.getDaftarData(null)
                         .stream()
-                        .map(t -> new PelakuUsahaDTO(t))
+                        .map(t -> new PerusahaanDTO(t))
                         .collect(Collectors.toList());
             }             
         } 
@@ -63,13 +63,13 @@ public class PelakuUsahaResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PelakuUsahaDTO save(PelakuUsahaDTO pelakuUsahaDTO) throws SQLException { 
+    public PerusahaanDTO save(PerusahaanDTO perusahaanDTO) throws SQLException { 
         
         try {            
-            return new PelakuUsahaDTO(pelakuUsahaService.save(pelakuUsahaDTO.toPelakuUsaha()));
+            return new PerusahaanDTO(perusahaanService.save(perusahaanDTO.toPerusahaan()));
         } 
         catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json pelaku usaha harus disertakan di body post request");
+            throw new IllegalArgumentException("data json perusahaan harus disertakan di body post request");
         }    
         
     }
@@ -78,18 +78,18 @@ public class PelakuUsahaResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PelakuUsahaDTO update(@PathParam("idLama") String idLama, PelakuUsahaDTO pelakuUsahaDTO) throws SQLException {
+    public PerusahaanDTO update(@PathParam("idLama") String idLama, PerusahaanDTO perusahaanDTO) throws SQLException {
          
         try {                
-            boolean isIdSame = idLama.equals(pelakuUsahaDTO.getId());
+            boolean isIdSame = idLama.equals(perusahaanDTO.getId());
             if(isIdSame) {
-                return new PelakuUsahaDTO(pelakuUsahaService.update(pelakuUsahaDTO.toPelakuUsaha()));
+                return new PerusahaanDTO(perusahaanService.update(perusahaanDTO.toPerusahaan()));
             }
             else {
-                throw new IllegalArgumentException("id pelaku usaha harus sama");
+                throw new IllegalArgumentException("id perusahaan harus sama");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json pelaku usaha harus disertakan di body put request");
+            throw new IllegalArgumentException("data json perusahaan harus disertakan di body put request");
         }
         
     }
@@ -98,31 +98,31 @@ public class PelakuUsahaResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PelakuUsahaDTO updateId(@PathParam("idLama") String idLama, PelakuUsahaDTO pelakuUsahaDTO) throws SQLException {
+    public PerusahaanDTO updateId(@PathParam("idLama") String idLama, PerusahaanDTO perusahaanDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(pelakuUsahaDTO.getId());
+            boolean isIdSame = idLama.equals(perusahaanDTO.getId());
 
             if(!isIdSame) {
-                return new PelakuUsahaDTO(pelakuUsahaService.updateId(idLama, pelakuUsahaDTO.toPelakuUsaha()));
+                return new PerusahaanDTO(perusahaanService.updateId(idLama, perusahaanDTO.toPerusahaan()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru pelaku usaha harus beda");
+                throw new IllegalArgumentException("id lama dan baru perusahaan harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json pelaku usaha harus disertakan di body put request");
+            throw new IllegalArgumentException("data json perusahaan harus disertakan di body put request");
         }
         
     } 
     
-    @Path("/{idPelakuUsaha}")
+    @Path("/{idPerusahaan}")
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject delete(@PathParam("idPelakuUsaha") String idPelakuUsaha) throws SQLException {
+    public JsonObject delete(@PathParam("idPerusahaan") String idPerusahaan) throws SQLException {
         
         JsonObject model = Json.createObjectBuilder()
-                .add("status", pelakuUsahaService.delete(idPelakuUsaha) == true ? "sukses" : "gagal")
+                .add("status", perusahaanService.delete(idPerusahaan) == true ? "sukses" : "gagal")
                 .build();
 
         return model;
