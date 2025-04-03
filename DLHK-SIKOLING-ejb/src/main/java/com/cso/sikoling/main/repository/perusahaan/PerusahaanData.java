@@ -40,8 +40,7 @@ import java.util.Date;
     @NamedQuery(name = "PerusahaanData.findByIdLama", query = "SELECT p FROM PerusahaanData p WHERE p.idLama = :idLama"),
     @NamedQuery(name = "PerusahaanData.updateId", query = "UPDATE PerusahaanData SET id = :idBaru WHERE id = :idLama")})
 public class PerusahaanData implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull

@@ -7,6 +7,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
 import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.permohonan.KategoriPermohonan;
 import com.cso.sikoling.abstraction.entity.person.Person;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
@@ -25,6 +26,7 @@ import com.cso.sikoling.abstraction.service.alamat.DesaServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
 import com.cso.sikoling.abstraction.service.DAOService;
+import com.cso.sikoling.abstraction.service.permohonan.KategoriPermohonanServiceBasic;
 import com.cso.sikoling.abstraction.service.person.JenisKelaminServiceBasic;
 import com.cso.sikoling.abstraction.service.person.PersonServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriModelPerizinanServiceBasic;
@@ -115,6 +117,12 @@ public class RestfulProvider {
     public DAOService<Perusahaan> getPerusahaanService(
             @Infrastructure Repository<Perusahaan, QueryParamFilters, Filter> perusahaanRepository) {
         return new PerusahaanServiceBasic(perusahaanRepository);
+    }
+    
+    @Produces
+    public DAOService<KategoriPermohonan> getKategoriPermohonanService(
+            @Infrastructure Repository<KategoriPermohonan, QueryParamFilters, Filter> kategoriPermohonanRepository) {
+        return new KategoriPermohonanServiceBasic(kategoriPermohonanRepository);
     }
     
 }
