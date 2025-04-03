@@ -1,10 +1,5 @@
 package com.cso.sikolingrestful.resources.perusahaan;
 
-import com.cso.sikoling.abstraction.entity.alamat.Alamat;
-import com.cso.sikoling.abstraction.entity.alamat.Kontak;
-import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
-import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
-import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikolingrestful.resources.alamat.AlamatDTO;
 import com.cso.sikolingrestful.resources.alamat.KontakDTO;
@@ -15,7 +10,7 @@ public class PerusahaanDTO {
     
     private String id;	
     private String nama;
-    private KategoriModelPerizinanDTO kategori_model_erizinan;
+    private KategoriModelPerizinanDTO kategori_model_perizinan;
     private KategoriSkalaUsahaDTO kategori_skala_usaha;	
     private PelakuUsahaDTO pelaku_usaha;
     private AlamatDTO alamat;
@@ -29,7 +24,7 @@ public class PerusahaanDTO {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
-            this.kategori_model_erizinan = t.getKategori_model_erizinan() != null ?
+            this.kategori_model_perizinan = t.getKategori_model_erizinan() != null ?
                 new KategoriModelPerizinanDTO(t.getKategori_model_erizinan()) : null;
             this.kategori_skala_usaha = t.getKategori_skala_usaha() != null ?
                     new KategoriSkalaUsahaDTO(t.getKategori_skala_usaha()) : null;
@@ -56,12 +51,12 @@ public class PerusahaanDTO {
         this.nama = nama;
     }
 
-    public KategoriModelPerizinanDTO getKategori_model_erizinan() {
-        return kategori_model_erizinan;
+    public KategoriModelPerizinanDTO getKategori_model_perizinan() {
+        return kategori_model_perizinan;
     }
 
-    public void setKategori_model_erizinan(KategoriModelPerizinanDTO kategori_model_erizinan) {
-        this.kategori_model_erizinan = kategori_model_erizinan;
+    public void setKategori_model_perizinan(KategoriModelPerizinanDTO kategori_model_perizinan) {
+        this.kategori_model_perizinan = kategori_model_perizinan;
     }
 
     public KategoriSkalaUsahaDTO getKategori_skala_usaha() {
@@ -107,7 +102,7 @@ public class PerusahaanDTO {
                 return new Perusahaan(
                     this.id, 
                     this.nama, 
-                    this.kategori_model_erizinan != null ? this.kategori_model_erizinan.toKategoriModelPerizinan() : null, 
+                    this.kategori_model_perizinan != null ? this.kategori_model_perizinan.toKategoriModelPerizinan() : null, 
                     this.kategori_skala_usaha != null ? this.kategori_skala_usaha.toKategoriSkalaUsaha() : null, 
                     this.pelaku_usaha != null ? this.pelaku_usaha.toPelakuUsaha() : null, 
                     this.alamat != null ? this.alamat.toAlamat() : null, 
