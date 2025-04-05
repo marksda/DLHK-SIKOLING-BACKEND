@@ -8,6 +8,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -25,9 +26,11 @@ public class KategoriPengurusPermohonanData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @Pattern(regexp="[\\d]{2}")
     @Size(min = 1, max = 2)
     @Column(name = "id")
     private String id;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;

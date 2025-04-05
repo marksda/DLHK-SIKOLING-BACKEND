@@ -4,6 +4,7 @@ import com.cso.sikoling.main.repository.alamat.DesaRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KabupatenRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KecamatanRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
+import com.cso.sikoling.main.repository.permohonan.KategoriPengurusPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.KategoriPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.person.JenisKelaminRepositoryJPA;
 import com.cso.sikoling.main.repository.person.PersonRepositoryJPA;
@@ -100,6 +101,11 @@ public class RepositoryProvider {
     @Produces
     public KategoriPermohonanRepositoryJPA getKategoriPermohonanRepositoryJPA(EntityManager entityManager) {
         return new KategoriPermohonanRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public KategoriPengurusPermohonanRepositoryJPA getKategoriPengurusPermohonanRepositoryJPA(EntityManager entityManager) {
+        return new KategoriPengurusPermohonanRepositoryJPA(entityManager);
     }
     
 }
