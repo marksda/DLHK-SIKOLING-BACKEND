@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Perusahaan implements Serializable {
     
     private final String id;	
+    private final String npwp;	
     private final String nama;
     private final KategoriModelPerizinan kategori_model_erizinan;
     private final KategoriSkalaUsaha kategori_skala_usaha;	
@@ -15,10 +16,11 @@ public class Perusahaan implements Serializable {
     private final Alamat alamat;
     private final Kontak kontak;
 
-    public Perusahaan(String id, String nama, KategoriModelPerizinan kategori_model_erizinan, 
+    public Perusahaan(String id, String npwp, String nama, KategoriModelPerizinan kategori_model_erizinan, 
         KategoriSkalaUsaha kategori_skala_usaha, PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak) {
         
         this.id = id;
+        this.npwp = npwp;
         this.nama = nama;
         this.kategori_model_erizinan = kategori_model_erizinan;
         this.kategori_skala_usaha = kategori_skala_usaha;
@@ -34,6 +36,10 @@ public class Perusahaan implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getNpwp() {
+        return npwp;
     }
 	
     public String getNama() {

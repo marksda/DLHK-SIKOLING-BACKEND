@@ -10,9 +10,11 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPermohonan;
 import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.entity.perusahaan.Jabatan;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
@@ -31,9 +33,11 @@ import com.cso.sikoling.abstraction.service.permohonan.KategoriPengurusPermohona
 import com.cso.sikoling.abstraction.service.permohonan.KategoriPermohonanServiceBasic;
 import com.cso.sikoling.abstraction.service.person.JenisKelaminServiceBasic;
 import com.cso.sikoling.abstraction.service.person.PersonServiceBasic;
+import com.cso.sikoling.abstraction.service.perusahaan.JabatanServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriModelPerizinanServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriSkalaUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.KategoriPelakuUsahaServiceBasic;
+import com.cso.sikoling.abstraction.service.perusahaan.PegawaiUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PerusahaanServiceBasic;
 import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
@@ -131,6 +135,18 @@ public class RestfulProvider {
     public DAOService<KategoriPengurusPermohonan> getKategoriPengurusPermohonanService(
             @Infrastructure Repository<KategoriPengurusPermohonan, QueryParamFilters, Filter> kategoriPengurusPermohonanRepository) {
         return new KategoriPengurusPermohonanServiceBasic(kategoriPengurusPermohonanRepository);
+    }
+    
+    @Produces
+    public DAOService<Jabatan> getJabatanService(
+            @Infrastructure Repository<Jabatan, QueryParamFilters, Filter> jabatanRepository) {
+        return new JabatanServiceBasic(jabatanRepository);
+    }
+    
+    @Produces
+    public DAOService<Pegawai> getPegawaiService(
+            @Infrastructure Repository<Pegawai, QueryParamFilters, Filter> pegawaiRepository) {
+        return new PegawaiUsahaServiceBasic(pegawaiRepository);
     }
     
 }

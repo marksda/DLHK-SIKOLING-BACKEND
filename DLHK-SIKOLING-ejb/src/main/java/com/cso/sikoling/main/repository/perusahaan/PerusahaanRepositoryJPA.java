@@ -342,6 +342,7 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
             
             perusahaan = new Perusahaan(
                 d.getId(), 
+                d.getNpwp(),
                 d.getNama(), 
                 kategoriModelPerizinan,
                 kategoriSkalaUsaha,
@@ -360,6 +361,7 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
         if(t != null) {
             perusahaanData = new PerusahaanData();
             perusahaanData.setId(t.getId());
+            perusahaanData.setNpwp(t.getNpwp());
             perusahaanData.setNama(t.getNama());
             PropinsiData propinsiData = new PropinsiData(t.getAlamat().getPropinsi().getId());
             perusahaanData.setPropinsi(propinsiData);

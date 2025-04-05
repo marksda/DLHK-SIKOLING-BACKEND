@@ -8,9 +8,11 @@ import com.cso.sikoling.main.repository.permohonan.KategoriPengurusPermohonanRep
 import com.cso.sikoling.main.repository.permohonan.KategoriPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.person.JenisKelaminRepositoryJPA;
 import com.cso.sikoling.main.repository.person.PersonRepositoryJPA;
+import com.cso.sikoling.main.repository.perusahaan.JabatanRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.KategoriModelPerizinanRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.KategoriPelakuUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.KategoriSkalaUsahaRepositoryJPA;
+import com.cso.sikoling.main.repository.perusahaan.PegawaiRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.PelakuUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanRepositoryJPA;
 import com.cso.sikoling.main.repository.security.AutorisasiRepositoryJPA;
@@ -106,6 +108,16 @@ public class RepositoryProvider {
     @Produces
     public KategoriPengurusPermohonanRepositoryJPA getKategoriPengurusPermohonanRepositoryJPA(EntityManager entityManager) {
         return new KategoriPengurusPermohonanRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public JabatanRepositoryJPA getJabatanRepositoryJPA(EntityManager entityManager) {
+        return new JabatanRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public PegawaiRepositoryJPA getPegawaiRepositoryJPA(EntityManager entityManager) {
+        return new PegawaiRepositoryJPA(entityManager);
     }
     
 }

@@ -9,6 +9,7 @@ import java.util.Objects;
 public class PerusahaanDTO {
     
     private String id;	
+    private String npwp;
     private String nama;
     private KategoriModelPerizinanDTO kategori_model_perizinan;
     private KategoriSkalaUsahaDTO kategori_skala_usaha;	
@@ -23,6 +24,7 @@ public class PerusahaanDTO {
         
         if(t != null) {
             this.id = t.getId();
+            this.npwp = t.getNpwp();
             this.nama = t.getNama();
             this.kategori_model_perizinan = t.getKategori_model_erizinan() != null ?
                 new KategoriModelPerizinanDTO(t.getKategori_model_erizinan()) : null;
@@ -37,6 +39,14 @@ public class PerusahaanDTO {
 
     public String getId() {
         return id;
+    }
+
+    public String getNpwp() {
+        return npwp;
+    }
+
+    public void setNpwp(String npwp) {
+        this.npwp = npwp;
     }
 
     public void setId(String id) {
@@ -101,6 +111,7 @@ public class PerusahaanDTO {
             if(isDigit) {  
                 return new Perusahaan(
                     this.id, 
+                    this.npwp,
                     this.nama, 
                     this.kategori_model_perizinan != null ? this.kategori_model_perizinan.toKategoriModelPerizinan() : null, 
                     this.kategori_skala_usaha != null ? this.kategori_skala_usaha.toKategoriSkalaUsaha() : null, 

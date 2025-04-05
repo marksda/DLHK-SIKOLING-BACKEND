@@ -1,9 +1,12 @@
-package com.cso.sikoling.main.repository.permohonan;
+package com.cso.sikoling.main.repository.perusahaan;
 
+import com.cso.sikoling.main.repository.person.PersonData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -19,29 +22,30 @@ import java.io.Serializable;
     @NamedQuery(name = "PegawaiPerusahaanData.findByPerson", query = "SELECT p FROM PegawaiPerusahaanData p WHERE p.person = :person"),
     @NamedQuery(name = "PegawaiPerusahaanData.findByPerusahaan", query = "SELECT p FROM PegawaiPerusahaanData p WHERE p.perusahaan = :perusahaan"),
     @NamedQuery(name = "PegawaiPerusahaanData.findByJabatan", query = "SELECT p FROM PegawaiPerusahaanData p WHERE p.jabatan = :jabatan"),
-    @NamedQuery(name = "PegawaiPerusahaanData.findById", query = "SELECT p FROM PegawaiPerusahaanData p WHERE p.id = :id")})
+    @NamedQuery(name = "PegawaiPerusahaanData.findById", query = "SELECT p FROM PegawaiPerusahaanData p WHERE p.id = :id"),
+    @NamedQuery(name = "PegawaiPerusahaanData.updateId", query = "UPDATE PegawaiPerusahaanData SET id = :idBaru WHERE id = :idLama")})
 public class PegawaiPerusahaanData implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "person")
-    private String person;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "perusahaan")
-    private String perusahaan;
-    @Size(max = 3)
-    @Column(name = "jabatan")
-    private String jabatan;
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "id")
-    private String id;
+    private String id;    
+    
+    @JoinColumn(name = "person", referencedColumnName = "id")
+    @ManyToOne
+    private PersonData person;
+    
+    @JoinColumn(name = "perusahaan", referencedColumnName = "id")
+    @ManyToOne
+    private PerusahaanData perusahaan;
+    
+    @JoinColumn(name = "jabatan", referencedColumnName = "id")
+    @ManyToOne
+    private JabatanData jabatan;
 
     public PegawaiPerusahaanData() {
     }
@@ -50,33 +54,33 @@ public class PegawaiPerusahaanData implements Serializable {
         this.id = id;
     }
 
-    public PegawaiPerusahaanData(String id, String person, String perusahaan) {
+    public PegawaiPerusahaanData(String id, PersonData person, PerusahaanData perusahaan) {
         this.id = id;
         this.person = person;
         this.perusahaan = perusahaan;
     }
 
-    public String getPerson() {
+    public PersonData getPerson() {
         return person;
     }
 
-    public void setPerson(String person) {
+    public void setPerson(PersonData person) {
         this.person = person;
     }
 
-    public String getPerusahaan() {
+    public PerusahaanData getPerusahaan() {
         return perusahaan;
     }
 
-    public void setPerusahaan(String perusahaan) {
+    public void setPerusahaan(PerusahaanData perusahaan) {
         this.perusahaan = perusahaan;
     }
 
-    public String getJabatan() {
+    public JabatanData getJabatan() {
         return jabatan;
     }
 
-    public void setJabatan(String jabatan) {
+    public void setJabatan(JabatanData jabatan) {
         this.jabatan = jabatan;
     }
 
@@ -110,7 +114,7 @@ public class PegawaiPerusahaanData implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cso.sikoling.main.repository.permohonan.PegawaiPerusahaanData[ id=" + id + " ]";
+        return "cso.sikoling.main.repository.permohonan.PegawaiPerusahaanData[ id=" + id + " ]";
     }
 
 }
