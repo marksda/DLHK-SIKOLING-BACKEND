@@ -24,6 +24,7 @@ import com.cso.sikoling.main.repository.alamat.DesaData;
 import com.cso.sikoling.main.repository.alamat.KabupatenData;
 import com.cso.sikoling.main.repository.alamat.KecamatanData;
 import com.cso.sikoling.main.repository.alamat.PropinsiData;
+import com.cso.sikoling.main.repository.person.JenisKelaminData;
 import com.cso.sikoling.main.repository.person.PersonData;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -405,7 +406,9 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                 );    
 
                 Kontak kontakPerson = new Kontak(personData.getTelepone(), personData.getFax(), personData.getEmail());
-                JenisKelamin jenisKelamin = new JenisKelamin(personData.getSex().getId(), personData.getSex().getNama());
+                JenisKelaminData jenisKelaminData = personData.getSex();
+                JenisKelamin jenisKelamin = jenisKelaminData != null ?
+                        new JenisKelamin(jenisKelaminData.getId(), jenisKelaminData.getNama()) : null;
                 person = new Person(
                         personData.getId(), 
                         personData.getNama(), 
