@@ -17,13 +17,12 @@ import java.util.logging.Logger;
 
 @Stateless
 @LocalBean
-@Path("autorisasi")
+@Path("token")
 public class TokenResource {
     
     @Inject
     private DAOTokenService<Token> tokenService;
     
-    @Path("get_token")
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
