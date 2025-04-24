@@ -18,7 +18,6 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
