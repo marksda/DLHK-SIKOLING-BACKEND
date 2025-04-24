@@ -18,9 +18,9 @@ public class TokenDTO implements Serializable {
     public TokenDTO(Token t) {
         if(t != null) {
             this.access_token = t.getAccess_token();
-            this.refreshToken = t.getRefreshToken();
+            this.refreshToken = t.getRefresh_token();
             this.expires_in = t.getExpires_in();
-            this.sessionId = t.getSessionId();
+            this.sessionId = t.getSession_id();
         }
     }
 

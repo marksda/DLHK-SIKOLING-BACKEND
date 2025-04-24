@@ -18,6 +18,7 @@ import com.cso.sikoling.main.repository.perusahaan.PelakuUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanRepositoryJPA;
 import com.cso.sikoling.main.repository.security.AutorisasiRepositoryJPA;
 import com.cso.sikoling.main.repository.security.HakAksesRepositoryJPA;
+import com.cso.sikoling.main.repository.security.TokenRepositoryJPA;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
@@ -126,4 +127,8 @@ public class RepositoryProvider {
         return new DokumenRepositoryJPA(entityManager);
     }
     
+    @Produces
+    public TokenRepositoryJPA getTokenRepositoryJPA(EntityManager entityManager) {
+        return new TokenRepositoryJPA(entityManager);
+    }
 }

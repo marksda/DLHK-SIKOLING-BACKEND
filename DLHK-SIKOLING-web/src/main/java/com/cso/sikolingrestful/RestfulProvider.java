@@ -20,7 +20,9 @@ import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
 import jakarta.ejb.Stateless;
@@ -30,6 +32,7 @@ import com.cso.sikoling.abstraction.service.alamat.DesaServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
 import com.cso.sikoling.abstraction.service.DAOService;
+import com.cso.sikoling.abstraction.service.DAOTokenService;
 import com.cso.sikoling.abstraction.service.dokumen.DokumenServiceBasic;
 import com.cso.sikoling.abstraction.service.permohonan.KategoriPengurusPermohonanServiceBasic;
 import com.cso.sikoling.abstraction.service.permohonan.KategoriPermohonanServiceBasic;
@@ -44,6 +47,7 @@ import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PerusahaanServiceBasic;
 import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
 import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
+import com.cso.sikoling.abstraction.service.security.TokenServiceBasic;
 
 @Stateless
 @LocalBean
@@ -157,4 +161,9 @@ public class RestfulProvider {
         return new DokumenServiceBasic(dokumenRepository);
     }
     
+    @Produces
+    public DAOTokenService<Token> getTokumenService(
+            @Infrastructure RepositoryToken<Token, QueryParamFilters, Filter> tokenRepository) {
+        return new TokenServiceBasic(tokenRepository);
+    }
 }

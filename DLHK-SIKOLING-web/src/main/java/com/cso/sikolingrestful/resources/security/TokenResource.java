@@ -12,16 +12,16 @@ import java.io.IOException;
 @Path("autorisasi")
 public class TokenResource {
     
-    @Inject
-    private DAOService<Autorisasi> autorisasiService;
-    
-    @Path("get_token")
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public TokenDTO getToken(CredentialDTO credentialDTO) throws IOException {
-        return new ResponTokenDTO(userService.getToken(u.toCredential()));
-    }
+//    @Inject
+//    private DAOService<Autorisasi> autorisasiService;
+//    
+//    @Path("get_token")
+//    @POST
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public TokenDTO getToken(CredentialDTO credentialDTO) throws IOException {
+//        return new ResponTokenDTO(userService.getToken(u.toCredential()));
+//    }
     
     
 }
