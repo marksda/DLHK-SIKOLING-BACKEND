@@ -35,6 +35,10 @@ public class CredentialDTO implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    public Credential toCredential() {
+        return new Credential(this.email, this.password);
+    }
 
     @Override
     public int hashCode() {
