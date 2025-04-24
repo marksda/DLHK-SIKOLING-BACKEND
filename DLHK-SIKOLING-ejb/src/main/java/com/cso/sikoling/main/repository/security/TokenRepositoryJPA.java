@@ -8,6 +8,8 @@ import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.InvalidKeyException;
 import jakarta.persistence.EntityManager;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,10 +27,27 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
 
     @Override
     public Token getToken(Credential c) throws SQLException {
+        
         try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.reset(); 
+            messageDigest.update(c.getPassword().getBytes());
+            byte[] digest2 = messageDigest.digest();
+            StringBuilder sb = new StringBuilder();
+            String hx2;
+            for (int i=0;i<digest2.length;i++){
+                hx2 = Integer.toHexString(0xFF & digest2[i]);
+                if(hx2.length() == 1){
+                    hx2 = "0" + hx2;
+                } 
+                sb.append(hx2);
+            }
+            
+            String messageDigestPassword = sb.toString();
+            
             UserData userData = entityManager.createQuery("SELECT u FROM UserData u WHERE u.userName = :user AND u.password = :password", UserData.class)
                             .setParameter("user", c.getEmail())
-                            .setParameter("password", c.getPassword())
+                            .setParameter("password", messageDigestPassword)
                             .getSingleResult();
             
             AutorisasiData autorisasiData = entityManager.createNamedQuery("AutorisasiData.findByIdLama", AutorisasiData.class)
@@ -54,10 +73,12 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         .compact();
             Token token = new Token(jwt, jwt, 10000000L, autorisasiData.getId());
             return token;
+        } catch (NoSuchAlgorithmException ex) {
+            // Logger.getLogger(TokenRepositoryJPA.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         } catch (InvalidKeyException e) {
             return null;
-        }   
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
         
