@@ -58,8 +58,8 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             Date today = cal.getTime();
             cal.add(Calendar.YEAR, 1); 
             Date nextYear = cal.getTime();
-            SecretKey key = Jwts.SIG.HS256.key().build();
             
+            SecretKey key = Jwts.SIG.HS256.key().build();            
             
             String jwt = Jwts.builder()
                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
@@ -72,6 +72,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         .signWith(key)
                         .compact();
             Token token = new Token(jwt, jwt, 10000000L, autorisasiData.getId());
+            
             return token;
         } catch (NoSuchAlgorithmException ex) {
             // Logger.getLogger(TokenRepositoryJPA.class.getName()).log(Level.SEVERE, null, ex);
