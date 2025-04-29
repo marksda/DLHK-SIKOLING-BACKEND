@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum AuthorizationGrantType implements Labeled {
-    CODE("Authorization Code"), IMPLICIT("Implicit"), PASSWORD("Resource Owner Password Credentials"), CLIENT("Client Credentials");
+    CODE("Authorization Code"),                         //front + back channel
+    IMPLICIT("Implicit"),                               //front channel only
+    PASSWORD("Resource Owner Password Credentials"),    //back channel only
+    CLIENT("Client Credentials");                       //back channel only
     
     public final String label;
     
