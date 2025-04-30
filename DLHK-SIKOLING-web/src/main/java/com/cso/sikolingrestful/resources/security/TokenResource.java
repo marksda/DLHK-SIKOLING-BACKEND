@@ -3,7 +3,7 @@ package com.cso.sikolingrestful.resources.security;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
-import com.cso.sikoling.abstraction.entity.security.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

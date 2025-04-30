@@ -1,4 +1,4 @@
-package com.cso.sikoling.abstraction.entity.security;
+package com.cso.sikoling.abstraction.entity.security.oauth2;
 
 import java.io.Serializable;
 import java.util.Objects;

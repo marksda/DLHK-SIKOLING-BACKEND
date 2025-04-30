@@ -5,8 +5,9 @@ import com.cso.sikoling.abstraction.repository.RepositoryToken;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.main.Infrastructure;
+import io.jsonwebtoken.Claims;
 import jakarta.ejb.Local;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -54,6 +55,11 @@ public class TokenRepositoryEJB implements RepositoryToken<Token, QueryParamFilt
     @Override
     public Long getJumlahData(List<Filter> f) {
         return tokenRepositoriJPA.getJumlahData(f);
+    }
+
+    @Override
+    public Claims validateAccessToken(String accessToken) {
+        return tokenRepositoriJPA.validateAccessToken(accessToken);
     }
 
 }

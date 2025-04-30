@@ -20,7 +20,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
-import com.cso.sikoling.abstraction.entity.security.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
@@ -162,7 +162,7 @@ public class RestfulProvider {
     }
     
     @Produces
-    public DAOTokenService<Token> getTokumenService(
+    public DAOTokenService<Token> getTokenService(
             @Infrastructure RepositoryToken<Token, QueryParamFilters, Filter> tokenRepository) {
         return new TokenServiceBasic(tokenRepository);
     }

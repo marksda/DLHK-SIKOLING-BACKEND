@@ -1,6 +1,6 @@
 package com.cso.sikolingrestful.resources.security;
 
-import com.cso.sikoling.abstraction.entity.security.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import java.io.Serializable;
 import java.util.Objects;
 

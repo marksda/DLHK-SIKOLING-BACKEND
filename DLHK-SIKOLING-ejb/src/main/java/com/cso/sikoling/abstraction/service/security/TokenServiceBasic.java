@@ -3,9 +3,10 @@ package com.cso.sikoling.abstraction.service.security;
 import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
+import io.jsonwebtoken.Claims;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -51,6 +52,11 @@ public class TokenServiceBasic implements DAOTokenService<Token> {
     @Override
     public Long getJumlahData(List queryParamFilters) {
         return this.repository.getJumlahData(queryParamFilters);
+    }
+
+    @Override
+    public Claims validateAccessToken(String accessToken) {
+        return this.repository.validateAccessToken(accessToken);
     }
 
 }

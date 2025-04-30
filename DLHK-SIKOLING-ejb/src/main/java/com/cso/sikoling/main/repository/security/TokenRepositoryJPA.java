@@ -3,8 +3,11 @@ package com.cso.sikoling.main.repository.security;
 import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.InvalidKeyException;
 import jakarta.persistence.EntityManager;
@@ -113,6 +116,25 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     @Override
     public Long getJumlahData(List f) {
         return null;
+    }
+
+    @Override
+    public Claims validateAccessToken(String accessToken) {
+        Jws<Claims> jws;
+        
+        try {
+            jws = (Jws<Claims>) Jwts.parser();
+//            .keyLocator(keyLocator)
+//            .verifyWith(null)
+//            .build()
+//            .parseSignedClaims(jwsString);
+//            jws.getPayload().getId();
+            return jws.getPayload();
+        } catch (JwtException e) {
+            return null;
+        }
+        
+        
     }
 
 }
