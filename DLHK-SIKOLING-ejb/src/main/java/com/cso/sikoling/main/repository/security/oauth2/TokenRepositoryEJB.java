@@ -1,4 +1,4 @@
-package com.cso.sikoling.main.repository.security;
+package com.cso.sikoling.main.repository.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;

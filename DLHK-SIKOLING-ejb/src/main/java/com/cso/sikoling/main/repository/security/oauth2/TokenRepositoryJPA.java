@@ -1,10 +1,12 @@
-package com.cso.sikoling.main.repository.security;
+package com.cso.sikoling.main.repository.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
+import com.cso.sikoling.main.repository.security.AutorisasiData;
+import com.cso.sikoling.main.repository.security.UserData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.annotation;
 
+import com.cso.sikolingrestful.Role;
 import jakarta.ws.rs.NameBinding;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -11,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ TYPE, METHOD })
 public @interface RequiredRole {
-//    Role[] value() default {};
+    Role[] value() default {};
 }
