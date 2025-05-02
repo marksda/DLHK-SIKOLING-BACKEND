@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.service.DAOService;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
 
 @Stateless
 @LocalBean
@@ -35,6 +38,8 @@ public class AutorisasiResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     public List<AutorisasiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
         try {            
@@ -62,7 +67,9 @@ public class AutorisasiResource {
     
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})    
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     public AutorisasiDTO save(AutorisasiDTO autorisasiDTO) throws SQLException { 
         
         try {            
@@ -78,6 +85,8 @@ public class AutorisasiResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     public AutorisasiDTO update(@PathParam("idLama") String idLama, AutorisasiDTO autorisasiDTO) throws SQLException {
         
         try {                
@@ -98,6 +107,8 @@ public class AutorisasiResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     public AutorisasiDTO updateId(@PathParam("idLama") String idLama, AutorisasiDTO autorisasiDTO) throws SQLException {
         
         try {                
@@ -119,6 +130,8 @@ public class AutorisasiResource {
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     public JsonObject delete(@PathParam("idAutorisasi") String idAutorisasi) throws SQLException {
         
         boolean isDigit = idAutorisasi.matches("[0-9]+");

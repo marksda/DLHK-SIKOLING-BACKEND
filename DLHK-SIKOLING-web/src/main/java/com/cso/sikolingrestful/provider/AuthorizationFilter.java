@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Provider
 @Stateless
@@ -41,40 +42,32 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext crc) throws IOException {
-//        final SecurityContext securityContext = crc.getSecurityContext();
+        
         String authorizationHeader = Optional.ofNullable(crc.getHeaderString(HttpHeaders.AUTHORIZATION))
                                         .orElseThrow(() -> new NotAuthorizedException("Authorization header not found"));
         String accessToken = authorizationHeader.substring("Bearer".length()).trim();
         Claims claims = Optional.ofNullable(tokenService.validateAccessToken(accessToken))
                                 .orElseThrow(() -> new NotAuthorizedException("Authorization header not found"));
         
-        
-        Class<?> resourceClass = resourceInfo.getResourceClass();
-        List<Role> classRoles = extractRoles(resourceClass);
-
         Method resourceMethod = resourceInfo.getResourceMethod();
-        List<Role> methodRoles = extractRoles(resourceMethod);
+        List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
+                .orElseThrow(() -> new NotAuthorizedException("Role not found"));
 
         try {
-            if (methodRoles.isEmpty()) {
-                checkPermissions(classRoles, claims);
-            } else {
-                checkPermissions(methodRoles, claims);
-            }
+            checkPermissions(methodRoles, claims);
         } catch (Exception e) {
             throw new NotAuthorizedException(e.toString());
         }
-        
         
     }
     
     private List<Role> extractRoles(AnnotatedElement annotatedElement) {
         if (annotatedElement == null) {
-            return new ArrayList<>();
+            return null;
         } else {
             RequiredRole requiredRole = annotatedElement.getAnnotation(RequiredRole.class);
             if (requiredRole == null) {
-                return new ArrayList<>();
+                return null;
             } else {
                 Role[] allowedRoles = requiredRole.value();
                 return Arrays.asList(allowedRoles);
@@ -83,20 +76,26 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     }
     
     private void checkPermissions(List<Role> allowedRoles, Claims claims) throws Exception {
-        Iterator<Role> iterator = allowedRoles.iterator();  
-        boolean grandPermission = false;
+        Iterator<Role> iterator = allowedRoles.iterator();          
+        Set<String> audience = claims.getAudience();
+        boolean allowRole = false;        
+        Iterator iteratorAudience = audience.iterator();
+        String roleId = null;
+        
+        if(iteratorAudience.hasNext()) {
+            roleId = (String) iteratorAudience.next();
+        }
         
         while(iterator.hasNext()) {    		
             Role role = iterator.next();
-            //cek jika claim memiliki slah satu role yang diperbolehkan
-//            if(authority.getHakAkses().getNama().equalsIgnoreCase(role.toString())) {
-//                    grandPermission = true;
-//                    break;
-//            }    		
+            if(role.label().equalsIgnoreCase(roleId)) {
+                allowRole = true;
+                break;
+            }    		
     	}
         
-        if(!grandPermission) {
-            throw new Exception("Role not found");
+        if(!allowRole) {
+            throw new Exception("unauthorized Role");
     	}
     }
 

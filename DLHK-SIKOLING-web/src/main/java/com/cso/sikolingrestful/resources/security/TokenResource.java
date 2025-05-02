@@ -10,6 +10,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -22,6 +23,9 @@ public class TokenResource {
     
     @Inject
     private DAOTokenService<Token> tokenService;
+    
+    @Inject
+    private SecurityContext SecurityContext;
     
     @POST
     @Consumes({MediaType.APPLICATION_JSON})

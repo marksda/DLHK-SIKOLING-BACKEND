@@ -5,15 +5,16 @@ import java.util.Map;
 
 
 public enum Role implements Labeled {
-    ADMINISTRATOR("Administrator"), 
-    ADMIN("Admin/KA"),
-    TU("Tata Usaha"),
-    KABID("Kepala Bidang"),
-    KASUBID("Kepala Sub Bidang"),
-    BO("Back Office"),
-    UMUM("Pemohon"),
-    FO("Front Office"),
-    ARSIP("Arsip");
+    UNTULAN("00"),
+    ADMINISTRATOR("01"), 
+    ADMIN("02"),
+    TU("03"),
+    KABID("04"),
+    KASUBID("05"),
+    BO("06"),
+    FO("07"),
+    ARSIP("08"),
+    UMUM("09");
     
     public final String label;
     

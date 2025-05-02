@@ -70,7 +70,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
                         .subject("sikoling")
-                        .audience().add(userData.getUserName()).and()
+                        .audience().add(autorisasiData.getHakAkses().getId()).and()
                         .expiration(nextYear)
                         .issuedAt(today)
                         .id(autorisasiData.getId())
