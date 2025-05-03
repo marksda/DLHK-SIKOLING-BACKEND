@@ -8,4 +8,5 @@ import java.sql.SQLException;
 public interface RepositoryToken<T, Q, F> extends Repository<T, Q, F> {
     T getToken(Credential c) throws SQLException;
     Claims validateAccessToken(String accessToken);
+    void generateSecretKey(String signatureAlgoritma);
 }

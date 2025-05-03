@@ -9,7 +9,7 @@ public enum AuthorizationGrantType implements Labeled {
     PASSWORD("Resource Owner Password Credentials"),    //back channel only
     CLIENT("Client Credentials");                       //back channel only
     
-    public final String label;
+    private final String label;
     
     private static final Map<String, AuthorizationGrantType> BY_LABEL = new HashMap<>();
     

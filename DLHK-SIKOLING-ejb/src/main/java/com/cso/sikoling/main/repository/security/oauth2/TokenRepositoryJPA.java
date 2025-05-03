@@ -11,8 +11,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Curve;
 import io.jsonwebtoken.security.InvalidKeyException;
+import io.jsonwebtoken.security.Jwks;
+import io.jsonwebtoken.security.MacAlgorithm;
+import io.jsonwebtoken.security.SignatureAlgorithm;
 import jakarta.persistence.EntityManager;
+import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -137,6 +142,69 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         }
         
         
+    }
+
+    @Override
+    public void generateSecretKey(String signatureAlgoritma) {
+        switch (signatureAlgoritma) {
+            case "HS512" -> {
+                MacAlgorithm alg = Jwts.SIG.HS512; 
+                SecretKey key = alg.key().build();
+            }
+            case "HS384" -> {
+                MacAlgorithm alg = Jwts.SIG.HS384; 
+                SecretKey key = alg.key().build();
+            }
+            case "HS256" -> {
+                MacAlgorithm alg = Jwts.SIG.HS256; 
+                SecretKey key = alg.key().build();
+            }
+            case "RS512" -> {
+                SignatureAlgorithm alg = Jwts.SIG.RS512; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "RS384" -> {
+                SignatureAlgorithm alg = Jwts.SIG.RS384; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "RS256" -> {
+                SignatureAlgorithm alg = Jwts.SIG.RS256; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "PS512" -> {
+                SignatureAlgorithm alg = Jwts.SIG.PS512; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "PS384" -> {
+                SignatureAlgorithm alg = Jwts.SIG.PS384; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "PS256" -> {
+                SignatureAlgorithm alg = Jwts.SIG.PS256; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "ES512" -> {
+                SignatureAlgorithm alg = Jwts.SIG.ES512; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "ES384" -> {
+                SignatureAlgorithm alg = Jwts.SIG.ES384; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "ES256" -> {
+                SignatureAlgorithm alg = Jwts.SIG.ES256; 
+                KeyPair pair = alg.keyPair().build();
+            }
+            case "Ed25519" -> {
+                Curve curve = Jwks.CRV.Ed25519; 
+                KeyPair pair = curve.keyPair().build();
+            }
+            case "Ed448" -> {
+                Curve curve = Jwks.CRV.Ed448; 
+                KeyPair pair = curve.keyPair().build();
+            }
+            default -> throw new AssertionError();
+        }
     }
 
 }
