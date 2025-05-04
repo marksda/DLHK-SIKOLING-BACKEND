@@ -11,9 +11,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Curve;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.InvalidKeyException;
-import io.jsonwebtoken.security.Jwks;
 import io.jsonwebtoken.security.MacAlgorithm;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 import jakarta.persistence.EntityManager;
@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilters, Filter> {
@@ -145,66 +146,120 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public void generateSecretKey(String signatureAlgoritma) {
+    public String generateSecretKey(String signatureAlgoritma) {
+        String generatedKey = null;
+        
         switch (signatureAlgoritma) {
-            case "HS512" -> {
+            case "HS512" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS512; 
-                SecretKey key = alg.key().build();
+                SecretKey key = alg.key().build();                
             }
-            case "HS384" -> {
+            case "HS384" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS384; 
                 SecretKey key = alg.key().build();
             }
-            case "HS256" -> {
+            case "HS256" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey key = alg.key().build();
             }
-            case "RS512" -> {
+            case "RS512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "RS384" -> {
+            case "RS384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "RS256" -> {
+            case "RS256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "PS512" -> {
+            case "PS512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "PS384" -> {
+            case "PS384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "PS256" -> {
+            case "PS256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "ES512" -> {
+            case "ES512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "ES384" -> {
+            case "ES384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "ES256" -> {
+            case "ES256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
             }
-            case "Ed25519" -> {
-                Curve curve = Jwks.CRV.Ed25519; 
-                KeyPair pair = curve.keyPair().build();
-            }
-            case "Ed448" -> {
-                Curve curve = Jwks.CRV.Ed448; 
-                KeyPair pair = curve.keyPair().build();
+            case "EdDSA" -> { 
+                SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
+                KeyPair pair = alg.keyPair().build();
             }
             default -> throw new AssertionError();
         }
+        
+        return generatedKey;
+    }
+    
+    private String convertSecretKeyToString(SecretKey secretKey) {
+        String encodedKey = Encoders.BASE64.encode(secretKey.getEncoded()); 
+        return encodedKey;
+    }
+    
+    private SecretKey convertStringToSecretKey(String encodedKey, String signatureAlgoritma) {
+        byte[] decodedKey = Decoders.BASE64.decode(encodedKey);
+        SecretKey originalKey = null; 
+        switch (signatureAlgoritma) {
+            case "HS512" -> {   
+                originalKey = new SecretKeySpec(decodedKey, "HmacSHA512");               
+            }
+            case "HS384" -> {  
+                originalKey = new SecretKeySpec(decodedKey, "HmacSHA384");
+            }
+            case "HS256" -> {  
+                originalKey = new SecretKeySpec(decodedKey, "HmacSHA256");
+            }
+            case "RS512" -> {  
+                originalKey = new SecretKeySpec(decodedKey, "SHA512withRSA");
+            }
+            case "RS384" -> {   
+                originalKey = new SecretKeySpec(decodedKey, "SHA384withRSA");
+            }
+            case "RS256" -> {   
+                originalKey = new SecretKeySpec(decodedKey, "SHA256withRSA");
+            }
+            case "PS512" -> {
+                originalKey = new SecretKeySpec(decodedKey, "RSASSA-PSS");
+            }
+            case "PS384" -> { 
+                originalKey = new SecretKeySpec(decodedKey, "RSASSA-PSS");
+            }
+            case "PS256" -> {  
+                originalKey = new SecretKeySpec(decodedKey, "RSASSA-PSS");
+            }
+            case "ES512" -> {   
+                originalKey = new SecretKeySpec(decodedKey, "SHA512withECDSA");
+            }
+            case "ES384" -> {   
+                originalKey = new SecretKeySpec(decodedKey, "SHA384withECDSA");
+            }
+            case "ES256" -> {   
+                originalKey = new SecretKeySpec(decodedKey, "SHA256withECDSA");
+            }
+            case "EdDSA" -> { 
+                originalKey = new SecretKeySpec(decodedKey, "EdDSA");
+            }
+            default -> throw new AssertionError();
+        }
+        
+        return originalKey;
     }
 
 }

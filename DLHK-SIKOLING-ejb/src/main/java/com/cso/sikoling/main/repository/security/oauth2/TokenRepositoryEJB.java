@@ -62,4 +62,9 @@ public class TokenRepositoryEJB implements RepositoryToken<Token, QueryParamFilt
         return tokenRepositoriJPA.validateAccessToken(accessToken);
     }
 
+    @Override
+    public String generateSecretKey(String signatureAlgoritma) {
+        return tokenRepositoriJPA.generateSecretKey(signatureAlgoritma);
+    }
+
 }

@@ -7,7 +7,9 @@ import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.SecurityContext;
@@ -26,6 +28,13 @@ public class TokenResource {
     
     @Inject
     private SecurityContext SecurityContext;
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/generate_key/{signatureAlgoritma}")
+    public AutorisasiDTO update(@PathParam("signatureAlgoritma") String signatureAlgoritma) {
+        return null;
+    }
     
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
