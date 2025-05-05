@@ -9,4 +9,5 @@ import java.sql.SQLException;
 public interface DAOTokenService<T> extends DAOService<T> {
     T getToken(Credential c) throws SQLException;
     Claims validateAccessToken(String accessToken);
+    String generateSecretKey(String signatureAlgoritma);
 }

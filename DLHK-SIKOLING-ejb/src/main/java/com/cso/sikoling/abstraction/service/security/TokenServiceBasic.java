@@ -59,4 +59,9 @@ public class TokenServiceBasic implements DAOTokenService<Token> {
         return this.repository.validateAccessToken(accessToken);
     }
 
+    @Override
+    public String generateSecretKey(String signatureAlgoritma) {
+        return this.repository.generateSecretKey(signatureAlgoritma);
+    }
+
 }

@@ -152,55 +152,68 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         switch (signatureAlgoritma) {
             case "HS512" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS512; 
-                SecretKey key = alg.key().build();                
+                SecretKey key = alg.key().build();       
+                generatedKey = convertSecretKeyToString(key.getEncoded());
             }
             case "HS384" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS384; 
                 SecretKey key = alg.key().build();
+                generatedKey = convertSecretKeyToString(key.getEncoded());
             }
             case "HS256" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey key = alg.key().build();
+                generatedKey = convertSecretKeyToString(key.getEncoded());
             }
             case "RS512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
-                KeyPair pair = alg.keyPair().build();
+                KeyPair pair = alg.keyPair().build(); 
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "RS384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "RS256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "PS512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "PS384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "PS256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "ES512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "ES384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "ES256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             case "EdDSA" -> { 
                 SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
                 KeyPair pair = alg.keyPair().build();
+                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
             }
             default -> throw new AssertionError();
         }
@@ -208,13 +221,13 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return generatedKey;
     }
     
-    private String convertSecretKeyToString(SecretKey secretKey) {
-        String encodedKey = Encoders.BASE64.encode(secretKey.getEncoded()); 
+    private String convertSecretKeyToString(byte[]secretKey) {
+        String encodedKey = Encoders.BASE64URL.encode(secretKey); 
         return encodedKey;
     }
     
     private SecretKey convertStringToSecretKey(String encodedKey, String signatureAlgoritma) {
-        byte[] decodedKey = Decoders.BASE64.decode(encodedKey);
+        byte[] decodedKey = Decoders.BASE64URL.decode(encodedKey);
         SecretKey originalKey = null; 
         switch (signatureAlgoritma) {
             case "HS512" -> {   
