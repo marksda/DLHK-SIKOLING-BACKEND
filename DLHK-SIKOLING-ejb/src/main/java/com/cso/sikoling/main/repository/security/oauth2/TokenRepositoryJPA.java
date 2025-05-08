@@ -14,12 +14,19 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.InvalidKeyException;
+import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 import jakarta.persistence.EntityManager;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,7 +77,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             cal.add(Calendar.YEAR, 1); 
             Date nextYear = cal.getTime();
             
-            SecretKey key = Jwts.SIG.HS256.key().build();            
+            SecretKey key = convertStringToSecretKey(Decoders.BASE64URL.decode(generateSecretKey("HS256")), "HS256");         
             
             String jwt = Jwts.builder()
                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
@@ -153,67 +160,67 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             case "HS512" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS512; 
                 SecretKey key = alg.key().build();       
-                generatedKey = convertSecretKeyToString(key.getEncoded());
+                generatedKey = convertKeyToString(key.getEncoded());
             }
             case "HS384" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS384; 
                 SecretKey key = alg.key().build();
-                generatedKey = convertSecretKeyToString(key.getEncoded());
+                generatedKey = convertKeyToString(key.getEncoded());
             }
             case "HS256" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey key = alg.key().build();
-                generatedKey = convertSecretKeyToString(key.getEncoded());
+                generatedKey = convertKeyToString(key.getEncoded());
             }
             case "RS512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
                 KeyPair pair = alg.keyPair().build(); 
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "RS384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "RS256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "PS512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "PS384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "PS256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "ES512" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "ES384" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "ES256" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             case "EdDSA" -> { 
                 SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
                 KeyPair pair = alg.keyPair().build();
-                generatedKey = convertSecretKeyToString(pair.getPublic().getEncoded());
+                generatedKey = convertKeyToString(pair.getPublic().getEncoded());
             }
             default -> throw new AssertionError();
         }
@@ -221,58 +228,227 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return generatedKey;
     }
     
-    private String convertSecretKeyToString(byte[]secretKey) {
+    private String convertKeyToString(byte[]secretKey) {
         String encodedKey = Encoders.BASE64URL.encode(secretKey); 
         return encodedKey;
     }
     
-    private SecretKey convertStringToSecretKey(String encodedKey, String signatureAlgoritma) {
-        byte[] decodedKey = Decoders.BASE64URL.decode(encodedKey);
-        SecretKey originalKey = null; 
+    private SecretKey convertStringToSecretKey(byte[] decodedKey, String signatureAlgoritma) {
+        SecretKey key = null; 
         switch (signatureAlgoritma) {
             case "HS512" -> {   
-                originalKey = new SecretKeySpec(decodedKey, "HmacSHA512");               
+                key = Keys.hmacShaKeyFor(decodedKey);
             }
             case "HS384" -> {  
-                originalKey = new SecretKeySpec(decodedKey, "HmacSHA384");
+                key = Keys.hmacShaKeyFor(decodedKey);
             }
             case "HS256" -> {  
-                originalKey = new SecretKeySpec(decodedKey, "HmacSHA256");
-            }
-            case "RS512" -> {  
-                originalKey = new SecretKeySpec(decodedKey, "SHA512withRSA");
-            }
-            case "RS384" -> {   
-                originalKey = new SecretKeySpec(decodedKey, "SHA384withRSA");
-            }
-            case "RS256" -> {   
-                originalKey = new SecretKeySpec(decodedKey, "SHA256withRSA");
-            }
-            case "PS512" -> {
-                originalKey = new SecretKeySpec(decodedKey, "RSASSA-PSS");
-            }
-            case "PS384" -> { 
-                originalKey = new SecretKeySpec(decodedKey, "RSASSA-PSS");
-            }
-            case "PS256" -> {  
-                originalKey = new SecretKeySpec(decodedKey, "RSASSA-PSS");
-            }
-            case "ES512" -> {   
-                originalKey = new SecretKeySpec(decodedKey, "SHA512withECDSA");
-            }
-            case "ES384" -> {   
-                originalKey = new SecretKeySpec(decodedKey, "SHA384withECDSA");
-            }
-            case "ES256" -> {   
-                originalKey = new SecretKeySpec(decodedKey, "SHA256withECDSA");
-            }
-            case "EdDSA" -> { 
-                originalKey = new SecretKeySpec(decodedKey, "EdDSA");
+                key = Keys.hmacShaKeyFor(decodedKey);
             }
             default -> throw new AssertionError();
         }
         
-        return originalKey;
+        return key;
+    }
+    
+    private PublicKey convertStringToPublicKey(byte[] decodedKey, String signatureAlgoritma) {
+        PublicKey key = null; 
+        switch (signatureAlgoritma) {            
+            case "RS512" -> {  
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+                
+            }
+            case "RS384" -> {   
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "RS256" -> {   
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "PS512" -> {
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "PS384" -> { 
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "PS256" -> {  
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "ES512" -> {   
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "ES384" -> {   
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "ES256" -> {   
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "EdDSA" -> { 
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            default -> throw new AssertionError();
+        }
+        
+        return key;
+    }
+    
+    private PrivateKey convertStringToPrivateKey(byte[] decodedKey, String signatureAlgoritma) {
+        PrivateKey key = null; 
+        switch (signatureAlgoritma) {            
+            case "RS512" -> {  
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+                
+            }
+            case "RS384" -> {   
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "RS256" -> {   
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "PS512" -> {
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "PS384" -> { 
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "PS256" -> {  
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "ES512" -> {   
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "ES384" -> {   
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "ES256" -> {   
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "EdDSA" -> { 
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    key = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            default -> throw new AssertionError();
+        }
+        
+        return key;
     }
 
 }
