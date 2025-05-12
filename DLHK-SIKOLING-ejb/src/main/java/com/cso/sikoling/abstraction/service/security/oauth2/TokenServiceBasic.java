@@ -1,4 +1,4 @@
-package com.cso.sikoling.abstraction.service.security;
+package com.cso.sikoling.abstraction.service.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;

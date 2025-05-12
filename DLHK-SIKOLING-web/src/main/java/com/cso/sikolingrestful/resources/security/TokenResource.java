@@ -31,7 +31,7 @@ public class TokenResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/generate_key/{signatureAlgoritma}")
-    public SecretKeyDTO update(@PathParam("signatureAlgoritma") String signatureAlgoritma) {
+    public SecretKeyDTO getKey(@PathParam("signatureAlgoritma") String signatureAlgoritma) {        
         return new SecretKeyDTO(tokenService.generateSecretKey(signatureAlgoritma));
     }
     
@@ -40,10 +40,16 @@ public class TokenResource {
     @Produces({MediaType.APPLICATION_JSON})
     public TokenDTO getToken(CredentialDTO credentialDTO) throws IOException {
         try {
-            return new TokenDTO(tokenService.getToken(credentialDTO.toCredential()));
+            Token token = tokenService.getToken(credentialDTO.toCredential());
+            if(token != null) {
+                return new TokenDTO(token);
+            }
+            else {
+                throw new IllegalArgumentException("credential ditolak");
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(TokenResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+//            Logger.getLogger(TokenResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("credential ditolak");
         }
     }
     

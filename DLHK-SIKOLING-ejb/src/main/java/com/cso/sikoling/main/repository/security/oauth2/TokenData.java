@@ -105,16 +105,14 @@ public class TokenData implements Serializable {
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+    public boolean equals(Object object) {        
         if (!(object instanceof TokenData)) {
             return false;
         }
+        
         TokenData other = (TokenData) object;
-        if ((this.sessionId == null && other.sessionId != null) || (this.sessionId != null && !this.sessionId.equals(other.sessionId))) {
-            return false;
-        }
-        return true;
+        
+        return !this.sessionId.equals(other.sessionId);
     }
 
     @Override

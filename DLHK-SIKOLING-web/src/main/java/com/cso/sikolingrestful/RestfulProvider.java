@@ -47,7 +47,7 @@ import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PerusahaanServiceBasic;
 import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
 import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
-import com.cso.sikoling.abstraction.service.security.TokenServiceBasic;
+import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
 
 @Stateless
 @LocalBean
