@@ -18,6 +18,7 @@ import com.cso.sikoling.main.repository.perusahaan.PelakuUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanRepositoryJPA;
 import com.cso.sikoling.main.repository.security.AutorisasiRepositoryJPA;
 import com.cso.sikoling.main.repository.security.HakAksesRepositoryJPA;
+import com.cso.sikoling.main.repository.security.oauth2.JwaRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.JwaTypeRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.TokenRepositoryJPA;
 import jakarta.ejb.Stateless;
@@ -136,5 +137,10 @@ public class RepositoryProvider {
     @Produces
     public JwaTypeRepositoryJPA getJwaTypeRepositoryJPA(EntityManager entityManager) {
         return new JwaTypeRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public JwaRepositoryJPA getJwaRepositoryJPA(EntityManager entityManager) {
+        return new JwaRepositoryJPA(entityManager);
     }
 }
