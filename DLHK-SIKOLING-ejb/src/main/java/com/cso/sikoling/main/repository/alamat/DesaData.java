@@ -31,8 +31,7 @@ public class DesaData implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Pattern(regexp="[\\d]{10}")
-    @Size(min = 1, max = 10)
-    @Column(name = "id")
+    @Column(name = "id", length = 10)
     private String id;
     
     @Basic(optional = false)

@@ -4,7 +4,7 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
-import com.cso.sikoling.abstraction.entity.security.oauth2.Jwa;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -22,21 +22,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filter> {
+public class RealmRepositoryJPA implements Repository<Realm, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public JwaRepositoryJPA(EntityManager entityManager) {
+    public RealmRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public Jwa save(Jwa t) throws SQLException {   
+    public Realm save(Realm t) throws SQLException {   
         try {
-            JwaData jwaData = convertJwaToJwaData(t);
-            entityManager.persist(jwaData);
+            RealmData realmData = convertRealmToRealmData(t);
+            entityManager.persist(realmData);
             entityManager.flush();             
-            return convertJwaDataToJwa(jwaData);  
+            return convertRealmDataToRealm(realmData);  
         } 
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id realm harus bilangan dan panjang 2 digit");
@@ -47,12 +47,12 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
     }
 
     @Override
-    public Jwa update(Jwa t) throws SQLException {
+    public Realm update(Realm t) throws SQLException {
         
         try {
-            JwaData jwaData = convertJwaToJwaData(t);  
-            jwaData = entityManager.merge(jwaData);
-            return convertJwaDataToJwa(jwaData);   
+            RealmData realmData = convertRealmToRealmData(t);  
+            realmData = entityManager.merge(realmData);
+            return convertRealmDataToRealm(realmData);   
         }         
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id realm harus bilangan dan panjang 2 digit");
@@ -64,9 +64,9 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
     }
 
     @Override
-    public Jwa updateId(String idLama, Jwa t) throws SQLException {
+    public Realm updateId(String idLama, Realm t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("JwaData.updateId");
+        Query query = entityManager.createNamedQuery("RealmData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
@@ -79,7 +79,7 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id realm harus bilangan dan panjang 2 digit");
+            throw new SQLException("id realm harus 36 karakter");
         }
         catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id realm");
@@ -91,9 +91,9 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
     public boolean delete(String id) throws SQLException {
         
         try {
-            JwaData jwaData = entityManager.find(JwaData.class, id);
-            if(jwaData != null) {
-                entityManager.remove(jwaData);	
+            RealmData realmData = entityManager.find(RealmData.class, id);
+            if(realmData != null) {
+                entityManager.remove(realmData);	
                 entityManager.flush();
                 return true;
             }
@@ -102,7 +102,7 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id realm harus bilangan dan panjang 2 digit");
+            throw new SQLException("id realm harus 36 karakter");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -111,12 +111,12 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
     }
 
     @Override
-    public List<Jwa> getDaftarData(QueryParamFilters q) {
+    public List<Realm> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<JwaData> cq = cb.createQuery(JwaData.class);
-            Root<JwaData> root = cq.from(JwaData.class);		
+            CriteriaQuery<RealmData> cq = cb.createQuery(RealmData.class);
+            Root<RealmData> root = cq.from(RealmData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -170,7 +170,7 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
             }
 
 
-            TypedQuery<JwaData> typedQuery;	
+            TypedQuery<RealmData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -184,14 +184,14 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
 
             return typedQuery.getResultList()
                             .stream()
-                            .map(d -> convertJwaDataToJwa(d))
+                            .map(d -> convertRealmDataToRealm(d))
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("JwaData.findAll", JwaData.class)
+            return entityManager.createNamedQuery("RealmData.findAll", RealmData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertJwaDataToJwa(d))
+                 .map(d -> convertRealmDataToRealm(d))
                             .collect(Collectors.toList());
         }
         
@@ -202,7 +202,7 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<JwaData> root = cq.from(JwaData.class);		
+        Root<RealmData> root = cq.from(RealmData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -230,29 +230,26 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
         
     }
     
-    private Jwa convertJwaDataToJwa(JwaData d) {
-        Jwa jwa = null;
+    private Realm convertRealmDataToRealm(RealmData d) {
+        Realm jwa = null;
 		
         if(d != null) {
-            jwa = new Jwa(d.getId(), d.getNama(), d.getKeterangan(), d.getJwa_type().getId());
+            jwa = new Realm(d.getId(), d.getNama());
         }
 
         return jwa;	
     }
     
-    private JwaData convertJwaToJwaData(Jwa t) {
-        JwaData jwaData = null;
+    private RealmData convertRealmToRealmData(Realm t) {
+        RealmData realmData = null;
 		
         if(t != null) {
-            jwaData = new JwaData();
-            jwaData.setId(t.getId());
-            jwaData.setNama(t.getNama());
-            jwaData.setKeterangan(t.getKeterangan());
-            JwaTypeData jwaTypeData = new JwaTypeData(t.getId_jwa_type());
-            jwaData.setJwa_type(jwaTypeData);
+            realmData = new RealmData();
+            realmData.setId(t.getId());
+            realmData.setNama(t.getNama());
         }
 
-        return jwaData;
+        return realmData;
     }
 
 }

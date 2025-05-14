@@ -20,6 +20,8 @@ import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
@@ -47,6 +49,8 @@ import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PerusahaanServiceBasic;
 import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
 import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
+import com.cso.sikoling.abstraction.service.security.oauth2.KeyServiceBasic;
+import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
 
 @Stateless
@@ -165,5 +169,17 @@ public class RestfulProvider {
     public DAOTokenService<Token> getTokenService(
             @Infrastructure RepositoryToken<Token, QueryParamFilters, Filter> tokenRepository) {
         return new TokenServiceBasic(tokenRepository);
+    }
+    
+    @Produces
+    public DAOService<Realm> getRealmService(
+            @Infrastructure Repository<Realm, QueryParamFilters, Filter> realmRepository) {
+        return new RealmServiceBasic(realmRepository);
+    }
+    
+    @Produces
+    public DAOService<Key> getKeyService(
+            @Infrastructure Repository<Key, QueryParamFilters, Filter> keyRepository) {
+        return new KeyServiceBasic(keyRepository);
     }
 }
