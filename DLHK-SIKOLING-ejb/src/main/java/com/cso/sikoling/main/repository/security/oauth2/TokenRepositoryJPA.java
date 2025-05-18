@@ -47,7 +47,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Token getToken(Credential c, String idKey) throws SQLException {
+    public Token getToken(Credential c, String idKey, String encodedType) throws SQLException {
         Token token;
         
         try {
@@ -89,7 +89,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                 
                 switch (jwaData.getId()) {
                     case "01" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), "BASE64URL");
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -103,7 +103,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "02" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), "BASE64URL");
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -117,7 +117,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "03" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), "BASE64URL");
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -131,7 +131,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "04" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -145,7 +145,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "05" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -159,7 +159,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "06" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -173,7 +173,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "07" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -187,7 +187,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "08" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -201,7 +201,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "09" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -215,7 +215,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "10" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -229,7 +229,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "11" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -243,7 +243,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "12" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -257,7 +257,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "36" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  "BASE64URL");
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  encodedType);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -334,7 +334,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Key generateKey(String idRealm, String idJwa) {
+    public Key generateKey(String idRealm, String idJwa, String encodedType) {
         UUID uuid = UuidCreator.getTimeOrderedEpoch();
         String id = uuid.toString();
         Key key = null;
@@ -343,89 +343,89 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             case "01" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");
+                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
             }
             case "02" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS384; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");
+                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
             }
             case "03" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS512; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");                
+                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), encodedType);                
                 key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
             }
             case "04" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "05" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "06" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
                 KeyPair pair = alg.keyPair().build(); 
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "07" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "08" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "09" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "10" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "11" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "12" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             case "36" -> { 
                 SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
             default -> throw new AssertionError();

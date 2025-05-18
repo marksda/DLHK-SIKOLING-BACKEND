@@ -36,7 +36,7 @@ public class TokenResource {
     @Path("/generate_key/{idRealm}/{idJwa}")
     public KeyDTO generateKey(@PathParam("idRealm") String idRealm, 
             @PathParam("idJwa") String idJwa) {  
-        Key key = tokenService.generateKey(idRealm, idJwa);
+        Key key = tokenService.generateKey(idRealm, idJwa, "BASE64");
         try {
             keyService.save(key);
             return new KeyDTO(key);
@@ -51,7 +51,7 @@ public class TokenResource {
     @Path("/{idKey}")
     public TokenDTO getToken(@PathParam("idKey") String idKey, CredentialDTO credentialDTO) throws IOException {
         try {
-            Token token = tokenService.getToken(credentialDTO.toCredential(), idKey);
+            Token token = tokenService.getToken(credentialDTO.toCredential(), idKey, "BASE64");
             if(token != null) {
                 return new TokenDTO(token);
             }
