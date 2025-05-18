@@ -12,7 +12,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.InvalidKeyException;
@@ -35,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.crypto.SecretKey;
+import com.github.f4b6a3.uuid.UuidCreator;
 
 
 public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilters, Filter> {
@@ -157,7 +157,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
 
     @Override
     public Key generateKey(String idRealm, String idJwa) {
-        UUID uuid = UUID.randomUUID();
+        UUID uuid = UuidCreator
         String id = uuid.toString();
         Key key = null;
         
