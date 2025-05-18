@@ -17,10 +17,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "oauth.tbl_jwa")
 @NamedQueries({
-    @NamedQuery(name = "TblJwa.findAll", query = "SELECT t FROM TblJwa t"),
-    @NamedQuery(name = "TblJwa.findById", query = "SELECT t FROM TblJwa t WHERE t.id = :id"),
-    @NamedQuery(name = "TblJwa.findByNama", query = "SELECT t FROM TblJwa t WHERE t.nama = :nama"),
-    @NamedQuery(name = "TblJwa.findByKeterangan", query = "SELECT t FROM TblJwa t WHERE t.keterangan = :keterangan")})
+    @NamedQuery(name = "JwaData.findAll", query = "SELECT t FROM JwaData t"),
+    @NamedQuery(name = "JwaData.findById", query = "SELECT t FROM JwaData t WHERE t.id = :id"),
+    @NamedQuery(name = "JwaData.findByNama", query = "SELECT t FROM JwaData t WHERE t.nama = :nama"),
+    @NamedQuery(name = "JwaData.findByKeterangan", query = "SELECT t FROM JwaData t WHERE t.keterangan = :keterangan")})
 public class JwaData implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -6,6 +6,7 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.github.f4b6a3.uuid.UuidCreator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -235,7 +236,10 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
         Key key = null;
 		
         if(d != null) {
-            key = new Key(d.getId(), d.getJwa().getId(), d.getRealm().getId(), d.getSecretKey(), d.getPrivateKey(), d.getPublicKey());
+            key =  new Key(
+                    d.getId(), d.getJwa().getId(), d.getRealm().getId(), 
+                    d.getSecretKey(), d.getPrivateKey(), d.getPublicKey()
+                );
         }
 
         return key;	
@@ -251,11 +255,11 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
                 keyData.setId(t.getId());
             }
             else {
-               UUID uuid = UUID.randomUUID();
+               UUID uuid = UuidCreator.getTimeOrderedEpoch();
                keyData.setId(uuid.toString()); 
             }
             
-            RealmData realmData = new RealmData(t.getId());
+            RealmData realmData = new RealmData(t.getId_realm());
             keyData.setRealm(realmData);
             JwaData jwaData = new JwaData(t.getId_jwa());
             keyData.setJwa(jwaData);
