@@ -1,9 +1,11 @@
 package com.cso.sikolingrestful.resources.security;
 
+import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
+import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -23,14 +25,24 @@ public class TokenResource {
     @Inject
     private DAOTokenService<Token> tokenService;
     
+    @Inject
+    private DAOService<Key> keyService;
+    
 //    @Inject
 //    private SecurityContext SecurityContext;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/generate_key/{signatureAlgoritma}")
-    public SecretKeyDTO getKey(@PathParam("signatureAlgoritma") String signatureAlgoritma) {        
-        return new SecretKeyDTO(tokenService.generateSecretKey(signatureAlgoritma));
+    @Path("/generate_key/{idRealm}/{idJwa}")
+    public KeyDTO generateKey(@PathParam("idRealm") String idRealm, 
+            @PathParam("idJwa") String idJwa) {  
+        Key key = tokenService.generateKey(idRealm, idJwa);
+        try {
+            keyService.save(key);
+            return new KeyDTO(key);
+        } catch (SQLException ex) {
+            throw new IllegalArgumentException("Gagal mengenerate key");
+        }        
     }
     
     @POST

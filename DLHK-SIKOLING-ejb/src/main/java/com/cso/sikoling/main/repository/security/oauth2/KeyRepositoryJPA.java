@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -231,13 +232,13 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
     }
     
     private Key convertKeyDataToKey(KeyData d) {
-        Key jwa = null;
+        Key key = null;
 		
         if(d != null) {
-            jwa = new Key(d.getId(), d.getJwa().getId(), d.getRealm().getId(), d.getSecretKey(), d.getPrivateKey(), d.getPublicKey());
+            key = new Key(d.getId(), d.getJwa().getId(), d.getRealm().getId(), d.getSecretKey(), d.getPrivateKey(), d.getPublicKey());
         }
 
-        return jwa;	
+        return key;	
     }
     
     private KeyData convertKeyToKeyData(Key t) {
@@ -245,7 +246,15 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
 		
         if(t != null) {
             keyData = new KeyData();
-            keyData.setId(t.getId());
+            
+            if(t.getId() != null) {
+                keyData.setId(t.getId());
+            }
+            else {
+               UUID uuid = UUID.randomUUID();
+               keyData.setId(uuid.toString()); 
+            }
+            
             RealmData realmData = new RealmData(t.getId());
             keyData.setRealm(realmData);
             JwaData jwaData = new JwaData(t.getId_jwa());

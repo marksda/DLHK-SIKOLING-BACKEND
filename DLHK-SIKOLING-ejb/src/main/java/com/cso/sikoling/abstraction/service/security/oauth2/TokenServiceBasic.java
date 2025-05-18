@@ -4,6 +4,7 @@ import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
 import io.jsonwebtoken.Claims;
@@ -60,8 +61,8 @@ public class TokenServiceBasic implements DAOTokenService<Token> {
     }
 
     @Override
-    public String generateSecretKey(String signatureAlgoritma) {
-        return this.repository.generateSecretKey(signatureAlgoritma);
+    public Key generateKey(String idRealm, String idJwa) {
+        return this.repository.generateKey(idRealm, idJwa);
     }
 
 }
