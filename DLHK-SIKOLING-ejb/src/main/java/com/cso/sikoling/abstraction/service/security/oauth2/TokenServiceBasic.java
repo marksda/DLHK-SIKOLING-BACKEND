@@ -21,8 +21,8 @@ public class TokenServiceBasic implements DAOTokenService<Token> {
     }
     
     @Override
-    public Token getToken(Credential c) throws SQLException {
-        return this.repository.getToken(c);
+    public Token getToken(Credential c, String idKey) throws SQLException {
+        return this.repository.getToken(c, idKey);
     }
 
     @Override

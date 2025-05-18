@@ -24,8 +24,8 @@ public class TokenRepositoryEJB implements RepositoryToken<Token, QueryParamFilt
     private TokenRepositoryJPA tokenRepositoriJPA;
 
     @Override
-    public Token getToken(Credential c) throws SQLException {
-        return tokenRepositoriJPA.getToken(c);
+    public Token getToken(Credential c, String idKey) throws SQLException {
+        return tokenRepositoriJPA.getToken(c, idKey);
     }
 
     @Override

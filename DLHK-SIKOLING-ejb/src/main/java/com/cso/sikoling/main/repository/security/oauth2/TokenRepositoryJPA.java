@@ -13,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.InvalidKeyException;
@@ -46,7 +47,8 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Token getToken(Credential c) throws SQLException {
+    public Token getToken(Credential c, String idKey) throws SQLException {
+        Token token;
         
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -74,33 +76,209 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                                             .setParameter("idLama", userData.getId())
                                             .getSingleResult();
             
-            Calendar cal = Calendar.getInstance();
-            Date today = cal.getTime();
-            cal.add(Calendar.YEAR, 1); 
-            Date nextYear = cal.getTime();
+            KeyData keyData = entityManager.find(KeyData.class, idKey);
             
-//            SecretKey key = convertStringToSecretKey(
-//                    Decoders.BASE64URL.decode(generateSecretKey("HS256")), 
-//                    "HS256"
-//            );       
+            if(keyData != null) {
+                Calendar cal = Calendar.getInstance();
+                Date today = cal.getTime();
+                cal.add(Calendar.YEAR, 1); 
+                Date nextYear = cal.getTime();
+                String jwt;
+                
+                JwaData jwaData = keyData.getJwa();
+                
+                switch (jwaData.getId()) {
+                    case "01" -> {   
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(secretKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "02" -> {   
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(secretKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "03" -> {   
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(secretKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "04" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "05" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "06" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "07" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "08" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "09" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "10" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "11" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "12" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    case "36" -> {   
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  "BASE64URL");
+                        jwt = Jwts.builder()
+                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                        .issuer("DLHK Sidoarjo")
+                                        .subject("sikoling")
+                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                        .expiration(nextYear)
+                                        .issuedAt(today)
+                                        .id(autorisasiData.getId())
+                                        .signWith(privateKey)
+                                        .compact();
+                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                    }
+                    default -> throw new AssertionError();
+                }                
+            }
+            else {
+                token = null;
+            }
 
-            
-            
-            String jwt = Jwts.builder()
-                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasiData.getId())
-//                        .signWith(key)
-                        .compact();
-            Token token = new Token(jwt, jwt, 10000000L, autorisasiData.getId());
-            
             return token;
-        } catch (NoSuchAlgorithmException | InvalidKeyException | DecodingException ex) {
-            // Logger.getLogger(TokenRepositoryJPA.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException | NoSuchAlgorithmException | InvalidKeyException | DecodingException ex) {
             return null;
         }
         
@@ -162,10 +340,10 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         Key key = null;
         
         switch (idJwa) {
-            case "03" -> {   
-                MacAlgorithm alg = Jwts.SIG.HS512; 
+            case "01" -> {   
+                MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");                
+                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");
                 key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
             }
             case "02" -> {   
@@ -174,15 +352,15 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                 String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");
                 key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
             }
-            case "01" -> {   
-                MacAlgorithm alg = Jwts.SIG.HS256; 
+            case "03" -> {   
+                MacAlgorithm alg = Jwts.SIG.HS512; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");
+                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), "BASE64URL");                
                 key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
             }
-            case "06" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.RS512; 
-                KeyPair pair = alg.keyPair().build(); 
+            case "04" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.RS256; 
+                KeyPair pair = alg.keyPair().build();
                 String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
                 String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
@@ -194,36 +372,15 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                 String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
-            case "04" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.RS256; 
-                KeyPair pair = alg.keyPair().build();
+            case "06" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.RS512; 
+                KeyPair pair = alg.keyPair().build(); 
                 String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
                 String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
-            case "12" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.PS512; 
-                KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
-            }
-            case "11" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.PS384; 
-                KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
-            }
-            case "10" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.PS256; 
-                KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
-            }
-            case "09" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.ES512; 
+            case "07" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
                 String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
                 String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
@@ -236,8 +393,29 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                 String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
                 key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
             }
-            case "07" -> {   
-                SignatureAlgorithm alg = Jwts.SIG.ES256; 
+            case "09" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.ES512; 
+                KeyPair pair = alg.keyPair().build();
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+            }
+            case "10" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.PS256; 
+                KeyPair pair = alg.keyPair().build();
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+            }
+            case "11" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.PS384; 
+                KeyPair pair = alg.keyPair().build();
+                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
+                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
+                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+            }
+            case "12" -> {   
+                SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
                 String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), "BASE64URL");
                 String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), "BASE64URL");
@@ -272,17 +450,15 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return encodedKey;
     }
     
-    private SecretKey convertStringToSecretKey(byte[] decodedKey, String signatureAlgoritma) {
+    private SecretKey convertStringToSecretKey(String stringKey, String encodeType) {
         SecretKey key = null; 
-        switch (signatureAlgoritma) {
-            case "HS512" -> {   
-                key = Keys.hmacShaKeyFor(decodedKey);
+        
+        switch (encodeType) {
+            case "BASE64URL" -> {   
+                key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(stringKey));
             }
-            case "HS384" -> {  
-                key = Keys.hmacShaKeyFor(decodedKey);
-            }
-            case "HS256" -> {  
-                key = Keys.hmacShaKeyFor(decodedKey);
+            case "BASE64" -> {  
+                key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(stringKey));
             }
             default -> throw new AssertionError();
         }
@@ -390,96 +566,110 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return key;
     }
     
-    private PrivateKey convertStringToPrivateKey(byte[] decodedKey, String signatureAlgoritma) {
-        PrivateKey key = null; 
-        switch (signatureAlgoritma) {            
-            case "RS512" -> {  
+    private PrivateKey convertStringToPrivateKey(String StringPrivateKey, String idJwa, String encodeType) {
+        
+        byte[] decodedKey;
+        PrivateKey privateKey = null;
+        
+        switch (encodeType) {
+            case "BASE64URL" -> {
+                decodedKey = Decoders.BASE64URL.decode(StringPrivateKey);
+            }
+            case "BASE64" -> {
+                decodedKey = Decoders.BASE64.decode(StringPrivateKey);
+            }    
+            default -> throw new AssertionError();
+        }
+                            
+         
+        switch (idJwa) {            
+            case "06" -> {  
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
                 
             }
-            case "RS384" -> {   
+            case "05" -> {   
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "RS256" -> {   
+            case "04" -> {   
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "PS512" -> {
+            case "12" -> {
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "PS384" -> { 
+            case "11" -> { 
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "PS256" -> {  
+            case "10" -> {  
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "ES512" -> {   
+            case "09" -> {   
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "ES384" -> {   
+            case "08" -> {   
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "ES256" -> {   
+            case "07" -> {   
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "EdDSA" -> { 
+            case "36" -> { 
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePrivate(keySpec);
+                    privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
@@ -487,7 +677,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             default -> throw new AssertionError();
         }
         
-        return key;
+        return privateKey;
     }
 
 }

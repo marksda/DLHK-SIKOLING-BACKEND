@@ -7,7 +7,7 @@ import io.jsonwebtoken.Claims;
 import java.sql.SQLException;
 
 public interface RepositoryToken<T, Q, F> extends Repository<T, Q, F> {
-    T getToken(Credential c) throws SQLException;
+    T getToken(Credential c, String idKey) throws SQLException;
     Claims validateAccessToken(String accessToken);
     Key generateKey(String idRealm, String idJwa);
 }

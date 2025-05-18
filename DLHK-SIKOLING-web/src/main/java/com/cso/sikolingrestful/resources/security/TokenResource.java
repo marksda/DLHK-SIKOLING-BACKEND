@@ -48,9 +48,10 @@ public class TokenResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public TokenDTO getToken(CredentialDTO credentialDTO) throws IOException {
+    @Path("/{idKey}")
+    public TokenDTO getToken(@PathParam("idKey") String idKey, CredentialDTO credentialDTO) throws IOException {
         try {
-            Token token = tokenService.getToken(credentialDTO.toCredential());
+            Token token = tokenService.getToken(credentialDTO.toCredential(), idKey);
             if(token != null) {
                 return new TokenDTO(token);
             }
