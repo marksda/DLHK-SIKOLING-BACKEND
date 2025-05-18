@@ -24,8 +24,8 @@ public class TokenRepositoryEJB implements RepositoryToken<Token, QueryParamFilt
     private TokenRepositoryJPA tokenRepositoriJPA;
 
     @Override
-    public Token getToken(Credential c, String idKey) throws SQLException {
-        return tokenRepositoriJPA.getToken(c, idKey);
+    public Token getToken(Credential c, String idKey, String encodedType) throws SQLException {
+        return tokenRepositoriJPA.getToken(c, idKey, encodedType);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class TokenRepositoryEJB implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Key generateKey(String idRealm, String idJwa) {
-        return tokenRepositoriJPA.generateKey(idRealm, idJwa);
+    public Key generateKey(String idRealm, String idJwa, String encodedType) {
+        return tokenRepositoriJPA.generateKey(idRealm, idJwa, encodedType);
     }
 
 }
