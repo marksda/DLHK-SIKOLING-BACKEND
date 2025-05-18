@@ -8,6 +8,7 @@ import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.main.repository.security.AutorisasiData;
 import com.cso.sikoling.main.repository.security.UserData;
+import com.github.f4b6a3.uuid.UuidCreator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -34,7 +35,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.crypto.SecretKey;
-import com.github.f4b6a3.uuid.UuidCreator;
 
 
 public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilters, Filter> {
@@ -157,7 +157,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
 
     @Override
     public Key generateKey(String idRealm, String idJwa) {
-        UUID uuid = UuidCreator
+        UUID uuid = UuidCreator.getTimeOrderedEpoch();
         String id = uuid.toString();
         Key key = null;
         
