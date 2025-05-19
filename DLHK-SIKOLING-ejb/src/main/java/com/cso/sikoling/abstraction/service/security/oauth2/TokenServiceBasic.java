@@ -21,8 +21,8 @@ public class TokenServiceBasic implements DAOTokenService<Token> {
     }
     
     @Override
-    public Token getToken(Credential c, String idKey, String encodedType) throws SQLException {
-        return this.repository.getToken(c, idKey, encodedType);
+    public Token getToken(Credential c, String idKey, String encodingScheme) throws SQLException {
+        return this.repository.getToken(c, idKey, encodingScheme);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class TokenServiceBasic implements DAOTokenService<Token> {
     }
 
     @Override
-    public Key generateKey(String idRealm, String idJwa, String encodedType) {
-        return this.repository.generateKey(idRealm, idJwa, encodedType);
+    public Key generateKey(String idRealm, String idJwa, String encodingScheme) {
+        return this.repository.generateKey(idRealm, idJwa, encodingScheme);
     }
 
 }

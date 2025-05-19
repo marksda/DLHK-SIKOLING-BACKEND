@@ -40,6 +40,10 @@ public class KeyData implements Serializable {
     @ManyToOne(optional = false)
     private JwaData jwa;
     
+    @JoinColumn(name = "encoding_scheme", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private EncodingSchemaData encoding_scheme;
+    
     @Size(max = 2147483647)
     @Column(name = "secret_key")
     private String secretKey;
@@ -105,6 +109,14 @@ public class KeyData implements Serializable {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public EncodingSchemaData getEncoding_scheme() {
+        return encoding_scheme;
+    }
+
+    public void setEncoding_scheme(EncodingSchemaData encoding_scheme) {
+        this.encoding_scheme = encoding_scheme;
     }
 
     @Override

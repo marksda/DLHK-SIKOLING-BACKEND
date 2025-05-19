@@ -47,25 +47,15 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Token getToken(Credential c, String idKey, String encodedType) throws SQLException {
+    public Token getToken(Credential c, String idKey, String encodingScheme) throws SQLException {
         Token token;
         
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.reset(); 
             messageDigest.update(c.getPassword().getBytes());
-            byte[] digest2 = messageDigest.digest();
-            StringBuilder sb = new StringBuilder();
-            String hx2;
-            for (int i=0;i<digest2.length;i++){
-                hx2 = Integer.toHexString(0xFF & digest2[i]);
-                if(hx2.length() == 1){
-                    hx2 = "0" + hx2;
-                } 
-                sb.append(hx2);
-            }
-            
-            String messageDigestPassword = sb.toString();
+            byte[] byteOfPassword = messageDigest.digest();
+            String messageDigestPassword = byteArrayToHexString(byteOfPassword);
             
             UserData userData = entityManager.createQuery("SELECT u FROM UserData u WHERE u.userName = :user AND u.password = :password", UserData.class)
                             .setParameter("user", c.getEmail())
@@ -89,7 +79,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                 
                 switch (jwaData.getId()) {
                     case "01" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodedType);
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -103,7 +93,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "02" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodedType);
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -117,7 +107,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "03" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodedType);
+                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -131,7 +121,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "04" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -145,7 +135,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "05" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -159,7 +149,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "06" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -173,7 +163,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "07" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -187,7 +177,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "08" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -201,7 +191,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "09" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -215,7 +205,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "10" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -229,7 +219,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "11" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -243,7 +233,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "12" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -257,7 +247,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
                         token = new Token(jwt, null, 10000000L, autorisasiData.getId());
                     }
                     case "36" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  encodedType);
+                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  encodingScheme);
                         jwt = Jwts.builder()
                                         .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
                                         .issuer("DLHK Sidoarjo")
@@ -334,7 +324,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Key generateKey(String idRealm, String idJwa, String encodedType) {
+    public Key generateKey(String idRealm, String idJwa, String encodingScheme) {
         UUID uuid = UuidCreator.getTimeOrderedEpoch();
         String id = uuid.toString();
         Key key = null;
@@ -343,90 +333,90 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             case "01" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
+                String secretKeyWithEncodingScheme = convertKeyToString(secretKey.getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme);
             }
             case "02" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS384; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
+                String secretKeyWithEncodingScheme = convertKeyToString(secretKey.getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme);
             }
             case "03" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS512; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyBase64Url = convertKeyToString(secretKey.getEncoded(), encodedType);                
-                key = new Key(id, idRealm, idJwa, secretKeyBase64Url);
+                String secretKeyWithEncodingScheme = convertKeyToString(secretKey.getEncoded(), encodingScheme);                
+                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme);
             }
             case "04" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "05" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "06" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
                 KeyPair pair = alg.keyPair().build(); 
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "07" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "08" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "09" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "10" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "11" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "12" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "36" -> { 
                 SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyBase64Url = convertKeyToString(pair.getPublic().getEncoded(), encodedType);
-                String privateKeyBase64Url = convertKeyToString(pair.getPrivate().getEncoded(), encodedType);
-                key = new Key(id, idRealm, idJwa, privateKeyBase64Url, publicKeyBase64Url);
+                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
+                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             default -> throw new AssertionError();
         }
@@ -434,15 +424,43 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return key;
     }
     
-    private String convertKeyToString(byte[]secretKey, String encodeType) {
+    private String byteArrayToHexString(byte[] arrayOfByte) {
+        StringBuilder sb = new StringBuilder();
+        String hx2;
+        for (int i=0;i<arrayOfByte.length;i++){
+            hx2 = Integer.toHexString(0xFF & arrayOfByte[i]);
+            if(hx2.length() == 1){
+                hx2 = "0" + hx2;
+            } 
+            sb.append(hx2);
+        }
+
+        return sb.toString();
+    }
+    
+    private byte[] hexStringToByteArrayTo(String hexString) {
+        byte[] ans = new byte[hexString.length() / 2];
+        for (int i = 0; i < ans.length; i++) {
+            int index = i * 2;
+            int val = Integer.parseInt(hexString.substring(index, index + 2), 16);
+            ans[i] = (byte)val;
+        }
+        
+        return ans;
+    }
+    
+    private String convertKeyToString(byte[]secretKey, String encodingScheme) {
         String encodedKey = null;
         
-        switch (encodeType) {
-            case "BASE64URL" -> {   
+        switch (encodingScheme) {
+            case "00" -> {  
+                encodedKey = Encoders.BASE64.encode(secretKey); 
+            }
+            case "01" -> {   
                 encodedKey = Encoders.BASE64URL.encode(secretKey); 
             }
-            case "BASE64" -> {  
-                encodedKey = Encoders.BASE64.encode(secretKey); 
+            case "02" -> {   
+                encodedKey = byteArrayToHexString(secretKey); 
             }
             default -> throw new AssertionError();
         }        
@@ -450,15 +468,18 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return encodedKey;
     }
     
-    private SecretKey convertStringToSecretKey(String stringKey, String encodeType) {
+    private SecretKey convertStringToSecretKey(String stringKey, String encodingScheme) {
         SecretKey key = null; 
         
-        switch (encodeType) {
-            case "BASE64URL" -> {   
+        switch (encodingScheme) {
+            case "00" -> {  
+                key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(stringKey));
+            }
+            case "01" -> {   
                 key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(stringKey));
             }
-            case "BASE64" -> {  
-                key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(stringKey));
+            case "02" -> {   
+                key = Keys.hmacShaKeyFor(hexStringToByteArrayTo(stringKey));
             }
             default -> throw new AssertionError();
         }
@@ -466,96 +487,111 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return key;
     }
     
-    private PublicKey convertStringToPublicKey(byte[] decodedKey, String signatureAlgoritma) {
-        PublicKey key = null; 
-        switch (signatureAlgoritma) {            
-            case "RS512" -> {  
+    private PublicKey convertStringToPublicKey(String stringPublicKey, String idJwa, String encodingScheme) {
+        byte[] decodedKey;
+        PublicKey publicKey = null; 
+        
+        switch (encodingScheme) {
+            case "00" -> {
+                decodedKey = Decoders.BASE64.decode(stringPublicKey);
+            }    
+            case "01" -> {
+                decodedKey = Decoders.BASE64URL.decode(stringPublicKey);
+            }
+            case "02" -> {
+                decodedKey = hexStringToByteArrayTo(stringPublicKey);
+            }
+            default -> throw new AssertionError();
+        }
+        
+        switch (idJwa) {            
+            case "06" -> {  
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
                 
             }
-            case "RS384" -> {   
+            case "05" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "RS256" -> {   
+            case "04" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "PS512" -> {
+            case "12" -> {
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "PS384" -> { 
+            case "11" -> { 
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "PS256" -> {  
+            case "10" -> {  
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "ES512" -> {   
+            case "09" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "ES384" -> {   
+            case "08" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "ES256" -> {   
+            case "07" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
             }
-            case "EdDSA" -> { 
+            case "36" -> { 
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
-                    key = keyFactory.generatePublic(keySpec);
+                    publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
@@ -563,21 +599,24 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             default -> throw new AssertionError();
         }
         
-        return key;
+        return publicKey;
     }
     
-    private PrivateKey convertStringToPrivateKey(String StringPrivateKey, String idJwa, String encodeType) {
+    private PrivateKey convertStringToPrivateKey(String stringPrivateKey, String idJwa, String encodingScheme) {
         
         byte[] decodedKey;
         PrivateKey privateKey = null;
         
-        switch (encodeType) {
-            case "BASE64URL" -> {
-                decodedKey = Decoders.BASE64URL.decode(StringPrivateKey);
-            }
-            case "BASE64" -> {
-                decodedKey = Decoders.BASE64.decode(StringPrivateKey);
+        switch (encodingScheme) {
+            case "00" -> {
+                decodedKey = Decoders.BASE64.decode(stringPrivateKey);
             }    
+            case "01" -> {
+                decodedKey = Decoders.BASE64URL.decode(stringPrivateKey);
+            }
+            case "02" -> {
+                decodedKey = hexStringToByteArrayTo(stringPrivateKey);
+            }
             default -> throw new AssertionError();
         }
                             

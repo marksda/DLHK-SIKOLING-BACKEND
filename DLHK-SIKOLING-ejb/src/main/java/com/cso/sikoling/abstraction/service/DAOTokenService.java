@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 
 public interface DAOTokenService<T> extends DAOService<T> {
-    T getToken(Credential c, String idKey, String encodedType) throws SQLException;
+    T getToken(Credential c, String idKey, String encodingScheme) throws SQLException;
     Claims validateAccessToken(String accessToken);
-    Key generateKey(String idRealm, String idJwa, String encodedType);
+    Key generateKey(String idRealm, String idJwa, String encodingScheme);
 }

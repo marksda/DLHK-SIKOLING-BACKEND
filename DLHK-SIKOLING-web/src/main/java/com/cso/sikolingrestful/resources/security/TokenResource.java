@@ -33,10 +33,10 @@ public class TokenResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/generate_key/{idRealm}/{idJwa}")
+    @Path("/generate_key/{idRealm}/{idJwa}/{idEncodingScheme")
     public KeyDTO generateKey(@PathParam("idRealm") String idRealm, 
-            @PathParam("idJwa") String idJwa) {  
-        Key key = tokenService.generateKey(idRealm, idJwa, "BASE64");
+            @PathParam("idJwa") String idJwa, @PathParam("idEncodingScheme") String idEncodingScheme) {  
+        Key key = tokenService.generateKey(idRealm, idJwa, idEncodingScheme);
         try {
             keyService.save(key);
             return new KeyDTO(key);
@@ -48,10 +48,13 @@ public class TokenResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{idKey}")
-    public TokenDTO getToken(@PathParam("idKey") String idKey, CredentialDTO credentialDTO) throws IOException {
+    @Path("/{idKey}/{idEncodingScheme")
+    public TokenDTO getToken(
+            @PathParam("idKey") String idKey, 
+            @PathParam("idEncodingScheme") String idEncodingScheme, 
+            CredentialDTO credentialDTO) throws IOException {
         try {
-            Token token = tokenService.getToken(credentialDTO.toCredential(), idKey, "BASE64");
+            Token token = tokenService.getToken(credentialDTO.toCredential(), idKey, idEncodingScheme);
             if(token != null) {
                 return new TokenDTO(token);
             }
