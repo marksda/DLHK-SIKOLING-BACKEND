@@ -48,7 +48,7 @@ public class TokenResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{idKey}/{idEncodingScheme")
+    @Path("/{idKey}/{idEncodingScheme}")
     public TokenDTO getToken(
             @PathParam("idKey") String idKey, 
             @PathParam("idEncodingScheme") String idEncodingScheme, 
