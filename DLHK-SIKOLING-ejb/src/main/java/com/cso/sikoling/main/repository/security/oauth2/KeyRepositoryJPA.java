@@ -237,7 +237,8 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
 		
         if(d != null) {
             key =  new Key(
-                    d.getId(), d.getJwa().getId(), d.getRealm().getId(), 
+                    d.getId(), d.getJwa().getId(), 
+                    d.getRealm().getId(), d.getEncoding_scheme().getId(),
                     d.getSecretKey(), d.getPrivateKey(), d.getPublicKey()
                 );
         }
@@ -263,6 +264,8 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
             keyData.setRealm(realmData);
             JwaData jwaData = new JwaData(t.getId_jwa());
             keyData.setJwa(jwaData);
+            EncodingSchemaData encodingSchemaData = new EncodingSchemaData(t.getId_encoding_scheme());
+            keyData.setEncoding_scheme(encodingSchemaData);
             keyData.setSecretKey(t.getSecred_key());
             keyData.setPrivateKey(t.getPrivate_key());
             keyData.setPublicKey(t.getPublic_key());
