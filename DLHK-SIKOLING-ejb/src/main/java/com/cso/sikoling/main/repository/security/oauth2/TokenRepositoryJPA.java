@@ -5,7 +5,6 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
-import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.main.repository.security.AutorisasiData;
 import com.cso.sikoling.main.repository.security.UserData;
 import com.github.f4b6a3.uuid.UuidCreator;
@@ -36,9 +35,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.crypto.SecretKey;
+import com.cso.sikoling.abstraction.repository.TokenRepository;
 
 
-public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilters, Filter> {
+public class TokenRepositoryJPA implements TokenRepository<Token, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 

@@ -3,18 +3,18 @@ package com.cso.sikoling.abstraction.service.security.oauth2;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
-import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.abstraction.repository.KeyRepository;
 
-import com.cso.sikoling.abstraction.service.DAOService;
+import com.cso.sikoling.abstraction.service.DAOKeyService;
 import java.sql.SQLException;
 import java.util.List;
 
 
-public class KeyServiceBasic implements DAOService<Key> {
+public class KeyServiceBasic implements DAOKeyService<Key> {
     
-    private final Repository<Key, QueryParamFilters, Filter> repository;
+    private final KeyRepository<Key, QueryParamFilters, Filter> repository;
 
-    public KeyServiceBasic(Repository repository) {
+    public KeyServiceBasic(KeyRepository repository) {
         this.repository = repository;
     }    
 
@@ -46,6 +46,11 @@ public class KeyServiceBasic implements DAOService<Key> {
     @Override
     public Long getJumlahData(List<Filter> queryParamFilters) {
         return repository.getJumlahData(queryParamFilters);
+    }
+    
+    @Override
+    public Key generateKey(String idRealm, String idJwa, String encodingScheme) {
+        return this.repository.generateKey(idRealm, idJwa, encodingScheme);
     }
 
 }

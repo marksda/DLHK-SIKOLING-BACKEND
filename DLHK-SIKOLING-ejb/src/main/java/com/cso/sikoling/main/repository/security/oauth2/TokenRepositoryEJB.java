@@ -1,7 +1,6 @@
 package com.cso.sikoling.main.repository.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Credential;
-import com.cso.sikoling.abstraction.repository.RepositoryToken;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
@@ -14,11 +13,12 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.repository.TokenRepository;
 
 @Stateless
 @Local
 @Infrastructure
-public class TokenRepositoryEJB implements RepositoryToken<Token, QueryParamFilters, Filter> {
+public class TokenRepositoryEJB implements TokenRepository<Token, QueryParamFilters, Filter> {
     
     @Inject
     private TokenRepositoryJPA tokenRepositoriJPA;

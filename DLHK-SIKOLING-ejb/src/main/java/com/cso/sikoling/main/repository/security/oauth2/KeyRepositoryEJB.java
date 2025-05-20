@@ -3,6 +3,7 @@ package com.cso.sikoling.main.repository.security.oauth2;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.repository.KeyRepository;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.Infrastructure;
 import jakarta.ejb.Local;
@@ -15,39 +16,44 @@ import java.util.List;
 @Stateless
 @Local
 @Infrastructure
-public class KeyRepositoryEJB implements Repository<Key, QueryParamFilters, Filter> {
+public class KeyRepositoryEJB implements KeyRepository<Key, QueryParamFilters, Filter> {
     
     @Inject
-    private KeyRepositoryJPA jwaRepositoryJPA;
+    private KeyRepositoryJPA keyRepository;
 
     @Override
     public Key updateId(String idLama, Key t) throws SQLException {
-        return jwaRepositoryJPA.updateId(idLama, t);
+        return keyRepository.updateId(idLama, t);
     }
 
     @Override
     public Key save(Key t) throws SQLException {
-        return jwaRepositoryJPA.save(t);
+        return keyRepository.save(t);
     }
 
     @Override
     public Key update(Key t) throws SQLException {
-        return jwaRepositoryJPA.update(t);
+        return keyRepository.update(t);
     }
 
     @Override
     public boolean delete(String id) throws SQLException {
-        return jwaRepositoryJPA.delete(id);
+        return keyRepository.delete(id);
     }
 
     @Override
     public List<Key> getDaftarData(QueryParamFilters q) {
-        return jwaRepositoryJPA.getDaftarData(q);
+        return keyRepository.getDaftarData(q);
     }
 
     @Override
     public Long getJumlahData(List<Filter> f) {
-        return jwaRepositoryJPA.getJumlahData(f);
+        return keyRepository.getJumlahData(f);
+    }
+
+    @Override
+    public Key generateKey(String idRealm, String idJwa, String encodingScheme) {
+        return keyRepository.generateKey(idRealm, idJwa, encodingScheme);
     }
     
 }

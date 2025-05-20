@@ -23,8 +23,8 @@ import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
+import com.cso.sikoling.abstraction.repository.KeyRepository;
 import com.cso.sikoling.abstraction.repository.Repository;
-import com.cso.sikoling.abstraction.repository.RepositoryToken;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
 import jakarta.ejb.Stateless;
@@ -52,6 +52,7 @@ import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.KeyServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
+import com.cso.sikoling.abstraction.repository.TokenRepository;
 
 @Stateless
 @LocalBean
@@ -167,7 +168,7 @@ public class RestfulProvider {
     
     @Produces
     public DAOTokenService<Token> getTokenService(
-            @Infrastructure RepositoryToken<Token, QueryParamFilters, Filter> tokenRepository) {
+            @Infrastructure TokenRepository<Token, QueryParamFilters, Filter> tokenRepository) {
         return new TokenServiceBasic(tokenRepository);
     }
     
@@ -179,7 +180,7 @@ public class RestfulProvider {
     
     @Produces
     public DAOService<Key> getKeyService(
-            @Infrastructure Repository<Key, QueryParamFilters, Filter> keyRepository) {
+            @Infrastructure KeyRepository<Key, QueryParamFilters, Filter> keyRepository) {
         return new KeyServiceBasic(keyRepository);
     }
 }
