@@ -23,10 +23,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
-import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikoling.abstraction.service.Service;
 
 @Stateless
 @LocalBean
@@ -34,7 +34,7 @@ import com.cso.sikolingrestful.annotation.RequiredRole;
 public class AutorisasiResource {
     
     @Inject
-    private DAOService<Autorisasi> autorisasiService;
+    private Service<Autorisasi> autorisasiService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})

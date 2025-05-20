@@ -1,10 +1,9 @@
-package com.cso.sikolingrestful.resources.security.oauth;
+package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
-import com.cso.sikoling.abstraction.service.DAOKeyService;
 import com.cso.sikolingrestful.exception.KeyException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -12,6 +11,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
+import com.cso.sikoling.abstraction.service.KeyService;
 
 @Stateless
 @LocalBean
@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class KeyResource {
     
     @Inject
-    private DAOKeyService<Key> keyService;
+    private KeyService<Key> keyService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})

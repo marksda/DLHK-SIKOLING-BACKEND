@@ -5,12 +5,12 @@ import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
-import com.cso.sikoling.abstraction.service.DAOService;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.service.Service;
 
 
-public class JenisKelaminServiceBasic implements DAOService<JenisKelamin> {
+public class JenisKelaminServiceBasic implements Service<JenisKelamin> {
     
     private final Repository<JenisKelamin, QueryParamFilters, Filter> repository;
 

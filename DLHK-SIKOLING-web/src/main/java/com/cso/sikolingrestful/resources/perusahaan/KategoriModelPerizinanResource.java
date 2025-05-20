@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
-import com.cso.sikoling.abstraction.service.DAOService;
+import com.cso.sikoling.abstraction.service.Service;
 
 @Stateless
 @LocalBean
@@ -31,7 +31,7 @@ import com.cso.sikoling.abstraction.service.DAOService;
 public class KategoriModelPerizinanResource {
     
     @Inject
-    private DAOService<KategoriModelPerizinan> kategoriModelPerizinanService;
+    private Service<KategoriModelPerizinan> kategoriModelPerizinanService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})

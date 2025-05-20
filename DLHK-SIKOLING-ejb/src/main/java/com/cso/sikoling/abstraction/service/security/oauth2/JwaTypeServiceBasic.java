@@ -5,12 +5,12 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
 import com.cso.sikoling.abstraction.repository.Repository;
 
-import com.cso.sikoling.abstraction.service.DAOService;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.service.Service;
 
 
-public class JwaTypeServiceBasic implements DAOService<JwaType> {
+public class JwaTypeServiceBasic implements Service<JwaType> {
     
     private final Repository<JwaType, QueryParamFilters, Filter> repository;
 

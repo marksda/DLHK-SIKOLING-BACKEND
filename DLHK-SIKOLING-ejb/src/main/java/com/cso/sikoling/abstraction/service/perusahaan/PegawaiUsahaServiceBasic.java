@@ -5,12 +5,12 @@ import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
-import com.cso.sikoling.abstraction.service.DAOService;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.service.Service;
 
 
-public class PegawaiUsahaServiceBasic implements DAOService<Pegawai> {
+public class PegawaiUsahaServiceBasic implements Service<Pegawai> {
     
     private final Repository<Pegawai, QueryParamFilters, Filter> repository;
 

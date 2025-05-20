@@ -1,4 +1,4 @@
-package com.cso.sikolingrestful.resources.security.oauth;
+package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import java.io.Serializable;

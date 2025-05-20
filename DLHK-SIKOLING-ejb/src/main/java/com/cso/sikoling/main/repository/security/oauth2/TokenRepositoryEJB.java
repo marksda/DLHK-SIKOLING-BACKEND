@@ -4,7 +4,6 @@ import com.cso.sikoling.abstraction.entity.Credential;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.main.Infrastructure;
 import io.jsonwebtoken.Claims;
@@ -61,11 +60,6 @@ public class TokenRepositoryEJB implements TokenRepository<Token, QueryParamFilt
     @Override
     public Claims validateAccessToken(String accessToken) {
         return tokenRepositoriJPA.validateAccessToken(accessToken);
-    }
-
-    @Override
-    public Key generateKey(String idRealm, String idJwa, String encodingScheme) {
-        return tokenRepositoriJPA.generateKey(idRealm, idJwa, encodingScheme);
     }
 
 }

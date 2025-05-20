@@ -1,14 +1,14 @@
 package com.cso.sikoling.abstraction.service.alamat;
 
-import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.alamat.Desa;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.service.Service;
 
-public class DesaServiceBasic implements DAOService<Desa> {
+public class DesaServiceBasic implements Service<Desa> {
     
     private final Repository<Desa, QueryParamFilters, Filter> repository;
 

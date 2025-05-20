@@ -5,12 +5,12 @@ import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
-import com.cso.sikoling.abstraction.service.DAOService;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.service.Service;
 
 
-public class HakAksesServiceBasic implements DAOService<HakAkses> {
+public class HakAksesServiceBasic implements Service<HakAkses> {
     
     private final Repository<HakAkses, QueryParamFilters, Filter> repository;
 

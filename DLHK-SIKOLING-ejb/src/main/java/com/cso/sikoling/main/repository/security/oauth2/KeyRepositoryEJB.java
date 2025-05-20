@@ -3,7 +3,6 @@ package com.cso.sikoling.main.repository.security.oauth2;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.repository.KeyRepository;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.Infrastructure;
 import jakarta.ejb.Local;
@@ -16,7 +15,7 @@ import java.util.List;
 @Stateless
 @Local
 @Infrastructure
-public class KeyRepositoryEJB implements KeyRepository<Key, QueryParamFilters, Filter> {
+public class KeyRepositoryEJB implements Repository<Key, QueryParamFilters, Filter> {
     
     @Inject
     private KeyRepositoryJPA keyRepository;
@@ -49,11 +48,6 @@ public class KeyRepositoryEJB implements KeyRepository<Key, QueryParamFilters, F
     @Override
     public Long getJumlahData(List<Filter> f) {
         return keyRepository.getJumlahData(f);
-    }
-
-    @Override
-    public Key generateKey(String idRealm, String idJwa, String encodingScheme) {
-        return keyRepository.generateKey(idRealm, idJwa, encodingScheme);
     }
     
 }

@@ -5,12 +5,12 @@ import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
-import com.cso.sikoling.abstraction.service.DAOService;
 import java.sql.SQLException;
 import java.util.List;
+import com.cso.sikoling.abstraction.service.Service;
 
 
-public class KategoriPelakuUsahaServiceBasic implements DAOService<KategoriPelakuUsaha> {
+public class KategoriPelakuUsahaServiceBasic implements Service<KategoriPelakuUsaha> {
     
     private final Repository<KategoriPelakuUsaha, QueryParamFilters, Filter> repository;
 

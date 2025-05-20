@@ -1,7 +1,6 @@
 package com.cso.sikolingrestful.provider;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
-import com.cso.sikoling.abstraction.service.DAOTokenService;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
@@ -24,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import com.cso.sikoling.abstraction.service.TokenService;
 
 @Provider
 @Stateless
@@ -32,7 +32,7 @@ import java.util.Set;
 public class AuthorizationFilter implements ContainerRequestFilter {
     
     @Inject
-    private DAOTokenService<Token> tokenService;
+    private TokenService<Token> tokenService;
     
     @Context
     private ResourceInfo resourceInfo;
