@@ -1,6 +1,6 @@
 package com.cso.sikolingrestful.provider;
 
-import com.cso.sikolingrestful.ExceptionResponse;
+import com.cso.sikolingrestful.exception.ExceptionResponse;
 import jakarta.json.bind.JsonbException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

@@ -47,7 +47,7 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
     }
 
     @Override
-    public Token getToken(Credential c, String idKey, String encodingScheme) throws SQLException {
+    public Token getToken(Credential c, String idRealm, String idKey, String encodingScheme) {
         Token token;
         
         try {
@@ -69,206 +69,211 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             KeyData keyData = entityManager.find(KeyData.class, idKey);
             
             if(keyData != null) {
-                Calendar cal = Calendar.getInstance();
-                Date today = cal.getTime();
-                cal.add(Calendar.YEAR, 1); 
-                Date nextYear = cal.getTime();
-                String jwt;
-                
-                JwaData jwaData = keyData.getJwa();
-                
-                switch (jwaData.getId()) {
-                    case "01" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(secretKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "02" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(secretKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "03" -> {   
-                        SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(secretKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "04" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "05" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "06" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "07" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "08" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "09" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "10" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "11" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "12" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    case "36" -> {   
-                        PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  encodingScheme);
-                        jwt = Jwts.builder()
-                                        .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
-                                        .issuer("DLHK Sidoarjo")
-                                        .subject("sikoling")
-                                        .audience().add(autorisasiData.getHakAkses().getId()).and()
-                                        .expiration(nextYear)
-                                        .issuedAt(today)
-                                        .id(autorisasiData.getId())
-                                        .signWith(privateKey)
-                                        .compact();
-                        token = new Token(jwt, null, 10000000L, autorisasiData.getId());
-                    }
-                    default -> throw new AssertionError();
-                }                
+                if(keyData.getRealm().getId().equals(idRealm)) {                
+                    Calendar cal = Calendar.getInstance();
+                    Date today = cal.getTime();
+                    cal.add(Calendar.YEAR, 1); 
+                    Date nextYear = cal.getTime();
+                    String jwt;
+
+                    JwaData jwaData = keyData.getJwa();
+
+                    switch (jwaData.getId()) {
+                        case "01" -> {   
+                            SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(secretKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "02" -> {   
+                            SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(secretKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "03" -> {   
+                            SecretKey secretKey = convertStringToSecretKey(keyData.getSecretKey(), encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(secretKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "04" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "04",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "05" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "05",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "06" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "06",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "07" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "07",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "08" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "08",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "09" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "09",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "10" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "10",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "11" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "11",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "12" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "12",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        case "36" -> {   
+                            PrivateKey privateKey = convertStringToPrivateKey(keyData.getPrivateKey(), "36",  encodingScheme);
+                            jwt = Jwts.builder()
+                                            .header().keyId(autorisasiData.getId()).add("typ", "JWT").and()
+                                            .issuer("DLHK Sidoarjo")
+                                            .subject("sikoling")
+                                            .audience().add(autorisasiData.getHakAkses().getId()).and()
+                                            .expiration(nextYear)
+                                            .issuedAt(today)
+                                            .id(autorisasiData.getId())
+                                            .signWith(privateKey)
+                                            .compact();
+                            token = new Token(jwt, null, 10000000L, autorisasiData.getId());
+                        }
+                        default -> throw new AssertionError();
+                    }    
+                }
+                else {
+                    token = null;
+                }
             }
             else {
                 token = null;
             }
 
             return token;
-        } catch (IllegalArgumentException | NoSuchAlgorithmException | InvalidKeyException | DecodingException ex) {
+        } catch ( NoSuchAlgorithmException | InvalidKeyException | DecodingException ex) {            
             return null;
         }
         

@@ -7,6 +7,7 @@ import jakarta.ws.rs.Path;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
+import com.cso.sikolingrestful.exception.KeyException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -34,8 +35,10 @@ public class TokenResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/generate_key/{idRealm}/{idJwa}/{idEncodingScheme}")
-    public KeyDTO generateKey(@PathParam("idRealm") String idRealm, 
-            @PathParam("idJwa") String idJwa, @PathParam("idEncodingScheme") String idEncodingScheme) {  
+    public KeyDTO generateKey(
+            @PathParam("idRealm") String idRealm, 
+            @PathParam("idJwa") String idJwa, 
+            @PathParam("idEncodingScheme") String idEncodingScheme) {  
         Key key = tokenService.generateKey(idRealm, idJwa, idEncodingScheme);
         try {
             keyService.save(key);
@@ -48,22 +51,18 @@ public class TokenResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{idKey}/{idEncodingScheme}")
+    @Path("/{idRealm}/{idKey}/{idEncodingScheme}")
     public TokenDTO getToken(
+            @PathParam("idRealm") String idRealm, 
             @PathParam("idKey") String idKey, 
             @PathParam("idEncodingScheme") String idEncodingScheme, 
-            CredentialDTO credentialDTO) throws IOException {
-        try {
-            Token token = tokenService.getToken(credentialDTO.toCredential(), idKey, idEncodingScheme);
-            if(token != null) {
-                return new TokenDTO(token);
-            }
-            else {
-                throw new IllegalArgumentException("credential ditolak");
-            }
-        } catch (SQLException ex) {
-//            Logger.getLogger(TokenResource.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IllegalArgumentException("credential ditolak");
+            CredentialDTO credentialDTO) throws KeyException {
+        Token token = tokenService.getToken(credentialDTO.toCredential(), idRealm, idKey, idEncodingScheme);
+        if(token != null) {
+            return new TokenDTO(token);
+        }
+        else {
+            throw new KeyException(500, "Realm not found");
         }
     }
     

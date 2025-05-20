@@ -1,4 +1,4 @@
-package com.cso.sikolingrestful;
+package com.cso.sikolingrestful.exception;
 
 public class ExceptionResponse {
 	
