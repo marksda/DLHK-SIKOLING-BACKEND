@@ -53,6 +53,7 @@ import com.cso.sikoling.abstraction.service.security.oauth2.KeyServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
 import com.cso.sikoling.abstraction.repository.TokenRepository;
+import com.cso.sikoling.abstraction.service.DAOKeyService;
 
 @Stateless
 @LocalBean
@@ -179,7 +180,7 @@ public class RestfulProvider {
     }
     
     @Produces
-    public DAOService<Key> getKeyService(
+    public DAOKeyService<Key> getKeyService(
             @Infrastructure KeyRepository<Key, QueryParamFilters, Filter> keyRepository) {
         return new KeyServiceBasic(keyRepository);
     }

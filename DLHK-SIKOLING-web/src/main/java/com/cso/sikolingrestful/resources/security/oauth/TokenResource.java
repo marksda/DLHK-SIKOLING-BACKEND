@@ -1,5 +1,7 @@
-package com.cso.sikolingrestful.resources.security;
+package com.cso.sikolingrestful.resources.security.oauth;
 
+import com.cso.sikolingrestful.resources.security.oauth.TokenDTO;
+import com.cso.sikolingrestful.resources.security.oauth.KeyDTO;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
@@ -8,6 +10,7 @@ import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.DAOService;
 import com.cso.sikoling.abstraction.service.DAOTokenService;
 import com.cso.sikolingrestful.exception.KeyException;
+import com.cso.sikolingrestful.resources.security.CredentialDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
