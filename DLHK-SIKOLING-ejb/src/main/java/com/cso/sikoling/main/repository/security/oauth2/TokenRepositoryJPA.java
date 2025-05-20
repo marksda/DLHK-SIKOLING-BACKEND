@@ -351,71 +351,141 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
             case "04" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme); 
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());                
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "05" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "06" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
                 KeyPair pair = alg.keyPair().build(); 
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "07" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "08" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "09" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "10" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "11" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "12" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             case "36" -> { 
                 SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
                 KeyPair pair = alg.keyPair().build();
-                String publicKeyWithEncodingScheme = convertKeyToString(pair.getPublic().getEncoded(), encodingScheme);
-                String privateKeyWithEncodingScheme = convertKeyToString(pair.getPrivate().getEncoded(), encodingScheme);
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertKeyToString(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertKeyToString(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme);
             }
             default -> throw new AssertionError();
@@ -449,18 +519,18 @@ public class TokenRepositoryJPA implements RepositoryToken<Token, QueryParamFilt
         return ans;
     }
     
-    private String convertKeyToString(byte[]secretKey, String encodingScheme) {
+    private String convertKeyToString(byte[] key, String encodingScheme) {
         String encodedKey = null;
         
         switch (encodingScheme) {
             case "00" -> {  
-                encodedKey = Encoders.BASE64.encode(secretKey); 
+                encodedKey = Encoders.BASE64.encode(key); 
             }
             case "01" -> {   
-                encodedKey = Encoders.BASE64URL.encode(secretKey); 
+                encodedKey = Encoders.BASE64URL.encode(key); 
             }
             case "02" -> {   
-                encodedKey = byteArrayToHexString(secretKey); 
+                encodedKey = byteArrayToHexString(key); 
             }
             default -> throw new AssertionError();
         }        

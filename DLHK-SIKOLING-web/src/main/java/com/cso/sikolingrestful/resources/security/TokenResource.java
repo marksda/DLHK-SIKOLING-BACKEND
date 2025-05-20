@@ -33,7 +33,7 @@ public class TokenResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/generate_key/{idRealm}/{idJwa}/{idEncodingScheme")
+    @Path("/generate_key/{idRealm}/{idJwa}/{idEncodingScheme}")
     public KeyDTO generateKey(@PathParam("idRealm") String idRealm, 
             @PathParam("idJwa") String idJwa, @PathParam("idEncodingScheme") String idEncodingScheme) {  
         Key key = tokenService.generateKey(idRealm, idJwa, idEncodingScheme);
