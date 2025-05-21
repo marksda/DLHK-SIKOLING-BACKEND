@@ -5,6 +5,7 @@ import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
+import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.Infrastructure;
 import io.jsonwebtoken.Claims;
 import jakarta.ejb.Local;
@@ -12,20 +13,14 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import java.sql.SQLException;
 import java.util.List;
-import com.cso.sikoling.abstraction.repository.TokenRepository;
 
 @Stateless
 @Local
 @Infrastructure
-public class TokenRepositoryEJB implements TokenRepository<Token, QueryParamFilters, Filter> {
+public class TokenRepositoryEJB implements Repository<Token, QueryParamFilters, Filter> {
     
     @Inject
     private TokenRepositoryJPA tokenRepositoriJPA;
-
-    @Override
-    public Token getToken(Credential c, String idRealm, String idKey, String encodingScheme) {
-        return tokenRepositoriJPA.getToken(c, idRealm, idKey, encodingScheme);
-    }
 
     @Override
     public Token save(Token t) throws SQLException {
@@ -55,11 +50,6 @@ public class TokenRepositoryEJB implements TokenRepository<Token, QueryParamFilt
     @Override
     public Long getJumlahData(List<Filter> f) {
         return tokenRepositoriJPA.getJumlahData(f);
-    }
-
-    @Override
-    public Claims validateAccessToken(String accessToken) {
-        return tokenRepositoriJPA.validateAccessToken(accessToken);
     }
 
 }

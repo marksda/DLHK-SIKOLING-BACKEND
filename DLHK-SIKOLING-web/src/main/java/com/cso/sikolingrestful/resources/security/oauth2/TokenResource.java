@@ -30,10 +30,9 @@ public class TokenResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{idRealm}/{idKey}/{idEncodingScheme}")
-    public TokenDTO getToken(
+    public TokenDTO generateToken(
             @PathParam("idRealm") String idRealm, 
-            @PathParam("idKey") String idKey, 
-            @PathParam("idEncodingScheme") String idEncodingScheme, 
+            @PathParam("idKey") String idKey,
             CredentialDTO credentialDTO) throws KeyException {
 //        Token token = tokenService.generateToken(credentialDTO.toCredential(), idRealm, idKey, idEncodingScheme);
         Token token = null;

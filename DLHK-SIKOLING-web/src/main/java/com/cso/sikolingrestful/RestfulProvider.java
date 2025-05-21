@@ -168,7 +168,7 @@ public class RestfulProvider {
     
     @Produces
     public TokenService<Token> getTokenService(
-            @Infrastructure TokenRepository<Token, QueryParamFilters, Filter> tokenRepository) {
+            @Infrastructure Repository<Token, QueryParamFilters, Filter> tokenRepository) {
         return new TokenServiceBasic(tokenRepository);
     }
     
