@@ -47,6 +47,16 @@
             <artifactId>uuid-creator</artifactId>
             <version>6.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.password4j</groupId>
+            <artifactId>password4j</artifactId>
+            <version>1.8.2</version>
+        </dependency>
     </dependencies>
     
     <build>
