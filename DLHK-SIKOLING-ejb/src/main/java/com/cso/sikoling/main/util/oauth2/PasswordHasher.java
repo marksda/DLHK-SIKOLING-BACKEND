@@ -1,14 +1,19 @@
 package com.cso.sikoling.main.util.oauth2;
 
+import com.password4j.Argon2Function;
 import com.password4j.BcryptFunction;
+import com.password4j.CompressedPBKDF2Function;
 import com.password4j.Hash;
+import com.password4j.PBKDF2Function;
 import com.password4j.Password;
 import com.password4j.ScryptFunction;
+import com.password4j.types.Argon2;
 import com.password4j.types.Bcrypt;
 import static com.password4j.types.Bcrypt.A;
 import static com.password4j.types.Bcrypt.B;
 import static com.password4j.types.Bcrypt.X;
 import static com.password4j.types.Bcrypt.Y;
+import com.password4j.types.Hmac;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -153,43 +158,224 @@ public final class PasswordHasher {
         if(salt != null) {
             if(pepper != null) {
                 Hash hash = Password.hash(plainTextPassword)
-                    .addPepper("pepper")
-                    .addSalt("salt")
+                    .addPepper(pepper)
+                    .addSalt(salt)
                     .with(scrypt);
+                
                 return hash.getResult();
             }
             else {
                 Hash hash = Password.hash(plainTextPassword)
-                    .addPepper("pepper")
+                    .addPepper(pepper)
                     .with(scrypt);
+                
                 return hash.getResult();
             }            
         }
         else {
             if(pepper != null) {
                 Hash hash = Password.hash(plainTextPassword)
-                    .addPepper("pepper")
+                    .addPepper(pepper)
                     .with(scrypt);
+                
                 return hash.getResult();
             }
             else {
                 Hash hash = Password.hash(plainTextPassword)
-                    .with(scrypt);
+                            .with(scrypt);
+                
                 return hash.getResult();
             }
         }
     }
     
-    public static boolean checkScrypt(String plainTextPassword, String hashTextPassword,
-            String pepper) {
+    public static boolean checkScrypt(String plainTextPassword, 
+            String hashTextPassword, String pepper) {
         
         ScryptFunction scrypt = ScryptFunction.getInstanceFromHash(hashTextPassword);
+        boolean verified;
         
-        boolean verified = Password.check(plainTextPassword, hashTextPassword)
-                           .addPepper(pepper)
-                           .with(scrypt);
+        if(pepper != null) {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(pepper)
+                        .with(scrypt);
+        }
+        else {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .with(scrypt);
+        }
         
         return verified;
+    }
+    
+    public static String getArgon2(String plainTextPassword, int amountOfMemory, 
+            int numberOfIteration, int countOfParallelisation, int outputLength, 
+            Argon2 argon2TypeAlg, int version, String salt, String pepper) {
+        
+        Argon2Function argon2 = Argon2Function.getInstance(
+                amountOfMemory, numberOfIteration, outputLength, 
+                outputLength, argon2TypeAlg, version);
+        
+        if(salt != null) {
+            if(pepper != null) {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addPepper(pepper)
+                    .addSalt(salt)
+                    .with(argon2);
+                
+                return hash.getResult();
+            }
+            else {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addSalt(salt)
+                    .with(argon2);
+                
+                return hash.getResult();
+            }
+        }
+        else {
+            if(pepper != null) {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addPepper(pepper)
+                    .with(argon2);
+                
+                return hash.getResult();
+            }
+            else {
+                Hash hash = Password.hash(plainTextPassword).with(argon2);
+                
+                return hash.getResult();
+            }
+        }
+        
+    }
+    
+    public static boolean checkArgon2(String plainTextPassword, 
+            String hashTextPassword, String pepper) {
+        
+        Argon2Function argon2 = Argon2Function.getInstanceFromHash(hashTextPassword);
+        
+        boolean verified;
+        
+        if(pepper != null) {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(pepper)
+                        .with(argon2);
+        }        
+        else {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .with(argon2);
+        }
+        
+        return verified;
+    }
+    
+    public static String getPBKDF2(String plainTextPassword, int prfIteration, 
+            int outputLength, Hmac algType, String salt, String pepper) {
+        
+        PBKDF2Function pbkdf2 = PBKDF2Function.getInstance(algType, prfIteration, outputLength);
+        
+        if(salt != null) {
+            if(pepper != null) {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addPepper(pepper)
+                    .addSalt(salt)
+                    .with(pbkdf2);
+                
+                return hash.getResult();
+            }
+            else {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addSalt(salt).with(pbkdf2);
+                
+                return hash.getResult();
+            }
+        }
+        else {
+            if(pepper != null) {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addPepper(pepper).with(pbkdf2);
+                
+                return hash.getResult();
+            }
+            else {
+                Hash hash = Password.hash(plainTextPassword).with(pbkdf2);
+                
+                return hash.getResult();
+            }
+        }
+        
+    }
+    
+    public static boolean checkPBKDF2(String plainTextPassword, String hashTextPassword, 
+            int prfIteration, int outputLength, Hmac algType, String salt, String pepper) {
+        
+        PBKDF2Function pbkdf2 = PBKDF2Function.getInstance(algType, prfIteration, outputLength);        
+        boolean verified;
+        
+        if(salt != null) {
+            if(pepper != null) {
+                verified = Password.check(plainTextPassword, hashTextPassword)
+                           .addSalt(salt)
+                           .addPepper(pepper)
+                           .with(pbkdf2);
+            }
+            else {
+                verified = Password.check(plainTextPassword, hashTextPassword)
+                           .addSalt(salt)
+                           .with(pbkdf2);
+            }
+        }
+        else {
+            if(pepper != null) {
+                verified = Password.check(plainTextPassword, hashTextPassword)
+                           .addPepper(pepper)
+                           .with(pbkdf2);
+            }
+            else {
+                verified = Password.check(plainTextPassword, hashTextPassword)
+                           .with(pbkdf2);
+            }
+        }
+        
+        return verified;
+    }
+    
+    public static String getCompressedPBKDF2(String plainTextPassword, int prfIteration, 
+            int outputLength, Hmac algType, String salt, String pepper) {
+        
+        CompressedPBKDF2Function compressedPBKDF2 = CompressedPBKDF2Function.getInstance(algType, prfIteration, outputLength);
+        
+        if(salt != null) {
+            if(pepper != null) {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addPepper(pepper)
+                    .addSalt(salt)
+                    .with(compressedPBKDF2);
+                
+                return hash.getResult();
+            }
+            else {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addSalt(salt).with(compressedPBKDF2);
+                
+                return hash.getResult();
+            }
+        }
+        else {
+            if(pepper != null) {
+                Hash hash = Password.hash(plainTextPassword)
+                    .addPepper(pepper).with(compressedPBKDF2);
+                
+                return hash.getResult();
+            }
+            else {
+                Hash hash = Password.hash(plainTextPassword).with(compressedPBKDF2);
+                
+                return hash.getResult();
+            }
+        }
+        
     }
     
 }
