@@ -19,7 +19,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
-import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.User;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
@@ -119,8 +119,8 @@ public class RestfulProvider {
     }
     
     @Produces
-    public Service<HakAkses> getHakAksesService(
-            @Infrastructure Repository<HakAkses, QueryParamFilters, Filter> hakAksesRepository) {
+    public Service<User> getHakAksesService(
+            @Infrastructure Repository<User, QueryParamFilters, Filter> hakAksesRepository) {
         return new HakAksesServiceBasic(hakAksesRepository);
     }
     

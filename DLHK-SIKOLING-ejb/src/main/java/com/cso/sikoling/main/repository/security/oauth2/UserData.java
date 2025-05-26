@@ -1,4 +1,4 @@
-package com.cso.sikoling.main.repository.security;
+package com.cso.sikoling.main.repository.security.oauth2;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;

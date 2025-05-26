@@ -378,4 +378,24 @@ public final class PasswordHasher {
         
     }
     
+    public static boolean checkCompressedPBKDF2(String plainTextPassword, 
+                                        String hashTextPassword, String pepper) {
+        
+        CompressedPBKDF2Function compressedPBKDF2 = CompressedPBKDF2Function.getInstanceFromHash(hashTextPassword);
+        
+        boolean verified;
+        
+        if(pepper != null) {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(pepper)
+                        .with(compressedPBKDF2);
+        }        
+        else {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .with(compressedPBKDF2);
+        }
+        
+        return verified;
+    }
+    
 }

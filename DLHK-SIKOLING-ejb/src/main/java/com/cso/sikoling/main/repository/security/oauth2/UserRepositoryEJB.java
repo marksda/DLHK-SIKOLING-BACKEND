@@ -1,7 +1,7 @@
-package com.cso.sikoling.main.repository.security;
+package com.cso.sikoling.main.repository.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.security.User;
+import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.Infrastructure;
@@ -15,39 +15,39 @@ import java.util.List;
 @Stateless
 @Local
 @Infrastructure
-public class HakAksesRepositoryEJB implements Repository<User, QueryParamFilters, Filter> {
+public class UserRepositoryEJB implements Repository<User, QueryParamFilters, Filter> {
     
     @Inject
-    private HakAksesRepositoryJPA hakAksesRepositoryJPA;
+    private UserRepositoryJPA userRepositoryJPA;
 
     @Override
     public User updateId(String idLama, User t) throws SQLException {
-        return hakAksesRepositoryJPA.updateId(idLama, t);
+        return userRepositoryJPA.updateId(idLama, t);
     }
 
     @Override
     public User save(User t) throws SQLException {
-        return hakAksesRepositoryJPA.save(t);
+        return userRepositoryJPA.save(t);
     }
 
     @Override
     public User update(User t) throws SQLException {
-        return hakAksesRepositoryJPA.update(t);
+        return userRepositoryJPA.update(t);
     }
 
     @Override
     public boolean delete(String id) throws SQLException {
-        return hakAksesRepositoryJPA.delete(id);
+        return userRepositoryJPA.delete(id);
     }
 
     @Override
     public List<User> getDaftarData(QueryParamFilters q) {
-        return hakAksesRepositoryJPA.getDaftarData(q);
+        return userRepositoryJPA.getDaftarData(q);
     }
 
     @Override
     public Long getJumlahData(List<Filter> f) {
-        return hakAksesRepositoryJPA.getJumlahData(f);
+        return userRepositoryJPA.getJumlahData(f);
     }
     
 }

@@ -1,7 +1,7 @@
 package com.cso.sikoling.abstraction.service.security;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.User;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
@@ -10,26 +10,26 @@ import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 
 
-public class HakAksesServiceBasic implements Service<HakAkses> {
+public class HakAksesServiceBasic implements Service<User> {
     
-    private final Repository<HakAkses, QueryParamFilters, Filter> repository;
+    private final Repository<User, QueryParamFilters, Filter> repository;
 
     public HakAksesServiceBasic(Repository repository) {
         this.repository = repository;
     }    
 
     @Override
-    public HakAkses save(HakAkses t) throws SQLException {
+    public User save(User t) throws SQLException {
         return repository.save(t);
     }
 
     @Override
-    public HakAkses update(HakAkses t) throws SQLException {
+    public User update(User t) throws SQLException {
         return repository.update(t);
     }
 
     @Override
-    public HakAkses updateId(String idLama, HakAkses t) throws SQLException {
+    public User updateId(String idLama, User t) throws SQLException {
         return repository.updateId(idLama, t);
     }
 
@@ -39,7 +39,7 @@ public class HakAksesServiceBasic implements Service<HakAkses> {
     }
 
     @Override
-    public List<HakAkses> getDaftarData(QueryParamFilters queryParamFilters) {
+    public List<User> getDaftarData(QueryParamFilters queryParamFilters) {
         return repository.getDaftarData(queryParamFilters);
     }
 

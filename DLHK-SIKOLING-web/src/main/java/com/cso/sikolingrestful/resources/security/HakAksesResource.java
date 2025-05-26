@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.User;
 import com.cso.sikoling.abstraction.service.Service;
 
 @Stateless
@@ -31,7 +31,7 @@ import com.cso.sikoling.abstraction.service.Service;
 public class HakAksesResource {
     
     @Inject
-    private Service<HakAkses> hakAksesService;
+    private Service<User> hakAksesService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})

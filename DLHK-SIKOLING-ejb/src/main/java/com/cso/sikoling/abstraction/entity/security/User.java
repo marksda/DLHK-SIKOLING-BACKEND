@@ -3,13 +3,13 @@ package com.cso.sikoling.abstraction.entity.security;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class HakAkses implements Serializable {
+public class User implements Serializable {
     
     private final String id;
     private final String nama;
     private final String keterangan;
 
-    public HakAkses(String id, String nama, String keterangan) {
+    public User(String id, String nama, String keterangan) {
         this.id = id;
         this.nama = nama;
         this.keterangan = keterangan;
@@ -49,7 +49,7 @@ public class HakAkses implements Serializable {
             return false;
         }
 
-        final HakAkses other = (HakAkses) obj;
+        final User other = (User) obj;
 
         return this.id.equals(other.getId());
         
