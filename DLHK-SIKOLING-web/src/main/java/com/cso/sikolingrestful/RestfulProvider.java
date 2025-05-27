@@ -19,7 +19,8 @@ import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
-import com.cso.sikoling.abstraction.entity.security.User;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
@@ -49,10 +50,10 @@ import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.KeyServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
-import com.cso.sikoling.abstraction.repository.TokenRepository;
 import com.cso.sikoling.abstraction.service.KeyService;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.abstraction.service.TokenService;
+import com.cso.sikoling.abstraction.service.security.oauth2.UserServiceBasic;
 
 @Stateless
 @LocalBean
@@ -119,8 +120,8 @@ public class RestfulProvider {
     }
     
     @Produces
-    public Service<User> getHakAksesService(
-            @Infrastructure Repository<User, QueryParamFilters, Filter> hakAksesRepository) {
+    public Service<HakAkses> getHakAksesService(
+            @Infrastructure Repository<HakAkses, QueryParamFilters, Filter> hakAksesRepository) {
         return new HakAksesServiceBasic(hakAksesRepository);
     }
     
@@ -182,5 +183,11 @@ public class RestfulProvider {
     public KeyService<Key> getKeyService(
             @Infrastructure Repository<Key, QueryParamFilters, Filter> keyRepository) {
         return new KeyServiceBasic(keyRepository);
+    }
+    
+    @Produces
+    public Service<User> getUserService(
+            @Infrastructure Repository<User, QueryParamFilters, Filter> userRepository) {
+        return new UserServiceBasic(userRepository);
     }
 }

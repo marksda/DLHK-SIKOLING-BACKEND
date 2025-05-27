@@ -33,10 +33,10 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
     @Override
     public User save(User t) throws SQLException {   
         try {
-            UserData hakAksesData = convertUserToUserData(t);
-            entityManager.persist(hakAksesData);
+            UserData userAksesData = convertUserToUserData(t);
+            entityManager.persist(userAksesData);
             entityManager.flush();             
-            return convertUserDataToUser(hakAksesData);  
+            return convertUserDataToUser(userAksesData);  
         } 
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
@@ -50,9 +50,9 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
     public User update(User t) throws SQLException {
         
         try {
-            UserData hakAksesData = convertUserToUserData(t);  
-            hakAksesData = entityManager.merge(hakAksesData);
-            return convertUserDataToUser(hakAksesData);   
+            UserData userAksesData = convertUserToUserData(t);  
+            userAksesData = entityManager.merge(userAksesData);
+            return convertUserDataToUser(userAksesData);   
         }         
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
@@ -91,9 +91,9 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
     public boolean delete(String id) throws SQLException {
         
         try {
-            UserData hakAksesData = entityManager.find(UserData.class, id);
-            if(hakAksesData != null) {
-                entityManager.remove(hakAksesData);	
+            UserData userAksesData = entityManager.find(UserData.class, id);
+            if(userAksesData != null) {
+                entityManager.remove(userAksesData);	
                 entityManager.flush();
                 return true;
             }

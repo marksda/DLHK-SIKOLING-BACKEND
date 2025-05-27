@@ -2,7 +2,7 @@ package com.cso.sikoling.main.repository.security;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
-import com.cso.sikoling.abstraction.entity.security.User;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.repository.Repository;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class HakAksesRepositoryJPA implements Repository<User, QueryParamFilters, Filter> {
+public class HakAksesRepositoryJPA implements Repository<HakAkses, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
@@ -31,7 +31,7 @@ public class HakAksesRepositoryJPA implements Repository<User, QueryParamFilters
     }
     
     @Override
-    public User save(User t) throws SQLException {   
+    public HakAkses save(HakAkses t) throws SQLException {   
         try {
             HakAksesData hakAksesData = convertHakAksesToHakAksesData(t);
             entityManager.persist(hakAksesData);
@@ -47,7 +47,7 @@ public class HakAksesRepositoryJPA implements Repository<User, QueryParamFilters
     }
 
     @Override
-    public User update(User t) throws SQLException {
+    public HakAkses update(HakAkses t) throws SQLException {
         
         try {
             HakAksesData hakAksesData = convertHakAksesToHakAksesData(t);  
@@ -64,7 +64,7 @@ public class HakAksesRepositoryJPA implements Repository<User, QueryParamFilters
     }
 
     @Override
-    public User updateId(String idLama, User t) throws SQLException {
+    public HakAkses updateId(String idLama, HakAkses t) throws SQLException {
         
         Query query = entityManager.createNamedQuery("HakAksesData.updateId");
         query.setParameter("idBaru", t.getId());
@@ -111,7 +111,7 @@ public class HakAksesRepositoryJPA implements Repository<User, QueryParamFilters
     }
 
     @Override
-    public List<User> getDaftarData(QueryParamFilters q) {
+    public List<HakAkses> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -230,17 +230,17 @@ public class HakAksesRepositoryJPA implements Repository<User, QueryParamFilters
         
     }
     
-    private User convertHakAksesDataToHakAkses(HakAksesData d) {
-        User hakAkses = null;
+    private HakAkses convertHakAksesDataToHakAkses(HakAksesData d) {
+        HakAkses hakAkses = null;
 		
         if(d != null) {
-            hakAkses = new User(d.getId(), d.getNama(), d.getKeterangan());
+            hakAkses = new HakAkses(d.getId(), d.getNama(), d.getKeterangan());
         }
 
         return hakAkses;	
     }
     
-    private HakAksesData convertHakAksesToHakAksesData(User t) {
+    private HakAksesData convertHakAksesToHakAksesData(HakAkses t) {
         HakAksesData hakAksesData = null;
 		
         if(t != null) {
