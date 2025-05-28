@@ -59,12 +59,7 @@ public class UserDTO implements Serializable {
     }
     
     public User toUser() {
-        if(this.id == null) {
-            throw new IllegalArgumentException("format data json propinsi tidak sesuai");
-        }
-        else {
-            return new User(this.id, this.user_name, this.password, this.tanggal_registrasi);
-        }
+        return new User(this.id, this.user_name, this.password, this.tanggal_registrasi);
     }
 
     @Override

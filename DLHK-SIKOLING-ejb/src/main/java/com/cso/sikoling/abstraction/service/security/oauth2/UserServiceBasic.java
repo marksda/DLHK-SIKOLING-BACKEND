@@ -8,11 +8,17 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikoling.main.util.GeneratorID;
+import com.cso.sikoling.main.util.oauth2.PasswordHasher;
+import com.password4j.types.Hmac;
+import io.jsonwebtoken.io.Encoders;
+import java.security.SecureRandom;
 
 
 public class UserServiceBasic implements Service<User> {
     
     private final Repository<User, QueryParamFilters, Filter> repository;
+    private final SecureRandom random = new SecureRandom();
 
     public UserServiceBasic(Repository repository) {
         this.repository = repository;
@@ -20,7 +26,12 @@ public class UserServiceBasic implements Service<User> {
 
     @Override
     public User save(User t) throws SQLException {
-        return repository.save(t);
+        String salt = Encoders.BASE64.encode(getRandomSalt(new byte[32]));
+        String hashPassword = PasswordHasher.getCompressedPBKDF2(
+                t.getPassword(), 1000, 1024, Hmac.SHA256, salt, null);
+        User user = new User(GeneratorID.getUserId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
+        
+        return repository.save(user);
     }
 
     @Override
@@ -46,6 +57,11 @@ public class UserServiceBasic implements Service<User> {
     @Override
     public Long getJumlahData(List<Filter> queryParamFilters) {
         return repository.getJumlahData(queryParamFilters);
+    }
+    
+    private synchronized byte[] getRandomSalt(byte[] salt) {
+        random.nextBytes(salt);
+        return salt;
     }
 
 }

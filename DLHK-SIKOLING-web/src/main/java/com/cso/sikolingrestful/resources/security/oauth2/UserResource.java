@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikolingrestful.resources.security.CredentialDTO;
+import java.util.Date;
 
 @Stateless
 @LocalBean
@@ -63,15 +65,18 @@ public class UserResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public UserDTO save(UserDTO userDTO) throws SQLException { 
-        
+    public UserDTO save(CredentialDTO credentialDTO) throws SQLException {         
         try {            
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUser_name(credentialDTO.getEmail());
+            userDTO.setPassword(credentialDTO.getPassword());
+            Date currentDate = new Date();
+            userDTO.setTanggal_registrasi(currentDate);
             return new UserDTO(userService.save(userDTO.toUser()));
         } 
         catch (NullPointerException e) {
             throw new IllegalArgumentException("data json user harus disertakan di body post request");
-        }    
-        
+        }  
     }
     
     @Path("/{idLama}")

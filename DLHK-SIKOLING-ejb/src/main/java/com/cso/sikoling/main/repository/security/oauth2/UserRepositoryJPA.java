@@ -33,16 +33,13 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
     @Override
     public User save(User t) throws SQLException {   
         try {
-            UserData userAksesData = convertUserToUserData(t);
-            entityManager.persist(userAksesData);
+            UserData userData = convertUserToUserData(t);
+            entityManager.persist(userData);
             entityManager.flush();             
-            return convertUserDataToUser(userAksesData);  
+            return convertUserDataToUser(userData);  
         } 
-        catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
-        }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data hak akses");
+            throw new SQLException("Duplikasi data user");
         }        
     }
 
