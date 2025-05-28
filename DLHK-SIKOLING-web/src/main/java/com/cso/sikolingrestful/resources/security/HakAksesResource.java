@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.resources.security;
 
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -31,7 +32,7 @@ import com.cso.sikoling.abstraction.service.Service;
 public class HakAksesResource {
     
     @Inject
-    private Service<User> hakAksesService;
+    private Service<HakAkses> hakAksesService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})

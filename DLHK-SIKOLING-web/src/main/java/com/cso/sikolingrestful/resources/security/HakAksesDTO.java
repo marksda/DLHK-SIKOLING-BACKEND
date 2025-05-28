@@ -1,8 +1,8 @@
 package com.cso.sikolingrestful.resources.security;
 
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import java.io.Serializable;
 import java.util.Objects;
-import com.cso.sikoling.abstraction.entity.security.User;
 
 public class HakAksesDTO implements Serializable {
     
@@ -13,7 +13,7 @@ public class HakAksesDTO implements Serializable {
     public HakAksesDTO() {
     }
 
-    public HakAksesDTO(User t) {
+    public HakAksesDTO(HakAkses t) {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
@@ -45,8 +45,8 @@ public class HakAksesDTO implements Serializable {
         this.keterangan = keterangan;
     }
 
-    public User toHakAkses() {
-        return new User(id, nama, keterangan);
+    public HakAkses toHakAkses() {
+        return new HakAkses(id, nama, keterangan);
     }
 
     @Override
