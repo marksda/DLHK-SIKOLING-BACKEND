@@ -10,6 +10,7 @@ import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.main.util.GeneratorID;
 import com.cso.sikoling.main.util.oauth2.PasswordHasher;
+import com.password4j.types.Bcrypt;
 import com.password4j.types.Hmac;
 import io.jsonwebtoken.io.Encoders;
 import java.security.SecureRandom;
@@ -35,8 +36,10 @@ public class UserServiceBasic implements Service<User> {
     }
 
     @Override
-    public User update(User t) throws SQLException {
-        return repository.update(t);
+    public User update(User t) throws SQLException { 
+        String hashPassword = PasswordHasher.getBcrypt(t.getPassword(), Bcrypt.B, "sda", 11);
+        User user = new User(t.getId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
+        return repository.update(user);
     }
 
     @Override

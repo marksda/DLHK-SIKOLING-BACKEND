@@ -47,15 +47,12 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
     public User update(User t) throws SQLException {
         
         try {
-            UserData userAksesData = convertUserToUserData(t);  
-            userAksesData = entityManager.merge(userAksesData);
-            return convertUserDataToUser(userAksesData);   
-        }         
-        catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
-        }
+            UserData userData = convertUserToUserData(t);  
+            userData = entityManager.merge(userData);
+            return convertUserDataToUser(userData);   
+        } 
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data hak akses");
+            throw new SQLException("Duplikasi data user");
         }
         
     }
@@ -127,7 +124,7 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
                             daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         }
                         case "nama" -> {
-                            daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                            daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
                         }
                         default -> {}
                     }			
@@ -157,10 +154,10 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
                         }
                         case "nama" -> {
                             if(sort.getValue().equals("asc")) {
-                                cq.orderBy(cb.asc(root.get("nama")));
+                                cq.orderBy(cb.asc(root.get("userName")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("nama")));
+                                cq.orderBy(cb.desc(root.get("userName")));
                             }
                         }
                         default -> {}
@@ -212,7 +209,7 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
                 default -> {
                 }
             }			
