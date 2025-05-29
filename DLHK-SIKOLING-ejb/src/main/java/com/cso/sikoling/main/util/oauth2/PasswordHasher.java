@@ -6,6 +6,7 @@ import com.password4j.CompressedPBKDF2Function;
 import com.password4j.Hash;
 import com.password4j.PBKDF2Function;
 import com.password4j.Password;
+import com.password4j.PepperGenerator;
 import com.password4j.ScryptFunction;
 import com.password4j.types.Argon2;
 import com.password4j.types.Bcrypt;
@@ -342,7 +343,7 @@ public final class PasswordHasher {
     }
     
     public static String getCompressedPBKDF2(String plainTextPassword, int prfIteration, 
-            int outputLength, Hmac algType, String salt, String pepper) {
+            int outputLength, Hmac algType, byte[] salt, String pepper) {
         
         CompressedPBKDF2Function compressedPBKDF2 = CompressedPBKDF2Function.getInstance(algType, prfIteration, outputLength);
         
@@ -365,12 +366,17 @@ public final class PasswordHasher {
         else {
             if(pepper != null) {
                 Hash hash = Password.hash(plainTextPassword)
-                    .addPepper(pepper).with(compressedPBKDF2);
+                        .addPepper(pepper)
+                        .addRandomSalt(48)
+                        .with(compressedPBKDF2);
                 
                 return hash.getResult();
             }
             else {
-                Hash hash = Password.hash(plainTextPassword).with(compressedPBKDF2);
+                Hash hash = Password.hash(plainTextPassword)
+                        .addPepper(PepperGenerator.get())
+                        .addRandomSalt(48)
+                        .with(compressedPBKDF2);
                 
                 return hash.getResult();
             }

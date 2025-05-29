@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.main.util.GeneratorID;
+import com.cso.sikoling.main.util.oauth2.KeyConverter;
 import com.cso.sikoling.main.util.oauth2.PasswordHasher;
 import com.password4j.types.Bcrypt;
 import com.password4j.types.Hmac;
@@ -27,9 +28,8 @@ public class UserServiceBasic implements Service<User> {
 
     @Override
     public User save(User t) throws SQLException {
-        String salt = Encoders.BASE64.encode(getRandomSalt(new byte[32]));
-        String hashPassword = PasswordHasher.getCompressedPBKDF2(
-                t.getPassword(), 1000, 1024, Hmac.SHA256, salt, null);
+//        byte[] salt = getRandomSalt(new byte[8]);
+        String hashPassword = PasswordHasher.getCompressedPBKDF2(t.getPassword(), 1000, 1024, Hmac.SHA256, null, null);
         User user = new User(GeneratorID.getUserId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
         
         return repository.save(user);
@@ -37,7 +37,8 @@ public class UserServiceBasic implements Service<User> {
 
     @Override
     public User update(User t) throws SQLException { 
-        String hashPassword = PasswordHasher.getBcrypt(t.getPassword(), Bcrypt.B, "sda", 11);
+//        byte[] salt = getRandomSalt(new byte[8]);
+        String hashPassword = PasswordHasher.getCompressedPBKDF2(t.getPassword(), 1000, 1024, Hmac.SHA256, null, null);
         User user = new User(t.getId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
         return repository.update(user);
     }
