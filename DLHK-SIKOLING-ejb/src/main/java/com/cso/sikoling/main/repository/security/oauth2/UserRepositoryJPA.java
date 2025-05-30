@@ -65,18 +65,15 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
         query.setParameter("idLama", idLama);
         try {
             int updateCount = query.executeUpdate();
-            if(updateCount > 0) {
+            if(updateCount > 0) {                
                 return update(t);
             }
             else {
-                throw new SQLException("Gagal mengupdate id hak akses");
+                throw new SQLException("Gagal mengupdate id user");
             }
         }
-        catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id hak akses harus bilangan dan panjang 2 digit");
-        }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id hak akses");
+            throw new SQLException("Dulpikasi id user");
         }
         
     }

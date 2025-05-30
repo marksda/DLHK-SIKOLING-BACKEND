@@ -27,18 +27,31 @@ public class UserServiceBasic implements Service<User> {
     }    
 
     @Override
-    public User save(User t) throws SQLException {
-//        byte[] salt = getRandomSalt(new byte[8]);
-        String hashPassword = PasswordHasher.getCompressedPBKDF2(t.getPassword(), 1000, 1024, Hmac.SHA256, null, null);
-        User user = new User(GeneratorID.getUserId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
+    public User save(User t) throws SQLException {        
+        String hashPassword = PasswordHasher.getCompressedPBKDF2(
+                t.getPassword(), 
+                1000, 
+                1024, 
+                Hmac.SHA256, 
+                null, 
+                null
+            );
+        User user = new User(GeneratorID.getUserId(), t.getUser_name(), 
+                hashPassword, t.getTanggal_registrasi());
         
         return repository.save(user);
     }
 
     @Override
     public User update(User t) throws SQLException { 
-//        byte[] salt = getRandomSalt(new byte[8]);
-        String hashPassword = PasswordHasher.getCompressedPBKDF2(t.getPassword(), 1000, 1024, Hmac.SHA256, null, null);
+        String hashPassword = PasswordHasher.getCompressedPBKDF2(
+                t.getPassword(), 
+                1000, 
+                1024, 
+                Hmac.SHA256, 
+                null, 
+                null
+            );
         User user = new User(t.getId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
         return repository.update(user);
     }
