@@ -282,7 +282,10 @@ public final class PasswordHasher {
     }
     
     public static boolean checkArgon2(String plainTextPassword, 
-            String hashTextPassword, byte[] salt, String pepper) {
+            String hashTextPassword, String pepper) {
+        String regex = "\\$";
+        String[] parts = hashTextPassword.split(regex);
+        String salt = parts[4];
         
         Argon2Function argon2 = Argon2Function.getInstanceFromHash(hashTextPassword);
         
