@@ -130,7 +130,6 @@ public class UserResource {
                     .add("status", userService.delete(idUser) == true ? "sukses" : "gagal")
                     .build();
             
-            
             return model;
     }
     

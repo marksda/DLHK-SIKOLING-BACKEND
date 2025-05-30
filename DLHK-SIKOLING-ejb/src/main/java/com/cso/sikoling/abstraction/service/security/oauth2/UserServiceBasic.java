@@ -11,10 +11,9 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.main.util.GeneratorID;
 import com.cso.sikoling.main.util.oauth2.KeyConverter;
 import com.cso.sikoling.main.util.oauth2.PasswordHasher;
-import com.password4j.types.Bcrypt;
 import com.password4j.types.Hmac;
-import io.jsonwebtoken.io.Encoders;
 import java.security.SecureRandom;
+import com.password4j.types.Argon2;
 
 
 public class UserServiceBasic implements Service<User> {
@@ -27,13 +26,17 @@ public class UserServiceBasic implements Service<User> {
     }    
 
     @Override
-    public User save(User t) throws SQLException {        
-        String hashPassword = PasswordHasher.getCompressedPBKDF2(
+    public User save(User t) throws SQLException {  
+        byte[] salt = getRandomSalt(new byte[16]);
+        String hashPassword = PasswordHasher.getArgon2(
                 t.getPassword(), 
-                1000, 
-                1024, 
-                Hmac.SHA256, 
-                null, 
+                15, 
+                32, 
+                2, 
+                48, 
+                Argon2.ID,
+                19,
+                salt,
                 null
             );
         User user = new User(GeneratorID.getUserId(), t.getUser_name(), 
