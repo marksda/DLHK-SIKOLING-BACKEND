@@ -47,12 +47,16 @@ public class UserServiceBasic implements Service<User> {
 
     @Override
     public User update(User t) throws SQLException { 
-        String hashPassword = PasswordHasher.getCompressedPBKDF2(
+        byte[] salt = getRandomSalt(new byte[16]);
+        String hashPassword = PasswordHasher.getArgon2(
                 t.getPassword(), 
-                1000, 
-                1024, 
-                Hmac.SHA256, 
-                null, 
+                15, 
+                32, 
+                2, 
+                48, 
+                Argon2.ID,
+                19,
+                salt,
                 null
             );
         User user = new User(t.getId(), t.getUser_name(), hashPassword, t.getTanggal_registrasi());
