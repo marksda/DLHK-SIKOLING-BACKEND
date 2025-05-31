@@ -11,15 +11,15 @@ import java.util.List;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.main.util.GeneratorID;
 import com.cso.sikoling.main.util.oauth2.PasswordHasher;
-import java.security.SecureRandom;
+import com.password4j.SaltGenerator;
 import com.password4j.types.Argon2;
+import com.password4j.types.Bcrypt;
 import java.util.ArrayList;
 
 
 public class UserServiceBasic implements UserService<User> {
     
     private final Repository<User, QueryParamFilters, Filter> repository;
-    private final SecureRandom random = new SecureRandom();
 
     public UserServiceBasic(Repository repository) {
         this.repository = repository;
@@ -27,18 +27,15 @@ public class UserServiceBasic implements UserService<User> {
 
     @Override
     public User save(User t) throws SQLException {  
-        byte[] salt = getRandomSalt(new byte[16]);
-        String hashPassword = PasswordHasher.getArgon2(
-                t.getPassword(), 
-                15, 
-                32, 
-                2, 
-                48, 
-                Argon2.ID,
-                19,
-                salt,
-                null
-            );
+        byte[] salt = SaltGenerator.generate(16);
+//        --argon2--
+        String hashPassword = PasswordHasher.getArgon2(t.getPassword(), 15, 32, 2, 48, Argon2.ID, 19, salt, null);
+//        --CompressedPBKDF2--
+//        String hashPassword = PasswordHasher.getCompressedPBKDF2(t.getPassword(), 1000, 256, Hmac.SHA256, salt, null);
+//        --Scrypt--
+//        String hashPassword = PasswordHasher.getScrypt(t.getPassword(), 16384, 8, 2, 128, salt, null);
+//        --Bcrypt--
+//        String hashPassword = PasswordHasher.getBcrypt(t.getPassword(), Bcrypt.Y, null, 11);
         User user = new User(GeneratorID.getUserId(), t.getUser_name(), 
                 hashPassword, t.getTanggal_registrasi());
         
@@ -47,7 +44,7 @@ public class UserServiceBasic implements UserService<User> {
 
     @Override
     public User update(User t) throws SQLException { 
-        byte[] salt = getRandomSalt(new byte[16]);
+        byte[] salt = SaltGenerator.generate(16);
         String hashPassword = PasswordHasher.getArgon2(
                 t.getPassword(), 
                 15, 
@@ -82,11 +79,6 @@ public class UserServiceBasic implements UserService<User> {
     public Long getJumlahData(List<Filter> queryParamFilters) {
         return repository.getJumlahData(queryParamFilters);
     }
-    
-    private synchronized byte[] getRandomSalt(byte[] salt) {
-        random.nextBytes(salt);
-        return salt;
-    }
 
     @Override
     public boolean authentication(Credential credential) {
@@ -103,6 +95,9 @@ public class UserServiceBasic implements UserService<User> {
         else{
             String hashFromDB = daftaruser.getFirst().getPassword();            
             verified = PasswordHasher.checkArgon2(credential.getPassword(), hashFromDB, null);
+//            verified = PasswordHasher.checkCompressedPBKDF2(credential.getPassword(), hashFromDB, null);
+//            verified = PasswordHasher.checkScrypt(credential.getPassword(), hashFromDB, null);
+//              verified = PasswordHasher.checkBcrypt(credential.getPassword(), hashFromDB, null);
         }
         
         return verified;

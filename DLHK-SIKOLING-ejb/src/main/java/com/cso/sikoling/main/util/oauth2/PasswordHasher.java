@@ -102,62 +102,27 @@ public final class PasswordHasher {
         
     } 
     
-    public static boolean checkBcrypt(String plainTextPassword, String hashTextPassword, 
-            Bcrypt bcryptVersion, String pepper, int costFactor) {
-        switch (bcryptVersion) {
-            case A -> {
-                BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.A, costFactor);
-                
-                return pepper == null ?
-                        Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(PepperGenerator.get())
-                                .with(bcrypt)
-                        :Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(pepper)
-                                .with(bcrypt);
-            }  
-            case B -> {
-                BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.B, costFactor);
-                
-                return pepper == null ?
-                        Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(PepperGenerator.get())
-                                .with(bcrypt)
-                        :Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(pepper)
-                                .with(bcrypt);
-            }  
-            case X -> {
-                BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.X, costFactor);
-                
-                return pepper == null ?
-                        Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(PepperGenerator.get())
-                                .with(bcrypt)
-                        :Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(pepper)
-                                .with(bcrypt);
-            }  
-            case Y -> {
-                BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.Y, costFactor);
-                
-                return pepper == null ?
-                        Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(PepperGenerator.get())
-                                .with(bcrypt)
-                        :Password.check(plainTextPassword, hashTextPassword)
-                                .addPepper(pepper)
-                                .with(bcrypt);
-            }  
-            default -> {
-                return false;
-            }
+    public static boolean checkBcrypt(String plainTextPassword, String hashTextPassword, String pepper) {
+        BcryptFunction bcrypt = BcryptFunction.getInstanceFromHash(hashTextPassword);
+        boolean verified;
+        
+        if(pepper != null) {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(pepper)
+                        .with(bcrypt);
         }
+        else {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(PepperGenerator.get())
+                        .with(bcrypt);
+        }
+        
+        return verified;
     }
     
     public static String getScrypt(String plainTextPassword, int workFactor,
             int memoryBlockSize, int countOfParallelisation, int outputLength,
-                String salt, String pepper) {
+                byte[] salt, String pepper) {
         
         ScryptFunction scrypt = ScryptFunction.getInstance(
                 workFactor, memoryBlockSize, 
@@ -200,37 +165,20 @@ public final class PasswordHasher {
         }
     }
     
-    public static boolean checkScrypt(String plainTextPassword, 
-                            String hashTextPassword, byte[] salt, String pepper) {
+    public static boolean checkScrypt(String plainTextPassword, String hashTextPassword,  String pepper) {
         
         ScryptFunction scrypt = ScryptFunction.getInstanceFromHash(hashTextPassword);
         boolean verified;
         
-        if(salt != null) {
-            if(pepper != null) {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(pepper)
-                            .addSalt(salt)
-                            .with(scrypt);
-            }
-            else {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(PepperGenerator.get())
-                            .addSalt(salt)
-                            .with(scrypt);
-            }
+        if(pepper != null) {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(pepper)
+                        .with(scrypt);
         }
         else {
-            if(pepper != null) {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(pepper)
-                            .with(scrypt);
-            }
-            else {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(PepperGenerator.get())
-                            .with(scrypt);
-            }
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(PepperGenerator.get())
+                        .with(scrypt);
         }
         
         return verified;
@@ -283,39 +231,17 @@ public final class PasswordHasher {
     
     public static boolean checkArgon2(String plainTextPassword, 
                                         String hashTextPassword, String pepper) {
-        String regex = "\\$";
-        String[] parts = hashTextPassword.split(regex);
-        String salt = parts[4];
         
         Argon2Function argon2 = Argon2Function.getInstanceFromHash(hashTextPassword);
-        
         boolean verified;
         
-        if(salt != null) {
-            if(pepper != null) {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(pepper)
-                            .addSalt(salt)
-                            .with(argon2);
-            }        
-            else {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(PepperGenerator.get())
-                            .addSalt(salt)
-                            .with(argon2);
-            }
+        if(pepper != null) {
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(pepper).with(argon2);
         }
         else {
-            if(pepper != null) {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(pepper)
-                            .with(argon2);
-            }        
-            else {
-                verified = Password.check(plainTextPassword, hashTextPassword)
-                            .addPepper(PepperGenerator.get())
-                            .with(argon2);
-            }
+            verified = Password.check(plainTextPassword, hashTextPassword)
+                        .addPepper(PepperGenerator.get()).with(argon2);
         }
         
         return verified;
@@ -416,7 +342,7 @@ public final class PasswordHasher {
             }
             else {
                 Hash hash = Password.hash(plainTextPassword)
-                    .addSalt(PepperGenerator.get())
+                    .addPepper(PepperGenerator.get())
                     .addSalt(salt)
                     .with(compressedPBKDF2);
                 
@@ -480,8 +406,6 @@ public final class PasswordHasher {
                             .with(compressedPBKDF2);
             }
         }
-        
-        
         
         return verified;
     }
