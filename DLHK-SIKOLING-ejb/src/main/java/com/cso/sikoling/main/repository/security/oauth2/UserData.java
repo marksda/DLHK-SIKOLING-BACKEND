@@ -22,7 +22,9 @@ import java.util.Date;
     @NamedQuery(name = "UserData.findById", query = "SELECT u FROM UserData u WHERE u.id = :id"),
     @NamedQuery(name = "UserData.findByUserName", query = "SELECT u FROM UserData u WHERE u.userName = :userName"),
     @NamedQuery(name = "UserData.findByPassword", query = "SELECT u FROM UserData u WHERE u.password = :password"),
-    @NamedQuery(name = "UserData.findByTanggalRegistrasi", query = "SELECT u FROM UserData u WHERE u.tanggalRegistrasi = :tanggalRegistrasi")})
+    @NamedQuery(name = "UserData.findByTanggalRegistrasi", query = "SELECT u FROM UserData u WHERE u.tanggalRegistrasi = :tanggalRegistrasi"),
+    @NamedQuery(name = "UserData.updateId", query = "UPDATE UserData SET id = :idBaru WHERE id = :idLama")
+})
 public class UserData implements Serializable {
 
     private static final long serialVersionUID = 1L;
