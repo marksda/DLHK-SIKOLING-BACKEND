@@ -97,7 +97,7 @@ public class UserServiceBasic implements UserService<User> {
             verified = PasswordHasher.checkArgon2(credential.getPassword(), hashFromDB, null);
 //            verified = PasswordHasher.checkCompressedPBKDF2(credential.getPassword(), hashFromDB, null);
 //            verified = PasswordHasher.checkScrypt(credential.getPassword(), hashFromDB, null);
-//              verified = PasswordHasher.checkBcrypt(credential.getPassword(), hashFromDB, null);
+//            verified = PasswordHasher.checkBcrypt(credential.getPassword(), hashFromDB, null);
         }
         
         return verified;
