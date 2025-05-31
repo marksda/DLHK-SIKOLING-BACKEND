@@ -65,15 +65,15 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
         query.setParameter("idLama", idLama);
         try {
             int updateCount = query.executeUpdate();
-            if(updateCount > 0) {                
-                return update(t);
+            if(updateCount > 0) {    
+                return t;
             }
             else {
                 throw new SQLException("Gagal mengupdate id user");
             }
         }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id user");
+            throw new SQLException("Duplikasi id user");
         }
         
     }
