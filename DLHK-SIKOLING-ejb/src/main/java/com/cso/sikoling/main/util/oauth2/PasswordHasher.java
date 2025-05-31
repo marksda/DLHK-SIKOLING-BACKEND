@@ -282,7 +282,7 @@ public final class PasswordHasher {
     }
     
     public static boolean checkArgon2(String plainTextPassword, 
-            String hashTextPassword, String pepper) {
+                                        String hashTextPassword, String pepper) {
         String regex = "\\$";
         String[] parts = hashTextPassword.split(regex);
         String salt = parts[4];

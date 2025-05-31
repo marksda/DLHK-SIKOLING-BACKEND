@@ -52,6 +52,7 @@ import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
 import com.cso.sikoling.abstraction.service.KeyService;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.security.oauth2.UserServiceBasic;
 
@@ -186,7 +187,7 @@ public class RestfulProvider {
     }
     
     @Produces
-    public Service<User> getUserService(
+    public UserService<User> getUserService(
             @Infrastructure Repository<User, QueryParamFilters, Filter> userRepository) {
         return new UserServiceBasic(userRepository);
     }

@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
-import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikolingrestful.resources.security.CredentialDTO;
 import java.util.Date;
 
@@ -33,7 +33,7 @@ import java.util.Date;
 public class UserResource {
     
     @Inject
-    private Service<User> userService;
+    private UserService<User> userService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -77,6 +77,18 @@ public class UserResource {
         catch (NullPointerException e) {
             throw new IllegalArgumentException("data json user harus disertakan di body post request");
         }  
+    }
+    
+    @Path("/authentication")
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject authentication(CredentialDTO credentialDTO) {         
+        JsonObject model = Json.createObjectBuilder()
+                    .add("status", userService.authentication(credentialDTO.toCredential()) == true ? "sukses" : "gagal")
+                    .build();
+            
+        return model;
     }
     
     @Path("/{idLama}")

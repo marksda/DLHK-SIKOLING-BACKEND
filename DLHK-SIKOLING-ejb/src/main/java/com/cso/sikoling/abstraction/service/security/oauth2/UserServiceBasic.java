@@ -1,5 +1,6 @@
 package com.cso.sikoling.abstraction.service.security.oauth2;
 
+import com.cso.sikoling.abstraction.entity.Credential;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
@@ -7,14 +8,15 @@ import com.cso.sikoling.abstraction.repository.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
-import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.main.util.GeneratorID;
 import com.cso.sikoling.main.util.oauth2.PasswordHasher;
 import java.security.SecureRandom;
 import com.password4j.types.Argon2;
+import java.util.ArrayList;
 
 
-public class UserServiceBasic implements Service<User> {
+public class UserServiceBasic implements UserService<User> {
     
     private final Repository<User, QueryParamFilters, Filter> repository;
     private final SecureRandom random = new SecureRandom();
@@ -84,6 +86,26 @@ public class UserServiceBasic implements Service<User> {
     private synchronized byte[] getRandomSalt(byte[] salt) {
         random.nextBytes(salt);
         return salt;
+    }
+
+    @Override
+    public boolean authentication(Credential credential) {
+        boolean verified;
+        List<Filter> fields_filter = new ArrayList<>();
+        Filter filter = new Filter("nama", credential.getEmail());
+        fields_filter.add(filter);
+        QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
+        
+        List<User> daftaruser = repository.getDaftarData(qFilter);
+        if(daftaruser.isEmpty()) {
+            verified = false;
+        }
+        else{
+            String hashFromDB = daftaruser.getFirst().getPassword();            
+            verified = PasswordHasher.checkArgon2(credential.getPassword(), hashFromDB, null);
+        }
+        
+        return verified;
     }
 
 }
