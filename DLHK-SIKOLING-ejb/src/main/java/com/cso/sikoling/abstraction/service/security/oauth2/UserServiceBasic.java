@@ -27,14 +27,18 @@ public class UserServiceBasic implements UserService<User> {
     @Override
     public User save(User t) throws SQLException {  
         byte[] salt = SaltGenerator.generate(16);
-//        --argon2--
+        /*--argon2--*/
         String hashPassword = PasswordHasher.getArgon2(t.getPassword(), 15, 32, 2, 48, Argon2.ID, 19, salt, null);
-//        --CompressedPBKDF2--
+        
+        /*--CompressedPBKDF2--*/
 //        String hashPassword = PasswordHasher.getCompressedPBKDF2(t.getPassword(), 1000, 256, Hmac.SHA256, salt, null);
-//        --Scrypt--
+        
+        /*--Scrypt--*/
 //        String hashPassword = PasswordHasher.getScrypt(t.getPassword(), 16384, 8, 2, 128, salt, null);
-//        --Bcrypt--
+       
+        /*--Bcrypt--*/
 //        String hashPassword = PasswordHasher.getBcrypt(t.getPassword(), Bcrypt.Y, null, 11);
+
         User user = new User(GeneratorID.getUserId(), t.getUser_name(), 
                 hashPassword, t.getTanggal_registrasi());
         

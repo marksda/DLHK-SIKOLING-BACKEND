@@ -21,7 +21,9 @@ import java.io.Serializable;
     @NamedQuery(name = "KeyData.findById", query = "SELECT k FROM KeyData k WHERE k.id = :id"),
     @NamedQuery(name = "KeyData.findBySecretKey", query = "SELECT k FROM KeyData k WHERE k.secretKey = :secretKey"),
     @NamedQuery(name = "KeyData.findByPrivateKey", query = "SELECT k FROM KeyData k WHERE k.privateKey = :privateKey"),
-    @NamedQuery(name = "KeyData.findByPublicKey", query = "SELECT k FROM KeyData k WHERE k.publicKey = :publicKey")})
+    @NamedQuery(name = "KeyData.findByPublicKey", query = "SELECT k FROM KeyData k WHERE k.publicKey = :publicKey"),
+    @NamedQuery(name = "KeyData.updateId", query = "UPDATE KeyData SET id = :idBaru WHERE id = :idLama")
+})
 public class KeyData implements Serializable {
 
     private static final long serialVersionUID = 1L;

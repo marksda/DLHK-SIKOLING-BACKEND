@@ -8,6 +8,7 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikoling.main.util.GeneratorID;
 
 
 public class RealmServiceBasic implements Service<Realm> {
@@ -20,7 +21,8 @@ public class RealmServiceBasic implements Service<Realm> {
 
     @Override
     public Realm save(Realm t) throws SQLException {
-        return repository.save(t);
+        Realm realm = new Realm(GeneratorID.getUserId(), t.getNama());
+        return repository.save(realm);
     }
 
     @Override

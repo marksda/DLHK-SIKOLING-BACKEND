@@ -20,7 +20,9 @@ import java.io.Serializable;
     @NamedQuery(name = "JwaData.findAll", query = "SELECT t FROM JwaData t"),
     @NamedQuery(name = "JwaData.findById", query = "SELECT t FROM JwaData t WHERE t.id = :id"),
     @NamedQuery(name = "JwaData.findByNama", query = "SELECT t FROM JwaData t WHERE t.nama = :nama"),
-    @NamedQuery(name = "JwaData.findByKeterangan", query = "SELECT t FROM JwaData t WHERE t.keterangan = :keterangan")})
+    @NamedQuery(name = "JwaData.findByKeterangan", query = "SELECT t FROM JwaData t WHERE t.keterangan = :keterangan"),
+    @NamedQuery(name = "JwaData.updateId", query = "UPDATE JwaData SET id = :idBaru WHERE id = :idLama")
+})
 public class JwaData implements Serializable {
 
     private static final long serialVersionUID = 1L;

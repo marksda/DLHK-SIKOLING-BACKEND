@@ -17,7 +17,9 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "JwaTypeData.findAll", query = "SELECT j FROM JwaTypeData j"),
     @NamedQuery(name = "JwaTypeData.findById", query = "SELECT j FROM JwaTypeData j WHERE j.id = :id"),
-    @NamedQuery(name = "JwaTypeData.findByNama", query = "SELECT j FROM JwaTypeData j WHERE j.nama = :nama")})
+    @NamedQuery(name = "JwaTypeData.findByNama", query = "SELECT j FROM JwaTypeData j WHERE j.nama = :nama"),
+    @NamedQuery(name = "JwaTypeData.updateId", query = "UPDATE JwaTypeData SET id = :idBaru WHERE id = :idLama")
+})
 public class JwaTypeData implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -37,9 +37,9 @@ public class RealmRepositoryJPA implements Repository<Realm, QueryParamFilters, 
             entityManager.persist(realmData);
             entityManager.flush();             
             return convertRealmDataToRealm(realmData);  
-        } 
+        }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id realm harus bilangan dan panjang 2 digit");
+            throw new SQLException("id realm harus 36 karakter");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data realm");
@@ -53,9 +53,9 @@ public class RealmRepositoryJPA implements Repository<Realm, QueryParamFilters, 
             RealmData realmData = convertRealmToRealmData(t);  
             realmData = entityManager.merge(realmData);
             return convertRealmDataToRealm(realmData);   
-        }         
+        } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id realm harus bilangan dan panjang 2 digit");
+            throw new SQLException("id realm harus 38 karakter");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data realm");
@@ -72,7 +72,7 @@ public class RealmRepositoryJPA implements Repository<Realm, QueryParamFilters, 
         try {
             int updateCount = query.executeUpdate();
             if(updateCount > 0) {
-                return update(t);
+                return t;
             }
             else {
                 throw new SQLException("Gagal mengupdate id realm");

@@ -17,7 +17,9 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "RealmData.findAll", query = "SELECT r FROM RealmData r"),
     @NamedQuery(name = "RealmData.findById", query = "SELECT r FROM RealmData r WHERE r.id = :id"),
-    @NamedQuery(name = "RealmData.findByNama", query = "SELECT r FROM RealmData r WHERE r.nama = :nama")})
+    @NamedQuery(name = "RealmData.findByNama", query = "SELECT r FROM RealmData r WHERE r.nama = :nama"),
+    @NamedQuery(name = "RealmData.updateId", query = "UPDATE RealmData SET id = :idBaru WHERE id = :idLama")
+})
 public class RealmData implements Serializable {
 
     private static final long serialVersionUID = 1L;
