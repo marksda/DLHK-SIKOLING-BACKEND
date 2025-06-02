@@ -9,9 +9,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 
 
 @Entity
@@ -57,6 +60,10 @@ public class KeyData implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "public_key")
     private String publicKey;
+    
+    @Column(name = "tanggal")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date tanggal;
 
     public KeyData() {
     }
@@ -119,6 +126,14 @@ public class KeyData implements Serializable {
 
     public void setEncoding_scheme(EncodingSchemaData encoding_scheme) {
         this.encoding_scheme = encoding_scheme;
+    }
+
+    public Date getTanggal() {
+        return tanggal;
+    }
+
+    public void setTanggal(Date tanggal) {
+        this.tanggal = tanggal;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.cso.sikoling.abstraction.entity.security.oauth2;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -12,8 +13,10 @@ public class Key implements Serializable {
     private final String secred_key;
     private final String private_key;
     private final String public_key;
+    private final Date tanggal;
 
-    public Key(String id, String id_realm, String id_jwa, String id_encoding_scheme, String secred_key) {
+    public Key(String id, String id_realm, String id_jwa, String id_encoding_scheme, 
+            String secred_key, Date tanggal) {
         this.id = id;
         this.id_realm = id_realm;
         this.id_jwa = id_jwa;
@@ -21,9 +24,11 @@ public class Key implements Serializable {
         this.secred_key = secred_key;
         this.private_key = null;
         this.public_key = null;
+        this.tanggal = tanggal;
     }
     
-    public Key(String id, String id_realm, String id_jwa, String id_encoding_scheme, String private_key, String public_key) {
+    public Key(String id, String id_realm, String id_jwa, String id_encoding_scheme, 
+            String private_key, String public_key, Date tanggal) {
         this.id = id;
         this.id_realm = id_realm;
         this.id_jwa = id_jwa;
@@ -31,9 +36,11 @@ public class Key implements Serializable {
         this.secred_key = null;
         this.private_key = private_key;
         this.public_key = public_key;
+        this.tanggal = tanggal;
     }
     
-    public Key(String id, String id_realm, String id_jwa, String id_encoding_scheme, String secred_key, String private_key, String public_key) {
+    public Key(String id, String id_realm, String id_jwa, String id_encoding_scheme, 
+            String secred_key, String private_key, String public_key, Date tanggal) {
         this.id = id;
         this.id_realm = id_realm;
         this.id_jwa = id_jwa;
@@ -41,6 +48,7 @@ public class Key implements Serializable {
         this.secred_key = secred_key;
         this.private_key = private_key;
         this.public_key = public_key;
+        this.tanggal = tanggal;
     }
 
     public String getId() {
@@ -69,6 +77,10 @@ public class Key implements Serializable {
 
     public String getId_encoding_scheme() {
         return id_encoding_scheme;
+    }
+
+    public Date getTanggal() {
+        return tanggal;
     }
 
     @Override

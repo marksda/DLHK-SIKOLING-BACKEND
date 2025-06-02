@@ -25,7 +25,7 @@ public final class PasswordHasher {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedHash = digest.digest(plainTextPassword.getBytes());
-            return KeyConverter.byteArrayToHexString(encodedHash);
+            return KeyToolGenerator.byteArrayToHexString(encodedHash);
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
@@ -35,7 +35,7 @@ public final class PasswordHasher {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedHash = digest.digest(plainTextPassword.getBytes());
-            String messageDigestPassword = KeyConverter.byteArrayToHexString(encodedHash);
+            String messageDigestPassword = KeyToolGenerator.byteArrayToHexString(encodedHash);
             
             return messageDigestPassword.equals(hashTextPassword);            
         } catch (NoSuchAlgorithmException e) {

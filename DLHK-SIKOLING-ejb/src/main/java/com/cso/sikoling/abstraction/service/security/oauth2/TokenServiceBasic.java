@@ -10,7 +10,7 @@ import io.jsonwebtoken.Claims;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.TokenService;
-import com.cso.sikoling.main.util.oauth2.KeyConverter;
+import com.cso.sikoling.main.util.oauth2.KeyToolGenerator;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -39,7 +39,7 @@ public class TokenServiceBasic implements TokenService<Token> {
 
         switch (key.getId_jwa()) {
             case "01" -> {   
-                SecretKey secretKey = KeyConverter.convertStringKeyToSecretKey(key.getSecred_key(), key.getId_encoding_scheme());
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(key.getSecred_key(), key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -53,7 +53,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "02" -> {   
-                SecretKey secretKey = KeyConverter.convertStringKeyToSecretKey(key.getSecred_key(), key.getId_encoding_scheme());
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(key.getSecred_key(), key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -67,7 +67,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "03" -> {   
-                SecretKey secretKey = KeyConverter.convertStringKeyToSecretKey(key.getSecred_key(), key.getId_encoding_scheme());
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(key.getSecred_key(), key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -81,7 +81,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "04" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "04",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "04",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -95,7 +95,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "05" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "05",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "05",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -109,7 +109,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "06" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "06",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "06",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -123,7 +123,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "07" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "07",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "07",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -137,7 +137,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "08" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "08",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "08",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -151,7 +151,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "09" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "09",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "09",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -165,7 +165,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "10" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "10",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "10",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -179,7 +179,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "11" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "11",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "11",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -193,7 +193,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "12" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "12",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "12",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")
@@ -207,7 +207,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "36" -> {   
-                PrivateKey privateKey = KeyConverter.convertStringKeyToPrivateKey(key.getPrivate_key(), "36",  key.getId_encoding_scheme());
+                PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(key.getPrivate_key(), "36",  key.getId_encoding_scheme());
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
                         .issuer("DLHK Sidoarjo")

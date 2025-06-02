@@ -239,7 +239,8 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
             key =  new Key(
                     d.getId(), d.getJwa().getId(), 
                     d.getRealm().getId(), d.getEncoding_scheme().getId(),
-                    d.getSecretKey(), d.getPrivateKey(), d.getPublicKey()
+                    d.getSecretKey(), d.getPrivateKey(), d.getPublicKey(),
+                    d.getTanggal()
                 );
         }
 
@@ -269,6 +270,7 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
             keyData.setSecretKey(t.getSecred_key());
             keyData.setPrivateKey(t.getPrivate_key());
             keyData.setPublicKey(t.getPublic_key());
+            keyData.setTanggal(t.getTanggal());
         }
 
         return keyData;

@@ -2,6 +2,7 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -13,6 +14,7 @@ public class KeyDTO implements Serializable {
     private String secred_key;
     private String private_key;
     private String public_key;
+    private Date tanggal;
 
     public KeyDTO() {
     }
@@ -25,6 +27,7 @@ public class KeyDTO implements Serializable {
             this.secred_key = t.getSecred_key();
             this.private_key = t.getPrivate_key();
             this.public_key = t.getPublic_key();
+            this.tanggal = t.getTanggal();
         }
     }
 
@@ -75,11 +78,20 @@ public class KeyDTO implements Serializable {
     public void setPublic_key(String public_key) {
         this.public_key = public_key;
     }
+
+    public Date getTanggal() {
+        return tanggal;
+    }
+
+    public void setTanggal(Date tanggal) {
+        this.tanggal = tanggal;
+    }
     
     public Key toKey() {
         return new Key(
                 this.id, this.id_realm, this.id_jwa,
-                this.secred_key, this.private_key, this.public_key
+                this.secred_key, this.private_key, this.public_key,
+                this.tanggal
             );
     }
 
