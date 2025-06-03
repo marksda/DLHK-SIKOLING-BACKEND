@@ -158,12 +158,20 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
                                 cq.orderBy(cb.desc(root.get("id")));
                             }
                         }
-                        case "nama" -> {
+                        case "realm" -> {
                             if(sort.getValue().equals("asc")) {
-                                cq.orderBy(cb.asc(root.get("nama")));
+                                cq.orderBy(cb.asc(root.get("realm").get("id")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("nama")));
+                                cq.orderBy(cb.desc(root.get("realm").get("id")));
+                            }
+                        }
+                        case "jwa" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("jwa").get("id")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("jwa").get("id")));
                             }
                         }
                         default -> {
@@ -216,7 +224,8 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "realm" -> daftarPredicate.add(cb.equal(root.get("realm").get("id"), filter.getValue()));
+                case "jwa" -> daftarPredicate.add(cb.equal(root.get("jwa").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
