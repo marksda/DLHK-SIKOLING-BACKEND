@@ -54,7 +54,8 @@ public class TokenResource {
             @PathParam("idJwa") String idJwa, 
             @PathParam("idKey") String idKey,
             CredentialDTO credentialDTO) throws UnspecifiedException {
-        Token token = null;
+        
+        Token token;
         User user = userService.authentication(credentialDTO.toCredential());
         
         if(user != null) {
