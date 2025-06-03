@@ -37,8 +37,8 @@ public class AutorisasiData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Size(max = 2147483647)
-    @Column(name = "id_lama")
-    private String idLama;
+    @Column(name = "id_user")
+    private String idUser;
     
     @Column(name = "status_internal")
     private Boolean statusInternal;
@@ -89,12 +89,12 @@ public class AutorisasiData implements Serializable {
         this.userName = userName;
     }
 
-    public String getIdLama() {
-        return idLama;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setIdLama(String idLama) {
-        this.idLama = idLama;
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public Boolean getStatusInternal() {

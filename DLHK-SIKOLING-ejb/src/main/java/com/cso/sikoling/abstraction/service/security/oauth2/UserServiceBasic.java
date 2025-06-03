@@ -84,7 +84,7 @@ public class UserServiceBasic implements UserService<User> {
     }
 
     @Override
-    public boolean authentication(Credential credential) {
+    public User authentication(Credential credential) {
         boolean verified;
         List<Filter> fields_filter = new ArrayList<>();
         Filter filter = new Filter("nama", credential.getEmail());
@@ -93,17 +93,21 @@ public class UserServiceBasic implements UserService<User> {
         
         List<User> daftaruser = repository.getDaftarData(qFilter);
         if(daftaruser.isEmpty()) {
-            verified = false;
+            return null;
         }
         else{
             String hashFromDB = daftaruser.getFirst().getPassword();            
             verified = PasswordHasher.checkArgon2(credential.getPassword(), hashFromDB, null);
+            if(verified) {
+                return daftaruser.getFirst();
+            }
+            else {
+                return null;
+            }
 //            verified = PasswordHasher.checkCompressedPBKDF2(credential.getPassword(), hashFromDB, null);
 //            verified = PasswordHasher.checkScrypt(credential.getPassword(), hashFromDB, null);
 //            verified = PasswordHasher.checkBcrypt(credential.getPassword(), hashFromDB, null);
         }
-        
-        return verified;
     }
 
 }

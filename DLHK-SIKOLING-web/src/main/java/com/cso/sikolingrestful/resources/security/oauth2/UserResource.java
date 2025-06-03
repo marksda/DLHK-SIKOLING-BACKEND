@@ -85,7 +85,7 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject authentication(CredentialDTO credentialDTO) {         
         JsonObject model = Json.createObjectBuilder()
-                    .add("status", userService.authentication(credentialDTO.toCredential()) == true ? "sukses" : "gagal")
+                    .add("status", userService.authentication(credentialDTO.toCredential()) != null ? "sukses" : "gagal")
                     .build();
             
         return model;

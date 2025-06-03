@@ -8,6 +8,7 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.AeadAlgorithm;
 import io.jsonwebtoken.security.Curve;
 import io.jsonwebtoken.security.Jwks;
+import io.jsonwebtoken.security.KeyAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
 import io.jsonwebtoken.security.SignatureAlgorithm;

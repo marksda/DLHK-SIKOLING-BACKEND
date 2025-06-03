@@ -129,6 +129,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "id_user" -> daftarPredicate.add(cb.equal(root.get("id_user"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -237,7 +238,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
         if(d != null) {
             autorisasi = new Autorisasi(
                     d.getId(), 
-                    d.getIdLama(), 
+                    d.getIdUser(), 
                     d.getStatusInternal(), 
                     d.getIsVerified(), 
                     d.getUserName(), 
@@ -256,7 +257,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
         if(t != null) {
             autorisasiData = new AutorisasiData();
             autorisasiData.setId(t.getId());
-            autorisasiData.setIdLama(t.getId_lama());
+            autorisasiData.setIdUser(t.getId_lama());
             autorisasiData.setStatusInternal(t.getStatus_internal());
             autorisasiData.setIsVerified(t.getIs_verified());
             autorisasiData.setUserName(t.getUser_name());

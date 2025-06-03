@@ -129,7 +129,8 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "realm" -> daftarPredicate.add(cb.equal(root.get("realm").get("id"), filter.getValue()));
+                        case "jwa" -> daftarPredicate.add(cb.equal(root.get("jwa").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
