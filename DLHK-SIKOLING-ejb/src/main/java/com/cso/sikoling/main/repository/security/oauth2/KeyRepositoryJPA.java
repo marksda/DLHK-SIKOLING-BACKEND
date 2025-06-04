@@ -247,9 +247,9 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
 		
         if(d != null) {
             key =  new Key(
-                    d.getId(), d.getJwa().getId(), 
-                    d.getRealm().getId(), d.getEncoding_scheme().getId(),
-                    d.getSecretKey(), d.getPrivateKey(), d.getPublicKey(),
+                    d.getId(), d.getRealm().getId(), d.getJwa().getId(), 
+                    d.getEncoding_scheme().getId(), d.getSecretKey(), 
+                    d.getPrivateKey(), d.getPublicKey(),
                     d.getTanggal()
                 );
         }

@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Autorisasi implements Serializable {
 
     private final String id;
-    private final String id_lama;
+    private final String id_user;
     private final Boolean status_internal;
     private final Boolean is_verified;
     private final String user_name;
@@ -16,9 +16,9 @@ public class Autorisasi implements Serializable {
     private final String id_hak_akses;
     private final String id_person;
 
-    public Autorisasi(String id, String id_lama, Boolean status_internal, Boolean is_verified, String user_name, Date tanggal_registrasi, String id_hak_akses, String id_person) {
+    public Autorisasi(String id, String id_user, Boolean status_internal, Boolean is_verified, String user_name, Date tanggal_registrasi, String id_hak_akses, String id_person) {
         this.id = id;
-        this.id_lama = id_lama;
+        this.id_user = id_user;
         this.status_internal = status_internal;
         this.is_verified = is_verified;
         this.user_name = user_name;
@@ -31,8 +31,8 @@ public class Autorisasi implements Serializable {
         return id;
     }
 
-    public String getId_lama() {
-        return id_lama;
+    public String getId_user() {
+        return id_user;
     }
 
     public Boolean getStatus_internal() {

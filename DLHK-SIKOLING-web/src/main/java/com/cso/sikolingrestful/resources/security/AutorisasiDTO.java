@@ -23,7 +23,7 @@ public class AutorisasiDTO implements Serializable {
     public AutorisasiDTO(Autorisasi t) {
         if(t != null) {
             this.id = t.getId();
-            this.id_lama = t.getId_lama();
+            this.id_lama = t.getId_user();
             this.status_internal = t.getStatus_internal();
             this.is_verified = t.getIs_verified();
             this.user_name = t.getUser_name();

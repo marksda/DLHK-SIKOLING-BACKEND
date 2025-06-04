@@ -4,24 +4,10 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.repository.Repository;
-import com.github.f4b6a3.uuid.UuidCreator;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.MacAlgorithm;
-import io.jsonwebtoken.security.SignatureAlgorithm;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
-import javax.crypto.SecretKey;
 import com.cso.sikoling.abstraction.service.KeyService;
 import com.cso.sikoling.main.util.oauth2.KeyToolGenerator;
-import io.jsonwebtoken.security.Curve;
-import io.jsonwebtoken.security.Jwks;
-import java.util.Date;
 
 
 public class KeyServiceBasic implements KeyService<Key> {
