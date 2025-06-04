@@ -227,7 +227,9 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
         User user = null;
 		
         if(d != null) {
-            user = new User(d.getId(), d.getUserName(), d.getPassword(), d.getTanggalRegistrasi());
+            user = new User(
+                    d.getId(), d.getUserName(), d.getPassword(), 
+                    d.getTanggalRegistrasi(), d.getHashing_password_type().getId());
         }
 
         return user;	
@@ -242,6 +244,7 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
             userData.setUserName(t.getUser_name());
             userData.setPassword(t.getPassword());
             userData.setTanggalRegistrasi(t.getTanggal_registrasi());
+            userData.setHashing_password_type(new HashingPasswordTypeData(t.getHashing_password_type_id()));            
         }
 
         return userData;

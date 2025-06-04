@@ -13,6 +13,7 @@ public class UserDTO implements Serializable {
     private String user_name;
     private String password;
     private Date tanggal_registrasi;
+    private String hashing_password_type_id;
 	
     public UserDTO() {		
     }
@@ -23,6 +24,7 @@ public class UserDTO implements Serializable {
             this.user_name = t.getUser_name();
             this.password = t.getPassword();
             this.tanggal_registrasi = t.getTanggal_registrasi();
+            this.hashing_password_type_id = t.getHashing_password_type_id();
         }
     }
 
@@ -57,9 +59,20 @@ public class UserDTO implements Serializable {
     public void setTanggal_registrasi(Date tanggal_registrasi) {
         this.tanggal_registrasi = tanggal_registrasi;
     }
+
+    public String getHashing_password_type_id() {
+        return hashing_password_type_id;
+    }
+
+    public void setHashing_password_type_id(String hashing_password_type_id) {
+        this.hashing_password_type_id = hashing_password_type_id;
+    }    
     
     public User toUser() {
-        return new User(this.id, this.user_name, this.password, this.tanggal_registrasi);
+        return new User(
+                this.id, this.user_name, this.password, 
+                this.tanggal_registrasi, this.hashing_password_type_id
+            );
     }
 
     @Override

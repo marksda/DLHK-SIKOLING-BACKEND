@@ -11,12 +11,15 @@ public class User implements Serializable {
     private final String user_name;
     private final String password;
     private final Date tanggal_registrasi;
+    private final String hashing_password_type_id;
 
-    public User(String id, String user_name, String password, Date tanggal_registrasi) {
+    public User(String id, String user_name, String password, Date tanggal_registrasi, 
+                                                String hashing_password_type_id) {
         this.id = id;
         this.user_name = user_name;
         this.password = password;
         this.tanggal_registrasi = tanggal_registrasi;
+        this.hashing_password_type_id = hashing_password_type_id;
     }
 
     public String getId() {
@@ -33,6 +36,10 @@ public class User implements Serializable {
 
     public Date getTanggal_registrasi() {
         return tanggal_registrasi;
+    }
+
+    public String getHashing_password_type_id() {
+        return hashing_password_type_id;
     }
 
     @Override

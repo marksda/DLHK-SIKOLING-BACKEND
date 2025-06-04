@@ -1,9 +1,12 @@
 package com.cso.sikoling.main.repository.security.oauth2;
 
+import com.cso.sikoling.main.repository.alamat.PropinsiData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -52,6 +55,10 @@ public class UserData implements Serializable {
     @Column(name = "tanggal_registrasi")
     @Temporal(TemporalType.DATE)
     private Date tanggalRegistrasi;
+    
+    @JoinColumn(name = "hashing_password_type", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private HashingPasswordTypeData hashing_password_type;
 
     public UserData() {
     }
@@ -98,6 +105,14 @@ public class UserData implements Serializable {
     public void setTanggalRegistrasi(Date tanggalRegistrasi) {
         this.tanggalRegistrasi = tanggalRegistrasi;
     }
+
+    public HashingPasswordTypeData getHashing_password_type() {
+        return hashing_password_type;
+    }
+
+    public void setHashing_password_type(HashingPasswordTypeData hashing_password_type) {
+        this.hashing_password_type = hashing_password_type;
+    }    
 
     @Override
     public int hashCode() {
