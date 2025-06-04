@@ -1,4 +1,3 @@
-
 package com.cso.sikoling.main.repository.security;
 
 import com.cso.sikoling.main.repository.person.PersonData;
@@ -26,13 +25,14 @@ import java.util.Date;
 @Table(name = "master.tbl_autorisasi")
 @NamedQueries({
     @NamedQuery(name = "AutorisasiData.findAll", query = "SELECT a FROM AutorisasiData a"),
-    @NamedQuery(name = "AutorisasiData.findByIdLama", query = "SELECT a FROM AutorisasiData a WHERE a.idLama = :idLama"),
+    @NamedQuery(name = "AutorisasiData.findByIdUser", query = "SELECT a FROM AutorisasiData a WHERE a.idUser = :idUser"),
     @NamedQuery(name = "AutorisasiData.findByStatusInternal", query = "SELECT a FROM AutorisasiData a WHERE a.statusInternal = :statusInternal"),
     @NamedQuery(name = "AutorisasiData.findByIsVerified", query = "SELECT a FROM AutorisasiData a WHERE a.isVerified = :isVerified"),
     @NamedQuery(name = "AutorisasiData.findByUserName", query = "SELECT a FROM AutorisasiData a WHERE a.userName = :userName"),
     @NamedQuery(name = "AutorisasiData.findById", query = "SELECT a FROM AutorisasiData a WHERE a.id = :id"),
     @NamedQuery(name = "AutorisasiData.findByTanggalRegistrasi", query = "SELECT a FROM AutorisasiData a WHERE a.tanggalRegistrasi = :tanggalRegistrasi"),
-    @NamedQuery(name = "AutorisasiData.updateId", query = "UPDATE AutorisasiData SET id = :idBaru WHERE id = :idLama")})
+    @NamedQuery(name = "AutorisasiData.updateId", query = "UPDATE AutorisasiData SET id = :idBaru WHERE id = :idLama")
+})
 public class AutorisasiData implements Serializable {
 
     private static final long serialVersionUID = 1L;

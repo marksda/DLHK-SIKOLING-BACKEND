@@ -98,15 +98,15 @@ public class UserServiceBasic implements UserService<User> {
         else{
             String hashFromDB = daftaruser.getFirst().getPassword();            
             verified = PasswordHasher.checkArgon2(credential.getPassword(), hashFromDB, null);
+//            verified = PasswordHasher.checkCompressedPBKDF2(credential.getPassword(), hashFromDB, null);
+//            verified = PasswordHasher.checkScrypt(credential.getPassword(), hashFromDB, null);
+//            verified = PasswordHasher.checkBcrypt(credential.getPassword(), hashFromDB, null);
             if(verified) {
                 return daftaruser.getFirst();
             }
             else {
                 return null;
             }
-//            verified = PasswordHasher.checkCompressedPBKDF2(credential.getPassword(), hashFromDB, null);
-//            verified = PasswordHasher.checkScrypt(credential.getPassword(), hashFromDB, null);
-//            verified = PasswordHasher.checkBcrypt(credential.getPassword(), hashFromDB, null);
         }
     }
 

@@ -18,6 +18,7 @@ import com.cso.sikoling.main.repository.perusahaan.PelakuUsahaRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanRepositoryJPA;
 import com.cso.sikoling.main.repository.security.AutorisasiRepositoryJPA;
 import com.cso.sikoling.main.repository.security.HakAksesRepositoryJPA;
+import com.cso.sikoling.main.repository.security.oauth2.HashingPasswordTypeRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.UserRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.JwaRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.JwaTypeRepositoryJPA;
@@ -160,6 +161,11 @@ public class RepositoryProvider {
     @Produces
     public UserRepositoryJPA getUserRepositoryJPA(EntityManager entityManager) {
         return new UserRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public HashingPasswordTypeRepositoryJPA getHashingPasswordTypeRepositoryJPA(EntityManager entityManager) {
+        return new HashingPasswordTypeRepositoryJPA(entityManager);
     }
     
 }

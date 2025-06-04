@@ -4,7 +4,7 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
-import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
+import com.cso.sikoling.abstraction.entity.security.oauth2.HashingPasswordType;
 import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -22,51 +22,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilters, Filter> {
+public class HashingPasswordTypeRepositoryJPA implements Repository<HashingPasswordType, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public JwaTypeRepositoryJPA(EntityManager entityManager) {
+    public HashingPasswordTypeRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public JwaType save(JwaType t) throws SQLException {   
+    public HashingPasswordType save(HashingPasswordType t) throws SQLException {   
         try {
-            JwaTypeData jwaTypeData = convertJwaTypeToJwaTypeData(t);
-            entityManager.persist(jwaTypeData);
+            HashingPasswordTypeData hashingPasswordTypeData = convertHashingPasswordTypeToHashingPasswordTypeData(t);
+            entityManager.persist(hashingPasswordTypeData);
             entityManager.flush();             
-            return convertJwaTypeDataToJwaType(jwaTypeData);  
+            return convertHashingPasswordTypeDataToHashingPasswordType(hashingPasswordTypeData);  
         } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id jwa type harus bilangan dan panjang 2 digit");
+            throw new SQLException("id hashing password type harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data jwa type");
+            throw new SQLException("Duplikasi data hashing password type");
         }        
     }
 
     @Override
-    public JwaType update(JwaType t) throws SQLException {
+    public HashingPasswordType update(HashingPasswordType t) throws SQLException {
         
         try {
-            JwaTypeData jwaTypeData = convertJwaTypeToJwaTypeData(t);  
-            jwaTypeData = entityManager.merge(jwaTypeData);
-            return convertJwaTypeDataToJwaType(jwaTypeData);   
+            HashingPasswordTypeData hashingPasswordTypeData = convertHashingPasswordTypeToHashingPasswordTypeData(t);  
+            hashingPasswordTypeData = entityManager.merge(hashingPasswordTypeData);
+            return convertHashingPasswordTypeDataToHashingPasswordType(hashingPasswordTypeData);   
         }         
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id jwa type harus bilangan dan panjang 2 digit");
+            throw new SQLException("id hashing password type harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data jwa type");
+            throw new SQLException("Duplikasi data hashing password type");
         }
         
     }
 
     @Override
-    public JwaType updateId(String idLama, JwaType t) throws SQLException {
+    public HashingPasswordType updateId(String idLama, HashingPasswordType t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("JwaTypeData.updateId");
+        Query query = entityManager.createNamedQuery("HashingPasswordTypeData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
@@ -75,14 +75,14 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
                 return update(t);
             }
             else {
-                throw new SQLException("Gagal mengupdate id jwa type");
+                throw new SQLException("Gagal mengupdate id hashing password type");
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id jwa type harus bilangan dan panjang 2 digit");
+            throw new SQLException("id hashing password type harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id jwa type");
+            throw new SQLException("Dulpikasi id hashing password type");
         }
         
     }
@@ -91,18 +91,18 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
     public boolean delete(String id) throws SQLException {
         
         try {
-            JwaTypeData jwaTypeData = entityManager.find(JwaTypeData.class, id);
-            if(jwaTypeData != null) {
-                entityManager.remove(jwaTypeData);	
+            HashingPasswordTypeData hashingPasswordTypeData = entityManager.find(HashingPasswordTypeData.class, id);
+            if(hashingPasswordTypeData != null) {
+                entityManager.remove(hashingPasswordTypeData);	
                 entityManager.flush();
                 return true;
             }
             else {
-                throw new SQLException("jwa type dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException("hashing password type dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id jwa type harus bilangan dan panjang 2 digit");
+            throw new SQLException("id hashing password type harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -111,12 +111,12 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
     }
 
     @Override
-    public List<JwaType> getDaftarData(QueryParamFilters q) {
+    public List<HashingPasswordType> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<JwaTypeData> cq = cb.createQuery(JwaTypeData.class);
-            Root<JwaTypeData> root = cq.from(JwaTypeData.class);		
+            CriteriaQuery<HashingPasswordTypeData> cq = cb.createQuery(HashingPasswordTypeData.class);
+            Root<HashingPasswordTypeData> root = cq.from(HashingPasswordTypeData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -170,7 +170,7 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
             }
 
 
-            TypedQuery<JwaTypeData> typedQuery;	
+            TypedQuery<HashingPasswordTypeData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -184,14 +184,14 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
 
             return typedQuery.getResultList()
                             .stream()
-                            .map(d -> convertJwaTypeDataToJwaType(d))
+                            .map(d -> convertHashingPasswordTypeDataToHashingPasswordType(d))
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("JwaTypeData.findAll", JwaTypeData.class)
+            return entityManager.createNamedQuery("HashingPasswordTypeData.findAll", HashingPasswordTypeData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertJwaTypeDataToJwaType(d))
+                 .map(d -> convertHashingPasswordTypeDataToHashingPasswordType(d))
                             .collect(Collectors.toList());
         }
         
@@ -202,7 +202,7 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<JwaTypeData> root = cq.from(JwaTypeData.class);		
+        Root<HashingPasswordTypeData> root = cq.from(HashingPasswordTypeData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -230,26 +230,26 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
         
     }
     
-    private JwaType convertJwaTypeDataToJwaType(JwaTypeData d) {
-        JwaType jwaType = null;
+    private HashingPasswordType convertHashingPasswordTypeDataToHashingPasswordType(HashingPasswordTypeData d) {
+        HashingPasswordType jwaType = null;
 		
         if(d != null) {
-            jwaType = new JwaType(d.getId(), d.getNama());
+            jwaType = new HashingPasswordType(d.getId(), d.getNama());
         }
 
         return jwaType;	
     }
     
-    private JwaTypeData convertJwaTypeToJwaTypeData(JwaType t) {
-        JwaTypeData jwaTypeData = null;
+    private HashingPasswordTypeData convertHashingPasswordTypeToHashingPasswordTypeData(HashingPasswordType t) {
+        HashingPasswordTypeData hashingPasswordTypeData = null;
 		
         if(t != null) {
-            jwaTypeData = new JwaTypeData();
-            jwaTypeData.setId(t.getId());
-            jwaTypeData.setNama(t.getNama());
+            hashingPasswordTypeData = new HashingPasswordTypeData();
+            hashingPasswordTypeData.setId(t.getId());
+            hashingPasswordTypeData.setNama(t.getNama());
         }
 
-        return jwaTypeData;
+        return hashingPasswordTypeData;
     }
 
 }

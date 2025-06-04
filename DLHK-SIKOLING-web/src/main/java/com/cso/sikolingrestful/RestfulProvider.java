@@ -20,6 +20,8 @@ import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.oauth2.HashingPasswordType;
+import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
@@ -54,6 +56,8 @@ import com.cso.sikoling.abstraction.service.KeyService;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.abstraction.service.TokenService;
+import com.cso.sikoling.abstraction.service.security.oauth2.HashingPasswordTypeServiceBasic;
+import com.cso.sikoling.abstraction.service.security.oauth2.JwaTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.UserServiceBasic;
 
 @Stateless
@@ -191,4 +195,17 @@ public class RestfulProvider {
             @Infrastructure Repository<User, QueryParamFilters, Filter> userRepository) {
         return new UserServiceBasic(userRepository);
     }
+    
+    @Produces
+    public Service<JwaType> getJwaTypeService(
+            @Infrastructure Repository<JwaType, QueryParamFilters, Filter> jwaTypeRepository) {
+        return new JwaTypeServiceBasic(jwaTypeRepository);
+    }
+    
+    @Produces
+    public Service<HashingPasswordType> getHashingPasswordTypeService(
+            @Infrastructure Repository<HashingPasswordType, QueryParamFilters, Filter> hashingPasswordTypeRepository) {
+        return new HashingPasswordTypeServiceBasic(hashingPasswordTypeRepository);
+    }
+    
 }
