@@ -14,7 +14,10 @@ import com.cso.sikoling.main.util.oauth2.KeyToolGenerator;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.AeadAlgorithm;
+import io.jsonwebtoken.security.KeyAlgorithm;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Calendar;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -90,7 +93,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "04" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "04",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -106,7 +109,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "05" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "05",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -122,7 +125,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "06" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "06",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -138,7 +141,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "07" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "07",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -154,7 +157,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "08" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "08",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -170,7 +173,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "09" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "09",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -186,7 +189,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "10" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "10",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -202,7 +205,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "11" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "11",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -218,7 +221,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "12" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "12",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -234,7 +237,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "36" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), "36",  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
@@ -247,6 +250,50 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .signWith(privateKey)
                         .compact();
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
+            }
+            case "13" -> {   
+                AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(
+                        key.getSecred_key(), 
+                        key.getId_encoding_scheme()
+                    );
+               
+                String jwe = Jwts.builder()
+                        .issuer("DLHK Sidoarjo")
+                        .subject("sikoling")
+                        .audience().add(autorisasi.getUser_name()).and()
+                        .expiration(nextYear)
+                        .issuedAt(today)
+                        .encryptWith(secretKey, enc)
+                        .compact();
+                
+                token = new Token(jwe, null, 10000000L, autorisasi.getId());
+            }
+            case "19" -> {  
+                PublicKey publicKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                        key.getPublic_key(), 
+                                        key.getId_jwa(), 
+                                        key.getId_encoding_scheme()
+                                    );
+                
+                KeyAlgorithm<PublicKey, PrivateKey> alg = Jwts.KEY.RSA_OAEP_256; //or RSA_OAEP or RSA_OAEP_256      
+                
+                AeadAlgorithm enc = Jwts.ENC.A256GCM;
+                               
+                String jwe = Jwts.builder()
+                        .header().keyId(
+                            KeyToolGenerator.byteArrayToHexString(publicKey.getEncoded())
+                        )
+                        .add("typ", "JWT").and()
+                        .issuer("DLHK Sidoarjo")
+                        .subject("sikoling")
+                        .audience().add(autorisasi.getUser_name()).and()
+                        .expiration(nextYear)
+                        .issuedAt(today)
+                        .encryptWith(publicKey, alg, enc)
+                        .compact();
+                
+                token = new Token(jwe, null, 10000000L, autorisasi.getId());
             }
             default -> throw new AssertionError();
         }   

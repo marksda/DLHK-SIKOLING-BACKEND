@@ -106,26 +106,7 @@ public final class KeyToolGenerator {
             default -> throw new AssertionError();
         }
         
-        switch (idJwa) {            
-            case "06" -> {  
-                try {
-                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
-                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    publicKey = keyFactory.generatePublic(keySpec);
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    throw new AssertionError();
-                }
-                
-            }
-            case "05" -> {   
-                try {
-                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
-                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    publicKey = keyFactory.generatePublic(keySpec);
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    throw new AssertionError();
-                }
-            }
+        switch (idJwa) { 
             case "04" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
@@ -134,35 +115,26 @@ public final class KeyToolGenerator {
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
-            }
-            case "12" -> {
+            }          
+            case "05" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
-                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
                     publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
-            }
-            case "11" -> { 
+            } 
+            case "06" -> {  
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
-                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
                     publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
-                }
+                }                
             }
-            case "10" -> {  
-                try {
-                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
-                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
-                    publicKey = keyFactory.generatePublic(keySpec);
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    throw new AssertionError();
-                }
-            }
-            case "09" -> {   
+            case "07" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
@@ -180,10 +152,37 @@ public final class KeyToolGenerator {
                     throw new AssertionError();
                 }
             }
-            case "07" -> {   
+            case "09" -> {   
                 try {
                     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
                     KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    publicKey = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "10" -> {  
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    publicKey = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "11" -> { 
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
+                    publicKey = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+            }
+            case "12" -> {
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSASSA-PSS");
                     publicKey = keyFactory.generatePublic(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
@@ -197,6 +196,16 @@ public final class KeyToolGenerator {
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
+            }
+            case "19" -> {  
+                try {
+                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    publicKey = keyFactory.generatePublic(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+                
             }
             default -> throw new AssertionError();
         }
@@ -314,6 +323,16 @@ public final class KeyToolGenerator {
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
                 }
+            }
+            case "19" -> {  
+                try {
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    privateKey = keyFactory.generatePrivate(keySpec);
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    throw new AssertionError();
+                }
+                
             }
             default -> throw new AssertionError();
         }
@@ -521,6 +540,20 @@ public final class KeyToolGenerator {
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
                 key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+            }
+            case "19" -> {
+                SignatureAlgorithm alg = Jwts.SIG.RS512; 
+                KeyPair pair = alg.keyPair().build(); 
+                
+                PublicKey publicKey = pair.getPublic();
+                X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+                String publicKeyWithEncodingScheme = convertBinaryKeyToStringKey(x509EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                PrivateKey privateKey = pair.getPrivate();
+                PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+                String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
+                
+                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             default -> throw new AssertionError();
         }
