@@ -309,7 +309,7 @@ public final class KeyToolGenerator {
             case "36" -> { 
                 try {
                     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
-                    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+                    KeyFactory keyFactory = KeyFactory.getInstance("Ed448");    //or Ed25519
                     privateKey = keyFactory.generatePrivate(keySpec);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     throw new AssertionError();
@@ -473,11 +473,8 @@ public final class KeyToolGenerator {
                 key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "36" -> { 
-                Curve curve = Jwks.CRV.Ed25519;  //or Ed448
+                Curve curve = Jwks.CRV.Ed448;  //or Ed25519
                 KeyPair pair = curve.keyPair().build();
-                
-//                SignatureAlgorithm alg = Jwts.SIG.EdDSA; 
-//                KeyPair pair = alg.keyPair().build();
                 
                 PublicKey publicKey = pair.getPublic();
                 X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
