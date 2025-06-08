@@ -22,6 +22,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public final class KeyToolGenerator {
@@ -70,7 +71,7 @@ public final class KeyToolGenerator {
         return encodedKey;
     }
     
-    public static SecretKey convertStringKeyToSecretKey(String stringKey, String encodingScheme) {
+    public static SecretKey convertStringKeyToHmacSecretKey(String stringKey, String encodingScheme) {
         SecretKey key = null; 
         
         switch (encodingScheme) {
@@ -82,6 +83,25 @@ public final class KeyToolGenerator {
             }
             case "02" -> {   
                 key = Keys.hmacShaKeyFor(hexStringToByteArrayTo(stringKey));
+            }
+            default -> throw new AssertionError();
+        }
+        
+        return key;
+    }
+    
+    public static SecretKey convertStringKeyToAESSecretKey(String stringKey, String encodingScheme) {
+        SecretKey key = null; 
+        
+        switch (encodingScheme) {
+            case "00" -> {  
+                key = new SecretKeySpec(Decoders.BASE64.decode(stringKey), "AES");
+            }
+            case "01" -> {   
+                key = new SecretKeySpec(Decoders.BASE64URL.decode(stringKey), "AES");
+            }
+            case "02" -> {   
+                key = new SecretKeySpec(hexStringToByteArrayTo(stringKey), "AES");
             }
             default -> throw new AssertionError();
         }

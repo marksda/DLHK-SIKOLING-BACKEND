@@ -42,7 +42,7 @@ public class TokenServiceBasic implements TokenService<Token> {
 
         switch (key.getId_jwa()) {
             case "01" -> {   
-                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );
@@ -59,7 +59,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "02" -> {   
-                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );
@@ -76,7 +76,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 token = new Token(jwt, null, 10000000L, autorisasi.getId());
             }
             case "03" -> {   
-                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), key.getId_encoding_scheme()
                     );
                 jwt = Jwts.builder()
@@ -253,7 +253,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "13" -> {   
                 AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
-                SecretKey secretKey = KeyToolGenerator.convertStringKeyToSecretKey(
+                SecretKey secretKey = KeyToolGenerator.convertStringKeyToAESSecretKey(
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );

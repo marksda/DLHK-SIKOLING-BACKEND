@@ -11,6 +11,7 @@ public class KeyDTO implements Serializable {
     private String id;
     private String id_realm;
     private String id_jwa;
+    private String id_encoding_scheme;
     private String secred_key;
     private String private_key;
     private String public_key;
@@ -24,6 +25,7 @@ public class KeyDTO implements Serializable {
             this.id = t.getId();
             this.id_realm = t.getId_realm();
             this.id_jwa = t.getId_jwa();
+            this.id_encoding_scheme = t.getId_encoding_scheme();
             this.secred_key = t.getSecred_key();
             this.private_key = t.getPrivate_key();
             this.public_key = t.getPublic_key();
@@ -53,6 +55,14 @@ public class KeyDTO implements Serializable {
 
     public void setId_jwa(String id_jwa) {
         this.id_jwa = id_jwa;
+    }
+
+    public String getId_encoding_scheme() {
+        return id_encoding_scheme;
+    }
+
+    public void setId_encoding_scheme(String id_encoding_scheme) {
+        this.id_encoding_scheme = id_encoding_scheme;
     }
 
     public String getSecred_key() {
