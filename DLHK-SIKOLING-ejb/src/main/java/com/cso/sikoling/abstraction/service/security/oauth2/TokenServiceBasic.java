@@ -16,6 +16,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.AeadAlgorithm;
 import io.jsonwebtoken.security.KeyAlgorithm;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Calendar;
@@ -257,13 +258,12 @@ public class TokenServiceBasic implements TokenService<Token> {
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );
+                String message = "Live long and prosper.";
+                byte[] content = message.getBytes(StandardCharsets.UTF_8);
                
                 String jwe = Jwts.builder()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
+                        .header().add("typ", "JOSE").and()
+                        .content(content, "text/plain")
                         .encryptWith(secretKey, enc)
                         .compact();
                 
