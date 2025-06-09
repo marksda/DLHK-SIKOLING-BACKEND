@@ -12,24 +12,31 @@ import java.util.List;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.main.util.oauth2.KeyToolGenerator;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Locator;
+import io.jsonwebtoken.LocatorAdapter;
 import io.jsonwebtoken.security.AeadAlgorithm;
 import io.jsonwebtoken.security.KeyAlgorithm;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import javax.crypto.SecretKey;
 
 
 public class TokenServiceBasic implements TokenService<Token> {
     
-    private final Repository<Token, QueryParamFilters, Filter> repository;  
+    private final Repository<Token, QueryParamFilters, Filter> repositoryToken;  
+    private final Repository<Key, QueryParamFilters, Filter> repositoryKey;
 
-    public TokenServiceBasic(Repository repository) {
-        this.repository = repository;
+    public TokenServiceBasic(Repository repositoryToken, Repository repositoryKey) {
+        this.repositoryToken = repositoryToken;
+        this.repositoryKey = repositoryKey;
     }
     
     @Override
@@ -49,9 +56,9 @@ public class TokenServiceBasic implements TokenService<Token> {
                     );
                 jwt = Jwts.builder()
                         .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
+                        .issuer("DLHK-Sidoarjo")
+                        .subject(autorisasi.getId_user())
+                        .audience().add(key.getId_realm()).and()
                         .expiration(nextYear)
                         .issuedAt(today)
                         .id(autorisasi.getId())
@@ -304,41 +311,45 @@ public class TokenServiceBasic implements TokenService<Token> {
 
     @Override
     public Token save(Token t) throws SQLException {
-        return this.repository.save(t);
+        return this.repositoryToken.save(t);
     }
 
     @Override
     public Token update(Token t) throws SQLException {
-        return this.repository.update(t);
+        return this.repositoryToken.update(t);
     }
 
     @Override
     public Token updateId(String idLama, Token t) throws SQLException {
-        return this.repository.updateId(idLama, t);
+        return this.repositoryToken.updateId(idLama, t);
     }
 
     @Override
     public boolean delete(String id) throws SQLException {
-        return this.repository.delete(id);
+        return this.repositoryToken.delete(id);
     }
 
     @Override
     public List getDaftarData(QueryParamFilters queryParamFilters) {
-        return this.repository.getDaftarData(queryParamFilters);
+        return this.repositoryToken.getDaftarData(queryParamFilters);
     }
 
     @Override
     public Long getJumlahData(List queryParamFilters) {
-        return this.repository.getJumlahData(queryParamFilters);
+        return this.repositoryToken.getJumlahData(queryParamFilters);
     }
 
     @Override
     public Claims validateAccessToken(String accessToken) {
+        Locator<java.security.Key> keyLocator = new KeyLocator();
+        
         Jws<Claims> jws;
         
         try {
-            jws = (Jws<Claims>) Jwts.parser();
-//            .keyLocator(keyLocator)
+            jws = (Jws<Claims>) Jwts.parser()
+                    .keyLocator(keyLocator)
+                    .build()
+                    .parseSignedClaims(accessToken);
 //            .verifyWith(null)
 //            .build()
 //            .parseSignedClaims(jwsString);
@@ -347,5 +358,125 @@ public class TokenServiceBasic implements TokenService<Token> {
         } catch (JwtException e) {
             return null;
         }
+        
+        
+    }
+    
+    private class KeyLocator extends LocatorAdapter<java.security.Key> {
+
+        @Override
+        protected java.security.Key locate(JwsHeader header) {
+            List<Filter> fields_filter = new ArrayList<>();
+            Filter filter = new Filter("id", header.getKeyId());
+            fields_filter.add(filter);
+            QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
+            java.security.Key decodeKey;
+            
+            try {
+                Key key = repositoryKey.getDaftarData(qFilter).getFirst();
+                
+                switch (key.getId_jwa()) {
+                    case "01" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
+                                key.getSecred_key(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "02" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
+                                key.getSecred_key(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "03" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
+                                key.getSecred_key(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "04" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "05" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "06" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "07" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "08" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "09" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "10" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "11" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "12" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    case "36" -> {
+                        decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
+                                key.getPublic_key(), 
+                                key.getId_jwa(), 
+                                key.getId_encoding_scheme()
+                            );
+                    }
+                    default -> {
+                        decodeKey = null;
+                    }
+                }
+                
+                return decodeKey;
+            } catch (NoSuchElementException e) {
+                return null;
+            }
+            
+        }
+
+       
+        
     }
 }

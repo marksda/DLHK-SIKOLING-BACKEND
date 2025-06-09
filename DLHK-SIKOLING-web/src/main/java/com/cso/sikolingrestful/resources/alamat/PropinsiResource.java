@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
 
 @Stateless
 @LocalBean
@@ -34,6 +37,8 @@ public class PropinsiResource {
     private Service<Propinsi> propinsiService;
     
     @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Produces({MediaType.APPLICATION_JSON})
     public List<PropinsiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         

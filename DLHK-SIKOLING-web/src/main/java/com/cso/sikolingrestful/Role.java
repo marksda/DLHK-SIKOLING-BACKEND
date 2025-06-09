@@ -3,7 +3,6 @@ package com.cso.sikolingrestful;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public enum Role implements Labeled {
     UNTULAN("00"),
     ADMINISTRATOR("01"), 
