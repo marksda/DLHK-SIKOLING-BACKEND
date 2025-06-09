@@ -1,6 +1,11 @@
 package com.cso.sikolingrestful.provider;
 
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
+import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
@@ -24,6 +29,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import com.cso.sikoling.abstraction.service.TokenService;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 @Provider
 @Stateless
@@ -33,6 +40,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     
     @Inject
     private TokenService<Token> tokenService;
+    
+    @Inject
+    private Service<Autorisasi> autorisasiService;
     
     @Context
     private ResourceInfo resourceInfo;
@@ -46,13 +56,22 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         Claims claims = Optional.ofNullable(tokenService.validateAccessToken(accessToken))
                                 .orElseThrow(() -> new NotAuthorizedException("Authorization header not found"));
         
-        Method resourceMethod = resourceInfo.getResourceMethod();
-        List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
-                .orElseThrow(() -> new NotAuthorizedException("Role not found"));
-
+        List<Filter> fields_filter = new ArrayList<>();
+        Filter filter = new Filter("id_user", claims.getSubject());
+        fields_filter.add(filter);
+        QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
+        
         try {
-            checkPermissions(methodRoles, claims);
-        } catch (Exception e) {
+            String idHakAkses = autorisasiService.getDaftarData(qFilter).getFirst().getId_hak_akses();
+            Method resourceMethod = resourceInfo.getResourceMethod();
+            List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
+                                        .orElseThrow(() -> new NotAuthorizedException("Role not found"));
+            try {
+                checkPermissions(methodRoles, idHakAkses);
+            } catch (Exception e) {
+                throw new NotAuthorizedException(e.toString());
+            }            
+        } catch (NoSuchElementException e) {
             throw new NotAuthorizedException(e.toString());
         }
         
@@ -72,20 +91,20 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         }
     }
     
-    private void checkPermissions(List<Role> allowedRoles, Claims claims) throws Exception {
+    private void checkPermissions(List<Role> allowedRoles, String idHakAkses) throws Exception {
         Iterator<Role> iterator = allowedRoles.iterator();          
-        Set<String> audience = claims.getAudience();
+//        Set<String> audience = claims.getAudience();
         boolean allowRole = false;        
-        Iterator iteratorAudience = audience.iterator();
-        String roleId = null;
-        
-        if(iteratorAudience.hasNext()) {
-            roleId = (String) iteratorAudience.next();
-        }
+//        Iterator iteratorAudience = audience.iterator();
+//        String roleId = null;
+//        
+//        if(iteratorAudience.hasNext()) {
+//            roleId = (String) iteratorAudience.next();
+//        }
         
         while(iterator.hasNext()) {    		
             Role role = iterator.next();
-            if(role.label().equalsIgnoreCase(roleId)) {
+            if(role.label().equalsIgnoreCase(idHakAkses)) {
                 allowRole = true;
                 break;
             }    		
