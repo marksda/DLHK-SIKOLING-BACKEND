@@ -350,10 +350,6 @@ public class TokenServiceBasic implements TokenService<Token> {
                     .keyLocator(keyLocator)
                     .build()
                     .parseSignedClaims(accessToken);
-//            .verifyWith(null)
-//            .build()
-//            .parseSignedClaims(jwsString);
-//            jws.getPayload().getId();
             return jws.getPayload();
         } catch (JwtException e) {
             return null;
