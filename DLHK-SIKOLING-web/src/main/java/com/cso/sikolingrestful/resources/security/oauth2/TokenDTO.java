@@ -10,7 +10,7 @@ public class TokenDTO implements Serializable {
     private String access_token;
     private String refreshToken;
     private Long expires_in;
-    private String sessionId;		
+    private String session_id;		
 
     public TokenDTO() {
     }
@@ -20,7 +20,7 @@ public class TokenDTO implements Serializable {
             this.access_token = t.getAccess_token();
             this.refreshToken = t.getRefresh_token();
             this.expires_in = t.getExpires_in();
-            this.sessionId = t.getSession_id();
+            this.session_id = t.getSession_id();
         }
     }
 
@@ -48,18 +48,25 @@ public class TokenDTO implements Serializable {
         this.expires_in = expires_in;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getSession_id() {
+        return session_id;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setSession_id(String session_id) {
+        this.session_id = session_id;
+    }
+    
+    public Token toToken() {
+        return new Token(
+                this.access_token, this.refreshToken, 
+                this.expires_in, this.session_id
+            );
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 29 * hash + Objects.hashCode(this.sessionId);
+        hash = 29 * hash + Objects.hashCode(this.session_id);
         return hash;
     }
 
@@ -75,7 +82,7 @@ public class TokenDTO implements Serializable {
             return false;
         }
         final TokenDTO other = (TokenDTO) obj;
-        return Objects.equals(this.sessionId, other.sessionId);
+        return Objects.equals(this.session_id, other.session_id);
     }
     
     

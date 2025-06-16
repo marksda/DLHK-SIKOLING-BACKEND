@@ -37,8 +37,6 @@ public class PropinsiResource {
     private Service<Propinsi> propinsiService;
     
     @GET
-    @RequiredAuthorization
-    @RequiredRole({Role.ADMINISTRATOR})
     @Produces({MediaType.APPLICATION_JSON})
     public List<PropinsiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
@@ -66,6 +64,8 @@ public class PropinsiResource {
     }
     
     @POST
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public PropinsiDTO save(PropinsiDTO propinsiDTO) throws SQLException { 
@@ -81,6 +81,8 @@ public class PropinsiResource {
     
     @Path("/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public PropinsiDTO update(@PathParam("idLama") String idLama, PropinsiDTO propinsiDTO) throws SQLException {
@@ -101,6 +103,8 @@ public class PropinsiResource {
     
     @Path("/update_id/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public PropinsiDTO updateId(@PathParam("idLama") String idLama, PropinsiDTO propinsiDTO) throws SQLException {
@@ -122,6 +126,8 @@ public class PropinsiResource {
     
     @Path("/{idPropinsi}")
     @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idPropinsi") String idPropinsi) throws SQLException {

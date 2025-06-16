@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.service.UserService;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.resources.security.CredentialDTO;
 import java.util.Date;
 
@@ -36,6 +39,8 @@ public class UserResource {
     private UserService<User> userService;
     
     @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Produces({MediaType.APPLICATION_JSON})
     public List<UserDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
@@ -70,6 +75,7 @@ public class UserResource {
             UserDTO userDTO = new UserDTO();
             userDTO.setUser_name(credentialDTO.getEmail());
             userDTO.setPassword(credentialDTO.getPassword());
+            userDTO.setHashing_password_type_id("05");
             Date currentDate = new Date();
             userDTO.setTanggal_registrasi(currentDate);
             return new UserDTO(userService.save(userDTO.toUser()));
@@ -93,6 +99,8 @@ public class UserResource {
     
     @Path("/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public UserDTO update(@PathParam("idLama") String idLama, UserDTO userDTO) throws SQLException {
@@ -113,6 +121,8 @@ public class UserResource {
     
     @Path("/update_id/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public UserDTO updateId(@PathParam("idLama") String idLama, UserDTO userDTO) throws SQLException {
@@ -134,6 +144,8 @@ public class UserResource {
     
     @Path("/{idUser}")
     @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idUser") String idUser) throws SQLException {
