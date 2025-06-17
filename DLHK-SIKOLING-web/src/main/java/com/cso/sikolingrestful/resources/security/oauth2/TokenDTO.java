@@ -2,15 +2,17 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 
 public class TokenDTO implements Serializable {
     
+    private String id;		
     private String access_token;
     private String refreshToken;
     private Long expires_in;
-    private String session_id;		
+    private Date tanggal_generate;
 
     public TokenDTO() {
     }
@@ -20,7 +22,8 @@ public class TokenDTO implements Serializable {
             this.access_token = t.getAccess_token();
             this.refreshToken = t.getRefresh_token();
             this.expires_in = t.getExpires_in();
-            this.session_id = t.getSession_id();
+            this.id = t.getId();
+            this.tanggal_generate = t.getTanggal_generate();
         }
     }
 
@@ -48,25 +51,37 @@ public class TokenDTO implements Serializable {
         this.expires_in = expires_in;
     }
 
-    public String getSession_id() {
-        return session_id;
+    public String getId() {
+        return id;
     }
 
-    public void setSession_id(String session_id) {
-        this.session_id = session_id;
+    public void setId(String id) {
+        this.id = id;
     }
+
+    public Date getTanggal_generate() {
+        return tanggal_generate;
+    }
+
+    public void setTanggal_generate(Date tanggal_generate) {
+        this.tanggal_generate = tanggal_generate;
+    }
+    
     
     public Token toToken() {
         return new Token(
-                this.access_token, this.refreshToken, 
-                this.expires_in, this.session_id
+                this.id,
+                this.access_token, 
+                this.refreshToken, 
+                this.expires_in,
+                this.tanggal_generate
             );
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 29 * hash + Objects.hashCode(this.session_id);
+        hash = 29 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -82,7 +97,7 @@ public class TokenDTO implements Serializable {
             return false;
         }
         final TokenDTO other = (TokenDTO) obj;
-        return Objects.equals(this.session_id, other.session_id);
+        return Objects.equals(this.id, other.id);
     }
     
     

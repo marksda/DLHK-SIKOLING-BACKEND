@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class TokenResource {
             @PathParam("idRealm") String idRealm, 
             @PathParam("idJwa") String idJwa, 
             @PathParam("idKey") String idKey,
-            CredentialDTO credentialDTO) throws UnspecifiedException {
+            CredentialDTO credentialDTO) throws UnspecifiedException, SQLException {
         
         Token token;
         User user = userService.authentication(credentialDTO.toCredential());
@@ -79,6 +80,7 @@ public class TokenResource {
             token = tokenService.generateToken(key, autorisasi);
             
             if(token != null) {
+                tokenService.save(token);
                 return new TokenDTO(token);
             }
             else {

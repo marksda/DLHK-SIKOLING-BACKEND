@@ -17,23 +17,25 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "master.tbl_token")
+@Table(name = "oauth.tbl_token")
 @NamedQueries({
     @NamedQuery(name = "TokenData.findAll", query = "SELECT t FROM TokenData t"),
-    @NamedQuery(name = "TokenData.findBySessionId", query = "SELECT t FROM TokenData t WHERE t.sessionId = :sessionId"),
+    @NamedQuery(name = "TokenData.findById", query = "SELECT t FROM TokenData t WHERE t.id = :id"),
     @NamedQuery(name = "TokenData.findByAccessToken", query = "SELECT t FROM TokenData t WHERE t.accessToken = :accessToken"),
     @NamedQuery(name = "TokenData.findByRefreshToken", query = "SELECT t FROM TokenData t WHERE t.refreshToken = :refreshToken"),
     @NamedQuery(name = "TokenData.findByExpiresIn", query = "SELECT t FROM TokenData t WHERE t.expiresIn = :expiresIn"),
-    @NamedQuery(name = "TokenData.findByTanggalGenerate", query = "SELECT t FROM TokenData t WHERE t.tanggalGenerate = :tanggalGenerate")})
+    @NamedQuery(name = "TokenData.findByTanggalGenerate", query = "SELECT t FROM TokenData t WHERE t.tanggalGenerate = :tanggalGenerate"),
+    @NamedQuery(name = "TokenData.updateId", query = "UPDATE TokenData SET id = :idBaru WHERE id = :idLama")
+})
 public class TokenData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "session_id")
-    private String sessionId;
+    @Size(min = 1, max = 36)
+    @Column(name = "id")
+    private String id;
     
     @Size(max = 2147483647)
     @Column(name = "access_token")
@@ -54,15 +56,15 @@ public class TokenData implements Serializable {
     }
 
     public TokenData(String sessionId) {
-        this.sessionId = sessionId;
+        this.id = sessionId;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getId() {
+        return id;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAccessToken() {
@@ -100,7 +102,7 @@ public class TokenData implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (sessionId != null ? sessionId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -112,12 +114,12 @@ public class TokenData implements Serializable {
         
         TokenData other = (TokenData) object;
         
-        return !this.sessionId.equals(other.sessionId);
+        return !this.id.equals(other.id);
     }
 
     @Override
     public String toString() {
-        return "com.cso.sikoling.main.repository.security.TokenData[ sessionId=" + sessionId + " ]";
+        return "com.cso.sikoling.main.repository.security.TokenData[ sessionId=" + id + " ]";
     }
 
 }

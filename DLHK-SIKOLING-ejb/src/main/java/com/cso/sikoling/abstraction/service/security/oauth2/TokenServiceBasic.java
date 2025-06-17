@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.main.util.oauth2.KeyToolGenerator;
+import com.github.f4b6a3.uuid.UuidCreator;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.JwtException;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 
 
@@ -46,7 +48,7 @@ public class TokenServiceBasic implements TokenService<Token> {
         cal.add(Calendar.YEAR, 1); 
         Date nextYear = cal.getTime();
         String jwt;
-        Token token;
+        Token token;        
 
         switch (key.getId_jwa()) {
             case "01" -> {   
@@ -64,7 +66,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(secretKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "02" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
@@ -81,7 +83,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(secretKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "03" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
@@ -97,7 +99,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(secretKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "04" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -113,7 +115,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "05" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -129,7 +131,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "06" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -145,7 +147,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "07" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -161,7 +163,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "08" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -177,7 +179,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "09" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -193,7 +195,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "10" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -209,7 +211,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "11" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -225,7 +227,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "12" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -241,7 +243,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "36" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -257,7 +259,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .id(autorisasi.getId())
                         .signWith(privateKey)
                         .compact();
-                token = new Token(jwt, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
             }
             case "13" -> {   
                 AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
@@ -274,7 +276,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .encryptWith(secretKey, enc)
                         .compact();
                 
-                token = new Token(jwe, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwe, null, 10000000L, today);
             }
             case "19" -> {  
                 PublicKey publicKey = KeyToolGenerator.convertStringKeyToPublicKey(
@@ -300,7 +302,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .encryptWith(publicKey, alg, enc)
                         .compact();
                 
-                token = new Token(jwe, null, 10000000L, autorisasi.getId());
+                token = new Token(this.generateIdToken(), jwe, null, 10000000L, today);
             }
             default -> throw new AssertionError();
         }   
@@ -356,6 +358,11 @@ public class TokenServiceBasic implements TokenService<Token> {
         }
         
         
+    }
+    
+    private String generateIdToken() {
+        UUID uuid = UuidCreator.getTimeOrderedEpoch();
+        return uuid.toString();
     }
     
     private class KeyLocator extends LocatorAdapter<java.security.Key> {
@@ -471,8 +478,6 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             
         }
-
-       
         
     }
 }
