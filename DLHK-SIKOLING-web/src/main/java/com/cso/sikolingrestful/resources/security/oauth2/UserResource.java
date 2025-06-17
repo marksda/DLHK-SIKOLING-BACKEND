@@ -37,8 +37,14 @@ import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.security.CredentialDTO;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 @Stateless
@@ -51,9 +57,6 @@ public class UserResource {
     
     @Inject
     private TokenService<Token> tokenService;
-    
-    @Inject
-    private Service<Autorisasi> autorisasiService;
     
     @Inject
     private KeyService<Key> keyService;  
@@ -116,15 +119,9 @@ public class UserResource {
         Token token;
         User user = userService.authentication(credentialDTO.toCredential()); 
         
-        if(user != null) {
-            List<Filter> filterAutorisasi = new ArrayList<>();
-            Filter filter = new Filter("id_user", user.getId());
-            filterAutorisasi.add(filter);
-            QueryParamFilters qFilterAutorisasi = new QueryParamFilters(false, null, filterAutorisasi, null);
-            Autorisasi autorisasi = autorisasiService.getDaftarData(qFilterAutorisasi).getFirst();
-            
+        if(user != null) {            
             List<Filter> filterKey = new ArrayList<>();
-            filter = new Filter("realm", appProperties.getProperty("ID_REALM"));
+            Filter filter = new Filter("realm", appProperties.getProperty("ID_REALM"));
             filterKey.add(filter);
             filter = new Filter("jwa", appProperties.getProperty("ID_JWA"));
             filterKey.add(filter);
@@ -134,7 +131,26 @@ public class UserResource {
             
             Key key = keyService.getDaftarData(qFilterKey).getFirst();
             
-            token = tokenService.generateToken(key, autorisasi);
+            Header jwsHeader = Jwts.header()
+                    .keyId(key.getId())
+                    .add("typ", "JWT")
+                    .build();
+            
+            
+            Map jwsPayload = new HashMap<String, Object>();
+            Calendar cal = Calendar.getInstance();
+            Date today = cal.getTime();
+            cal.add(Calendar.YEAR, 1); 
+            Date nextYear = cal.getTime();
+        
+            jwsPayload.put("iss", "dlhk sidoarjo");
+            jwsPayload.put("sub", key.getId_realm());
+            jwsPayload.put("aud", user.getId());
+            jwsPayload.put("exp", nextYear);
+            jwsPayload.put("iat", today);
+            
+            
+            token = tokenService.generateToken(key, jwsHeader, jwsPayload);
             
             if(token != null) {
                 tokenService.save(token);
@@ -149,11 +165,6 @@ public class UserResource {
             throw new UnspecifiedException(500, "Credential ditolak"); 
         }
         
-//        JsonObject model = Json.createObjectBuilder()
-//                    .add("status", userService.authentication(credentialDTO.toCredential()) != null ? "sukses" : "gagal")
-//                    .build();
-//            
-//        return model;
     }
     
     @Path("/{idLama}")

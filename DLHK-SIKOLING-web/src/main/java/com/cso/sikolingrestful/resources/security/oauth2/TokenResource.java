@@ -2,7 +2,6 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
@@ -10,7 +9,6 @@ import jakarta.ws.rs.Path;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.service.KeyService;
-import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.resources.security.CredentialDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -21,9 +19,15 @@ import jakarta.ws.rs.core.MediaType;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 @LocalBean
@@ -35,9 +39,6 @@ public class TokenResource {
     
     @Inject
     private UserService<User> userService;
-    
-    @Inject
-    private Service<Autorisasi> autorisasiService;
     
     @Inject
     private KeyService<Key> keyService;    
@@ -59,15 +60,9 @@ public class TokenResource {
         Token token;
         User user = userService.authentication(credentialDTO.toCredential());
         
-        if(user != null) {
-            List<Filter> filterAutorisasi = new ArrayList<>();
-            Filter filter = new Filter("id_user", user.getId());
-            filterAutorisasi.add(filter);
-            QueryParamFilters qFilterAutorisasi = new QueryParamFilters(false, null, filterAutorisasi, null);
-            Autorisasi autorisasi = autorisasiService.getDaftarData(qFilterAutorisasi).getFirst();
-            
+        if(user != null) {            
             List<Filter> filterKey = new ArrayList<>();
-            filter = new Filter("realm", idRealm);
+            Filter filter = new Filter("realm", idRealm);
             filterKey.add(filter);
             filter = new Filter("jwa", idJwa);
             filterKey.add(filter);
@@ -77,7 +72,26 @@ public class TokenResource {
             
             Key key = keyService.getDaftarData(qFilterKey).getFirst();
             
-            token = tokenService.generateToken(key, autorisasi);
+            Header jwsHeader = Jwts.header()
+                    .keyId(key.getId())
+                    .add("typ", "JWT")
+                    .build();
+            
+            
+            Map jwsPayload = new HashMap<String, Object>();
+            Calendar cal = Calendar.getInstance();
+            Date today = cal.getTime();
+            cal.add(Calendar.YEAR, 1); 
+            Date nextYear = cal.getTime();
+        
+            jwsPayload.put("iss", "dlhk sidoarjo");
+            jwsPayload.put("sub", key.getId_realm());
+            jwsPayload.put("aud", user.getId());
+            jwsPayload.put("exp", nextYear);
+            jwsPayload.put("iat", today);
+            
+            
+            token = tokenService.generateToken(key, jwsHeader, jwsPayload);
             
             if(token != null) {
                 tokenService.save(token);

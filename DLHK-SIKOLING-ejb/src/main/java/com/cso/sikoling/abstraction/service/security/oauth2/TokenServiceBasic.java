@@ -2,7 +2,6 @@ package com.cso.sikoling.abstraction.service.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
@@ -24,8 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import javax.crypto.SecretKey;
@@ -42,224 +41,168 @@ public class TokenServiceBasic implements TokenService<Token> {
     }
     
     @Override
-    public Token generateToken(Key key, Autorisasi autorisasi) {
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        cal.add(Calendar.YEAR, 1); 
-        Date nextYear = cal.getTime();
-        String jwt;
+    public Token generateToken(Key key, Map<String, Object> header, Map<String, Object> payload) {
         Token token;        
-
+        String idToken = generateIdToken();
+        
         switch (key.getId_jwa()) {
             case "01" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK-Sidoarjo")
-                        .subject(autorisasi.getId_user())
-                        .audience().add(key.getId_realm()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(secretKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "02" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(secretKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "03" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(secretKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "04" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "05" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "06" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "07" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "08" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "09" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "10" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "11" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "12" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "36" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
                         key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
                     );
-                jwt = Jwts.builder()
-                        .header().keyId(key.getId()).add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
-                        .id(autorisasi.getId())
+                String jwt = Jwts.builder()                        
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(this.generateIdToken(), jwt, null, 10000000L, today);
+                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
             }
             case "13" -> {   
                 AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
@@ -267,7 +210,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         key.getSecred_key(), 
                         key.getId_encoding_scheme()
                     );
-                String message = "Live long and prosper.";
+                String message = (String) payload.get("content");
                 byte[] content = message.getBytes(StandardCharsets.UTF_8);
                
                 String jwe = Jwts.builder()
@@ -276,7 +219,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .encryptWith(secretKey, enc)
                         .compact();
                 
-                token = new Token(this.generateIdToken(), jwe, null, 10000000L, today);
+                token = new Token(idToken, jwe, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             case "19" -> {  
                 PublicKey publicKey = KeyToolGenerator.convertStringKeyToPublicKey(
@@ -290,19 +233,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                 AeadAlgorithm enc = Jwts.ENC.A256GCM;
                                
                 String jwe = Jwts.builder()
-                        .header().keyId(
-                            KeyToolGenerator.byteArrayToHexString(publicKey.getEncoded())
-                        )
-                        .add("typ", "JWT").and()
-                        .issuer("DLHK Sidoarjo")
-                        .subject("sikoling")
-                        .audience().add(autorisasi.getUser_name()).and()
-                        .expiration(nextYear)
-                        .issuedAt(today)
+                        .header().add(header).and()
+                        .id(idToken)
+                        .claims(payload)
                         .encryptWith(publicKey, alg, enc)
                         .compact();
                 
-                token = new Token(this.generateIdToken(), jwe, null, 10000000L, today);
+                token = new Token(idToken, jwe, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
             }
             default -> throw new AssertionError();
         }   

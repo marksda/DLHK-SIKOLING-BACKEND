@@ -54,12 +54,12 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         Claims claims = Optional.ofNullable(tokenService.validateAccessToken(accessToken))
                                 .orElseThrow(() -> new NotAuthorizedException("Authorization header not found"));
         
-        List<Filter> fields_filter = new ArrayList<>();
-        Filter filter = new Filter("id_user", claims.getSubject());
-        fields_filter.add(filter);
-        QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
-        
         try {
+            List<Filter> fields_filter = new ArrayList<>();
+            Filter filter = new Filter("id_user", claims.getAudience().stream().findFirst().orElseThrow());
+            fields_filter.add(filter);
+            QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
+        
             String idHakAkses = autorisasiService.getDaftarData(qFilter).getFirst().getId_hak_akses();
             Method resourceMethod = resourceInfo.getResourceMethod();
             List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
