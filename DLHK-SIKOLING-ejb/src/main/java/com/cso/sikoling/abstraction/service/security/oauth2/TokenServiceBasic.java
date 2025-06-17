@@ -357,7 +357,6 @@ public class TokenServiceBasic implements TokenService<Token> {
             return null;
         }
         
-        
     }
     
     private String generateIdToken() {

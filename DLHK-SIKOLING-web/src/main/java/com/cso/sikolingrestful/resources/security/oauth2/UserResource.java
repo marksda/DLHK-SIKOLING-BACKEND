@@ -1,5 +1,10 @@
 package com.cso.sikolingrestful.resources.security.oauth2;
 
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -23,12 +28,18 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
+import com.cso.sikoling.abstraction.service.KeyService;
+import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.security.CredentialDTO;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 
 @Stateless
 @LocalBean
@@ -37,6 +48,18 @@ public class UserResource {
     
     @Inject
     private UserService<User> userService;
+    
+    @Inject
+    private TokenService<Token> tokenService;
+    
+    @Inject
+    private Service<Autorisasi> autorisasiService;
+    
+    @Inject
+    private KeyService<Key> keyService;  
+    
+    @Inject
+    private Properties appProperties;
     
     @GET
     @RequiredAuthorization
@@ -89,12 +112,48 @@ public class UserResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject authentication(CredentialDTO credentialDTO) {         
-        JsonObject model = Json.createObjectBuilder()
-                    .add("status", userService.authentication(credentialDTO.toCredential()) != null ? "sukses" : "gagal")
-                    .build();
+    public TokenDTO authentication(CredentialDTO credentialDTO) throws UnspecifiedException, SQLException { 
+        Token token;
+        User user = userService.authentication(credentialDTO.toCredential()); 
+        
+        if(user != null) {
+            List<Filter> filterAutorisasi = new ArrayList<>();
+            Filter filter = new Filter("id_user", user.getId());
+            filterAutorisasi.add(filter);
+            QueryParamFilters qFilterAutorisasi = new QueryParamFilters(false, null, filterAutorisasi, null);
+            Autorisasi autorisasi = autorisasiService.getDaftarData(qFilterAutorisasi).getFirst();
             
-        return model;
+            List<Filter> filterKey = new ArrayList<>();
+            filter = new Filter("realm", appProperties.getProperty("ID_REALM"));
+            filterKey.add(filter);
+            filter = new Filter("jwa", appProperties.getProperty("ID_JWA"));
+            filterKey.add(filter);
+            filter = new Filter("id", appProperties.getProperty("ID_KEY"));
+            filterKey.add(filter);
+            QueryParamFilters qFilterKey = new QueryParamFilters(false, null, filterKey, null);
+            
+            Key key = keyService.getDaftarData(qFilterKey).getFirst();
+            
+            token = tokenService.generateToken(key, autorisasi);
+            
+            if(token != null) {
+                tokenService.save(token);
+                return new TokenDTO(token);
+            }
+            else {
+                throw new UnspecifiedException(500, "Token gagal dibuat"); 
+            }    
+            
+        }
+        else {
+            throw new UnspecifiedException(500, "Credential ditolak"); 
+        }
+        
+//        JsonObject model = Json.createObjectBuilder()
+//                    .add("status", userService.authentication(credentialDTO.toCredential()) != null ? "sukses" : "gagal")
+//                    .build();
+//            
+//        return model;
     }
     
     @Path("/{idLama}")
