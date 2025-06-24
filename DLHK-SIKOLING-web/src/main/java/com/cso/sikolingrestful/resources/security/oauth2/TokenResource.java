@@ -18,9 +18,15 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.UserService;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.ws.rs.DELETE;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,4 +113,17 @@ public class TokenResource {
         
     }
     
+    @Path("/{idToken}")
+    @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject delete(@PathParam("idToken") String idToken) throws SQLException {            
+        JsonObject model = Json.createObjectBuilder()
+                .add("keterangan", tokenService.delete(idToken) == true ? "sukses" : "gagal")
+                .build();
+
+        return model;
+    }
 }
