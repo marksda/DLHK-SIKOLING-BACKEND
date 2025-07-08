@@ -63,7 +63,7 @@ public class PropinsiResource {
         
     }
     
-    @POST
+    @POST    
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})

@@ -141,7 +141,7 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
                 }
             }        
 
-            // sort clause
+            // sort clause  
             if(q.getFields_sorter() != null) {
                 Iterator<SortOrder> iterSort = q.getFields_sorter().iterator();
                 while (iterSort.hasNext()) {
