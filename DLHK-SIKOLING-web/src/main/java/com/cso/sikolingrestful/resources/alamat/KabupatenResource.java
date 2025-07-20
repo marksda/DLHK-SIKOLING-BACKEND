@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.resources.FilterDTO;
+import java.util.ArrayList;
 
 @Stateless
 @LocalBean
@@ -149,6 +154,44 @@ public class KabupatenResource {
             throw new IllegalArgumentException("id kabupaten harus bilangan panjang 4 digit");
         }        
         
+    }
+    
+    @Path("/jumlah")
+    @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject getJumlahData(@QueryParam("filters") String qfilters) {
+        try {
+            if(qfilters != null) {
+                Jsonb jsonb = JsonbBuilder.create();
+                List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
+                
+                JsonObject model = Json.createObjectBuilder()
+                    .add(
+                        "jumlah", 
+                        kabupatenService.getJumlahData(
+                            filters
+                                .stream()
+                                .map(t -> t.toFilter())
+                                .collect(Collectors.toList())
+                        )
+                    )
+                    .build();            
+            
+                return model;
+            }
+            else {
+                JsonObject model = Json.createObjectBuilder()
+                    .add("jumlah", kabupatenService.getJumlahData(null))
+                    .build();            
+            
+                return model;
+            }
+        }
+        catch (JsonbException e) {
+            throw new JsonbException("format query data json tidak sesuai");
+        }
     }
     
 }
