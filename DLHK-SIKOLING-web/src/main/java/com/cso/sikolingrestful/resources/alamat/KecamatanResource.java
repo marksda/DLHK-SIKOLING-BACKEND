@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.resources.FilterDTO;
+import java.util.ArrayList;
 
 @Stateless
 @LocalBean
@@ -61,6 +66,8 @@ public class KecamatanResource {
     }
     
     @POST
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KecamatanDTO save(KecamatanDTO kecamatanDTO) throws SQLException { 
@@ -76,6 +83,8 @@ public class KecamatanResource {
     
     @Path("/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KecamatanDTO update(@PathParam("idLama") String idLama, KecamatanDTO kecamatanDTO) throws SQLException {
@@ -103,6 +112,8 @@ public class KecamatanResource {
     
     @Path("/update_id/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KecamatanDTO updateId(@PathParam("idLama") String idLama, KecamatanDTO kecamatanDTO) throws SQLException {
@@ -130,6 +141,8 @@ public class KecamatanResource {
     
     @Path("/{idKecamatan}")
     @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idKecamatan") String idKecamatan) throws SQLException {
@@ -149,6 +162,44 @@ public class KecamatanResource {
             throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
         }        
         
+    }
+    
+    @Path("/jumlah")
+    @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject getJumlahData(@QueryParam("filters") String qfilters) {
+        try {
+            if(qfilters != null) {
+                Jsonb jsonb = JsonbBuilder.create();
+                List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
+                
+                JsonObject model = Json.createObjectBuilder()
+                    .add(
+                        "jumlah", 
+                        kecamatanService.getJumlahData(
+                            filters
+                                .stream()
+                                .map(t -> t.toFilter())
+                                .collect(Collectors.toList())
+                        )
+                    )
+                    .build();            
+            
+                return model;
+            }
+            else {
+                JsonObject model = Json.createObjectBuilder()
+                    .add("jumlah", kecamatanService.getJumlahData(null))
+                    .build();            
+            
+                return model;
+            }
+        }
+        catch (JsonbException e) {
+            throw new JsonbException("format query data json tidak sesuai");
+        }
     }
     
 }

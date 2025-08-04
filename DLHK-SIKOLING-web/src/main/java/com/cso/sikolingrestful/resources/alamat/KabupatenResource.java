@@ -66,6 +66,8 @@ public class KabupatenResource {
     }
     
     @POST
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KabupatenDTO save(KabupatenDTO kabupatenDTO) throws SQLException { 
@@ -81,6 +83,8 @@ public class KabupatenResource {
     
     @Path("/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KabupatenDTO update(@PathParam("idLama") String idLama, KabupatenDTO kabupatenDTO) throws SQLException {
@@ -108,6 +112,8 @@ public class KabupatenResource {
     
     @Path("/update_id/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KabupatenDTO updateId(@PathParam("idLama") String idLama, KabupatenDTO kabupatenDTO) throws SQLException {
@@ -135,6 +141,8 @@ public class KabupatenResource {
     
     @Path("/{idKabupaten}")
     @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idKabupaten") String idKabupaten) throws SQLException {
