@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.service.Service;
+import com.cso.sikolingrestful.Role;
+import com.cso.sikolingrestful.annotation.RequiredAuthorization;
+import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.resources.FilterDTO;
+import java.util.ArrayList;
 
 @Stateless
 @LocalBean
@@ -61,6 +66,8 @@ public class KategoriSkalaUsahaResource {
     }
     
     @POST
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KategoriSkalaUsahaDTO save(KategoriSkalaUsahaDTO kategoriSkalaUsahaDTO) throws SQLException { 
@@ -76,6 +83,8 @@ public class KategoriSkalaUsahaResource {
     
     @Path("/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KategoriSkalaUsahaDTO update(@PathParam("idLama") String idLama, KategoriSkalaUsahaDTO kategoriSkalaUsahaDTO) throws SQLException {
@@ -96,6 +105,8 @@ public class KategoriSkalaUsahaResource {
     
     @Path("/update_id/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KategoriSkalaUsahaDTO updateId(@PathParam("idLama") String idLama, KategoriSkalaUsahaDTO kategoriSkalaUsahaDTO) throws SQLException {
@@ -117,6 +128,8 @@ public class KategoriSkalaUsahaResource {
     
     @Path("/{idKategoriSkalaUsaha}")
     @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idKategoriSkalaUsaha") String idKategoriSkalaUsaha) throws SQLException {
@@ -127,6 +140,44 @@ public class KategoriSkalaUsahaResource {
 
         return model;
         
+    }
+    
+    @Path("/jumlah")
+    @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject getJumlahData(@QueryParam("filters") String qfilters) {
+        try {
+            if(qfilters != null) {
+                Jsonb jsonb = JsonbBuilder.create();
+                List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
+                
+                JsonObject model = Json.createObjectBuilder()
+                    .add(
+                        "jumlah", 
+                        kategoriSkalaUsahaService.getJumlahData(
+                            filters
+                                .stream()
+                                .map(t -> t.toFilter())
+                                .collect(Collectors.toList())
+                        )
+                    )
+                    .build();            
+            
+                return model;
+            }
+            else {
+                JsonObject model = Json.createObjectBuilder()
+                    .add("jumlah", kategoriSkalaUsahaService.getJumlahData(null))
+                    .build();            
+            
+                return model;
+            }
+        }
+        catch (JsonbException e) {
+            throw new JsonbException("format query data json tidak sesuai");
+        }
     }
     
 }
