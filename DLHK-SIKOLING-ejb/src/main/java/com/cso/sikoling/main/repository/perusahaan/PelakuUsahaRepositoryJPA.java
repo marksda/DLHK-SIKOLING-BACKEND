@@ -209,21 +209,27 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
         Root<DetailPelakuUsahaData> root = cq.from(DetailPelakuUsahaData.class);		
 
         // where clause
-        Iterator<Filter> iterFilter = f.iterator();
         ArrayList<Predicate> daftarPredicate = new ArrayList<>();
+        
+        if( f != null) {
+            Iterator<Filter> iterFilter =  f.iterator();
+            
+            
+            while (iterFilter.hasNext()) {
+                Filter filter = (Filter) iterFilter.next();
 
-        while (iterFilter.hasNext()) {
-            Filter filter = (Filter) iterFilter.next();
-
-            switch (filter.getField_name()) {
-                case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "id_kategori_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
-                case "id_kategori_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
-                default -> {
-                }
-            }			
+                switch (filter.getField_name()) {
+                    case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                    case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                    case "id_kategori_pelaku_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("id"), filter.getValue()));
+                    case "id_kategori_skala_usaha" -> daftarPredicate.add(cb.equal(root.get("kategoriPelakuUsaha").get("skalaUsaha").get("id"), filter.getValue()));
+                    default -> {
+                    }
+                }			
+            }
+            
         }
+        
 
         if(daftarPredicate.isEmpty()) {
             cq.select(cb.count(root));
