@@ -5,6 +5,7 @@ import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -164,6 +165,14 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
                                 cq.orderBy(cb.desc(root.get("nama")));
                             }
                         }
+                        case "kategori_skala_usaha" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("skalaUsaha").get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("skalaUsaha").get("nama")));
+                            }
+                        }
                         default -> {
                         }
                     }			
@@ -238,7 +247,17 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
         KategoriPelakuUsaha kategoriPelakuUsaha = null;
 		
         if(d != null) {
-            kategoriPelakuUsaha = new KategoriPelakuUsaha(d.getId(), d.getNama(), d.getSkalaUsaha().getId());
+            KategoriSkalaUsahaData kategoriSkalaUsahaData = d.getSkalaUsaha();
+            kategoriPelakuUsaha = new KategoriPelakuUsaha(
+                d.getId(), 
+                d.getNama(), 
+                new KategoriSkalaUsaha(
+                    kategoriSkalaUsahaData.getId(), 
+                    kategoriSkalaUsahaData.getNama(), 
+                    kategoriSkalaUsahaData.getSingkatan(),
+                    kategoriSkalaUsahaData.getKeterangan()
+                )
+            );
         }
 
         return kategoriPelakuUsaha;	
@@ -252,7 +271,7 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
             kategoriPelakuUsahaData.setId(t.getId());
             kategoriPelakuUsahaData.setNama(t.getNama());
             KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData();
-            kategoriSkalaUsahaData.setId(t.getId_kategori_skala_usaha());
+            kategoriSkalaUsahaData.setId(t.getKategori_skala_usaha().getId());
             kategoriPelakuUsahaData.setSkalaUsaha(kategoriSkalaUsahaData);
         }
 

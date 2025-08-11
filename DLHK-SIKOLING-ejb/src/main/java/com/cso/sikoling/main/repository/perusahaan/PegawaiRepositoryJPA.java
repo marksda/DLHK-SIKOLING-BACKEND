@@ -276,7 +276,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                         new KategoriSkalaUsaha(
                             kategoriSkalaUsahaData.getId(), 
                             kategoriSkalaUsahaData.getNama(), 
-                            kategoriSkalaUsahaData.getSingkatan()
+                            kategoriSkalaUsahaData.getSingkatan(),
+                            kategoriSkalaUsahaData.getKeterangan()
                         )
                         : null;
 
@@ -288,7 +289,9 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                             kategoriPelakuUsahaData.getId(), 
                             kategoriPelakuUsahaData.getNama(), 
                             kategoriPelakuUsahaData.getSkalaUsaha() != null ?
-                                    kategoriPelakuUsahaData.getSkalaUsaha().getId() : null
+                                    convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(
+                                        kategoriPelakuUsahaData.getSkalaUsaha()
+                                    ) : null
                         ) 
                         : null;
                 PelakuUsaha pelakuUsaha = pelakuUsahaData != null ?
@@ -457,6 +460,17 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
         }
 
         return pegawaiData;
+    }
+    
+    private KategoriSkalaUsaha convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(KategoriSkalaUsahaData d) {
+        KategoriSkalaUsaha kategoriSkalaUsaha = null;
+		
+        if(d != null) {
+            kategoriSkalaUsaha = new KategoriSkalaUsaha(
+                    d.getId(), d.getNama(), d.getSingkatan(), d.getKeterangan());
+        }
+
+        return kategoriSkalaUsaha;	
     }
 
 }

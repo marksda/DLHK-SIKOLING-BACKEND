@@ -6,22 +6,23 @@ import java.util.Objects;
 public class KategoriPelakuUsahaDTO {
     private String id;
     private String nama;
-    private String id_kategori_skala_usaha;
+    private KategoriSkalaUsahaDTO kategori_skala_usaha;
 
     public KategoriPelakuUsahaDTO() {
     }
 
-    public KategoriPelakuUsahaDTO(String id, String nama, String id_kategori_skala_usaha) {
+    public KategoriPelakuUsahaDTO(String id, String nama, KategoriSkalaUsahaDTO kategori_skala_usaha) {
         this.id = id;
         this.nama = nama;
-        this.id_kategori_skala_usaha = id_kategori_skala_usaha;
+        this.kategori_skala_usaha = kategori_skala_usaha;
     }
     
     public KategoriPelakuUsahaDTO(KategoriPelakuUsaha t) {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
-            this.id_kategori_skala_usaha = t.getId_kategori_skala_usaha();
+            this.kategori_skala_usaha = t.getKategori_skala_usaha() != null ?
+                    new KategoriSkalaUsahaDTO(t.getKategori_skala_usaha()) : null;
         }
     }
 
@@ -41,12 +42,12 @@ public class KategoriPelakuUsahaDTO {
         this.nama = nama;
     }
 
-    public String getId_kategori_skala_usaha() {
-        return id_kategori_skala_usaha;
+    public KategoriSkalaUsahaDTO getKategori_skala_usaha() {
+        return kategori_skala_usaha;
     }
 
-    public void setId_kategori_skala_usaha(String id_kategori_skala_usaha) {
-        this.id_kategori_skala_usaha = id_kategori_skala_usaha;
+    public void setKategori_skala_usaha(KategoriSkalaUsahaDTO kategori_skala_usaha) {
+        this.kategori_skala_usaha = kategori_skala_usaha;
     }
     
     public KategoriPelakuUsaha toKategoriPelakuUsaha() {
@@ -57,7 +58,12 @@ public class KategoriPelakuUsahaDTO {
             boolean isDigit = this.id.matches("[0-9]+");
             
             if(isDigit) {            
-                return new KategoriPelakuUsaha(this.id, this.nama, this.id_kategori_skala_usaha);
+                return new KategoriPelakuUsaha(
+                    this.id, 
+                    this.nama, 
+                    this.kategori_skala_usaha != null ?
+                        this.kategori_skala_usaha.toKategoriSkalaUsaha(): null                        
+                );
             }
             else {
                 throw new IllegalArgumentException("id kategori pelaku usaha harus bilangan panjang 2 digit");

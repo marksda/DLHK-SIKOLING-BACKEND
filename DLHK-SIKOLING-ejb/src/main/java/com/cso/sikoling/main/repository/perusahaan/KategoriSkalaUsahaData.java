@@ -1,4 +1,3 @@
-
 package com.cso.sikoling.main.repository.perusahaan;
 
 import jakarta.persistence.Basic;
@@ -44,6 +43,10 @@ public class KategoriSkalaUsahaData implements Serializable {
     @Column(name = "singkatan")
     private String singkatan;
     
+    @Size(max = 2147483647)
+    @Column(name = "keterangan")
+    private String keterangan;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "skalaUsaha")
     private Collection<KategoriPelakuUsahaData> kategoriPelakuUsahaDataCollection;
     
@@ -79,6 +82,14 @@ public class KategoriSkalaUsahaData implements Serializable {
 
     public void setSingkatan(String singkatan) {
         this.singkatan = singkatan;
+    }
+
+    public String getKeterangan() {
+        return keterangan;
+    }
+
+    public void setKeterangan(String keterangan) {
+        this.keterangan = keterangan;
     }
 
     public Collection<KategoriPelakuUsahaData> getKategoriPelakuUsahaDataCollection() {

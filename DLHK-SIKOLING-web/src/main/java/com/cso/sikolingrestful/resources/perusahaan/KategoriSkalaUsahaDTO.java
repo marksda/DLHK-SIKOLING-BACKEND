@@ -8,15 +8,16 @@ public class KategoriSkalaUsahaDTO {
     private String id;	
     private String nama;
     private String singkatan;
-
+    private String keterangan;
     
     public KategoriSkalaUsahaDTO() {       
     }
     
-    public KategoriSkalaUsahaDTO(String id, String nama, String singkatan) {
+    public KategoriSkalaUsahaDTO(String id, String nama, String singkatan, String keterangan) {
         this.id = id;
         this.nama = nama;
         this.singkatan = singkatan;
+        this.keterangan = keterangan;
     }
     
     public KategoriSkalaUsahaDTO(KategoriSkalaUsaha t) {    
@@ -24,6 +25,7 @@ public class KategoriSkalaUsahaDTO {
             this.id = t.getId();
             this.nama = t.getNama();
             this.singkatan = t.getSingkatan();
+            this.keterangan = t.getKeterangan();
         }
     }
 
@@ -50,6 +52,14 @@ public class KategoriSkalaUsahaDTO {
     public void setSingkatan(String singkatan) {
         this.singkatan = singkatan;
     }
+
+    public String getKeterangan() {
+        return keterangan;
+    }
+
+    public void setKeterangan(String keterangan) {
+        this.keterangan = keterangan;
+    }
     
     public KategoriSkalaUsaha toKategoriSkalaUsaha() {
         
@@ -60,7 +70,8 @@ public class KategoriSkalaUsahaDTO {
             boolean isDigit = this.id.matches("[0-9]+");
             
             if(isDigit) {            
-                return new KategoriSkalaUsaha(this.id, this.nama, this.singkatan);
+                return new KategoriSkalaUsaha(
+                        this.id, this.nama, this.singkatan, this.keterangan);
             }
             else {
                 throw new IllegalArgumentException("id kategori skala usaha harus bilangan panjang 2 digit");

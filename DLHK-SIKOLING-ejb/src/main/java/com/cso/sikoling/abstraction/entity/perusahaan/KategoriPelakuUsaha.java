@@ -7,12 +7,12 @@ public class KategoriPelakuUsaha implements Serializable {
     
     private final String id;
     private final String nama;
-    private final String id_kategori_skala_usaha;
+    private final KategoriSkalaUsaha kategori_skala_usaha;
 
-    public KategoriPelakuUsaha(String id, String nama, String id_kategori_skala_usaha) {
+    public KategoriPelakuUsaha(String id, String nama, KategoriSkalaUsaha kategori_skala_usaha) {
         this.id = id;
         this.nama = nama;
-        this.id_kategori_skala_usaha = id_kategori_skala_usaha;
+        this.kategori_skala_usaha = kategori_skala_usaha;
     }
 
     public String getId() {
@@ -23,8 +23,8 @@ public class KategoriPelakuUsaha implements Serializable {
         return nama;
     }
 
-    public String getId_kategori_skala_usaha() {
-        return id_kategori_skala_usaha;
+    public KategoriSkalaUsaha getKategori_skala_usaha() {
+        return kategori_skala_usaha;
     }
 
     @Override

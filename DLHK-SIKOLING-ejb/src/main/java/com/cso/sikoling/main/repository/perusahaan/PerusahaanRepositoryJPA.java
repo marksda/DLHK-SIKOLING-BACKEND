@@ -265,7 +265,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new KategoriSkalaUsaha(
                         kategoriSkalaUsahaData.getId(), 
                         kategoriSkalaUsahaData.getNama(), 
-                        kategoriSkalaUsahaData.getSingkatan()
+                        kategoriSkalaUsahaData.getSingkatan(),
+                        kategoriSkalaUsahaData.getKeterangan()
                     )
                     : null;
             
@@ -277,7 +278,9 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                         kategoriPelakuUsahaData.getId(), 
                         kategoriPelakuUsahaData.getNama(), 
                         kategoriPelakuUsahaData.getSkalaUsaha() != null ?
-                                kategoriPelakuUsahaData.getSkalaUsaha().getId() : null
+                                convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(
+                                    kategoriPelakuUsahaData.getSkalaUsaha()
+                                ) : null
                     ) 
                     : null;
             
@@ -387,6 +390,17 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
         }
 
         return perusahaanData;
+    }
+    
+    private KategoriSkalaUsaha convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(KategoriSkalaUsahaData d) {
+        KategoriSkalaUsaha kategoriSkalaUsaha = null;
+		
+        if(d != null) {
+            kategoriSkalaUsaha = new KategoriSkalaUsaha(
+                    d.getId(), d.getNama(), d.getSingkatan(), d.getKeterangan());
+        }
+
+        return kategoriSkalaUsaha;	
     }
 
 }

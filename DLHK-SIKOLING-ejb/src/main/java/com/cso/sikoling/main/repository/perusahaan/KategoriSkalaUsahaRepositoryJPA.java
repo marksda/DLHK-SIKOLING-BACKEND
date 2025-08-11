@@ -236,7 +236,8 @@ public class KategoriSkalaUsahaRepositoryJPA implements Repository<KategoriSkala
         KategoriSkalaUsaha kategoriSkalaUsaha = null;
 		
         if(d != null) {
-            kategoriSkalaUsaha = new KategoriSkalaUsaha(d.getId(), d.getNama(), d.getSingkatan());
+            kategoriSkalaUsaha = new KategoriSkalaUsaha(
+                    d.getId(), d.getNama(), d.getSingkatan(), d.getKeterangan());
         }
 
         return kategoriSkalaUsaha;	
@@ -250,6 +251,7 @@ public class KategoriSkalaUsahaRepositoryJPA implements Repository<KategoriSkala
             kategoriSkalaUsahaData.setId(t.getId());
             kategoriSkalaUsahaData.setNama(t.getNama());
             kategoriSkalaUsahaData.setSingkatan(t.getSingkatan());
+            kategoriSkalaUsahaData.setKeterangan(t.getKeterangan());
         }
 
         return kategoriSkalaUsahaData;

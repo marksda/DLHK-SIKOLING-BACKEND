@@ -5,76 +5,81 @@ import java.util.Objects;
 
 public class KategoriSkalaUsaha implements Serializable {
     
-	private final String id;	
-	private final String nama;
-	private final String singkatan;
-        
-        public KategoriSkalaUsaha(String id, String nama) {
-		this.id = id;
-		this.nama = nama;
-		this.singkatan = null;
-	}
-	
-	public KategoriSkalaUsaha(String id, String nama, String singkatan) {
-		this.id = id;
-		this.nama = nama;
-		this.singkatan = singkatan;
-	}
+    private final String id;	
+    private final String nama;
+    private final String singkatan;
+    private final String keterangan;
 
-	public String getId() {
-		return id;
-	}
+    public KategoriSkalaUsaha(String id, String nama) {
+            this.id = id;
+            this.nama = nama;
+            this.singkatan = null;
+            this.keterangan = null;
+    }
 
-	public String getNama() {
-		return nama;
-	}
+    public KategoriSkalaUsaha(String id, String nama, String singkatan, String keterangan) {
+            this.id = id;
+            this.nama = nama;
+            this.singkatan = singkatan;
+            this.keterangan  = keterangan;
+    }
 
-	public String getSingkatan() {
-		return singkatan;
-	}
-	
-        @Override
-	public int hashCode() {
-            
-		int hash = 31;
-		hash = 91 * hash + Objects.hashCode(this.id);
-		hash = 91 * hash + Objects.hashCode(this.nama);
-                
-		return hash;
-                
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-            
-            if (this == obj) {
-                return true;
-            }
+    public String getId() {
+            return id;
+    }
 
-            if (obj == null) {
-                return false;
-            }
+    public String getNama() {
+            return nama;
+    }
 
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
+    public String getSingkatan() {
+            return singkatan;
+    }
 
-            final KategoriSkalaUsaha other = (KategoriSkalaUsaha) obj;
+    public String getKeterangan() {
+        return keterangan;
+    }
 
-            return this.id.equals(other.getId());
-            
-	}
-	
-	@Override
-	public String toString() {
-            return "SkalaUsaha { id="
-                    .concat(this.id)
-                    .concat(", nama=")
-                    .concat(this.nama)
-                    .concat(", singkatan=")
-                    .concat(this.singkatan)
-                    .concat("}");
-	}	
-	
+    @Override
+    public int hashCode() {
 
+            int hash = 31;
+            hash = 91 * hash + Objects.hashCode(this.id);
+            hash = 91 * hash + Objects.hashCode(this.nama);
+
+            return hash;
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final KategoriSkalaUsaha other = (KategoriSkalaUsaha) obj;
+
+        return this.id.equals(other.getId());
+
+    }
+
+    @Override
+    public String toString() {
+        return "SkalaUsaha { id="
+                .concat(this.id)
+                .concat(", nama=")
+                .concat(this.nama)
+                .concat(", singkatan=")
+                .concat(this.singkatan)
+                .concat("}");
+    }	
 }

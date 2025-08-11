@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 
 
 public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryParamFilters, Filter> {
@@ -246,13 +247,18 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
         PelakuUsaha pelakuUsaha = null;
 		
         if(d != null) {
+            
             KategoriPelakuUsahaData kategoriPelakuUsahaData = d.getKategoriPelakuUsaha();
+            
             KategoriPelakuUsaha kategoriPelakuUsaha = kategoriPelakuUsahaData != null ?
                     new KategoriPelakuUsaha(
                             kategoriPelakuUsahaData.getId(), 
                             kategoriPelakuUsahaData.getNama(), 
                             kategoriPelakuUsahaData.getSkalaUsaha() != null ?
-                                    kategoriPelakuUsahaData.getSkalaUsaha().getId():null) 
+                                    convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(
+                                            kategoriPelakuUsahaData.getSkalaUsaha()
+                                    ):null
+                    ) 
                     : null;
             
             pelakuUsaha = new PelakuUsaha(
@@ -278,12 +284,23 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
             kategoriPelakuUsahaData.setId(t.getKategori_pelaku_usaha().getId());
             kategoriPelakuUsahaData.setNama(t.getKategori_pelaku_usaha().getNama());            
             KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData();
-            kategoriSkalaUsahaData.setId(t.getKategori_pelaku_usaha().getId_kategori_skala_usaha());
+            kategoriSkalaUsahaData.setId(t.getKategori_pelaku_usaha().getKategori_skala_usaha().getId());
             kategoriPelakuUsahaData.setSkalaUsaha(kategoriSkalaUsahaData);            
             pelakuUsahaData.setKategoriPelakuUsaha(kategoriPelakuUsahaData);            
         }
 
         return pelakuUsahaData;
+    }
+    
+    private KategoriSkalaUsaha convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(KategoriSkalaUsahaData d) {
+        KategoriSkalaUsaha kategoriSkalaUsaha = null;
+		
+        if(d != null) {
+            kategoriSkalaUsaha = new KategoriSkalaUsaha(
+                    d.getId(), d.getNama(), d.getSingkatan(), d.getKeterangan());
+        }
+
+        return kategoriSkalaUsaha;	
     }
 
 }
