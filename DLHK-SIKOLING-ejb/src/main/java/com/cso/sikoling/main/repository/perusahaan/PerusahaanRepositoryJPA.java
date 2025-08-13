@@ -262,25 +262,18 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
             
             KategoriSkalaUsahaData kategoriSkalaUsahaData = d.getSkalaUsaha();
             KategoriSkalaUsaha kategoriSkalaUsaha = kategoriSkalaUsahaData != null ?
-                    new KategoriSkalaUsaha(
-                        kategoriSkalaUsahaData.getId(), 
-                        kategoriSkalaUsahaData.getNama(), 
-                        kategoriSkalaUsahaData.getSingkatan(),
-                        kategoriSkalaUsahaData.getKeterangan()
-                    )
+                    convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(kategoriSkalaUsahaData)
                     : null;
             
             DetailPelakuUsahaData pelakuUsahaData = d.getPelakuUsaha();
             KategoriPelakuUsahaData kategoriPelakuUsahaData = pelakuUsahaData != null ?
                     pelakuUsahaData.getKategoriPelakuUsaha() : null;
+            
             KategoriPelakuUsaha kategoriPelakuUsaha = kategoriPelakuUsahaData != null ?
                     new KategoriPelakuUsaha(
                         kategoriPelakuUsahaData.getId(), 
                         kategoriPelakuUsahaData.getNama(), 
-                        kategoriPelakuUsahaData.getSkalaUsaha() != null ?
-                                convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(
-                                    kategoriPelakuUsahaData.getSkalaUsaha()
-                                ) : null
+                        kategoriSkalaUsaha
                     ) 
                     : null;
             
@@ -350,7 +343,6 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                 d.getNpwp(),
                 d.getNama(), 
                 kategoriModelPerizinan,
-                kategoriSkalaUsaha,
                 pelakuUsaha,   
                 alamat,
                 kontak    
@@ -368,20 +360,32 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
             perusahaanData.setId(t.getId());
             perusahaanData.setNpwp(t.getNpwp());
             perusahaanData.setNama(t.getNama());
-            PropinsiData propinsiData = new PropinsiData(t.getAlamat().getPropinsi().getId());
+            PropinsiData propinsiData = 
+                    new PropinsiData(t.getAlamat().getPropinsi().getId());
             perusahaanData.setPropinsi(propinsiData);
-            KabupatenData kabupatenData = new KabupatenData(t.getAlamat().getKabupaten().getId());
+            KabupatenData kabupatenData = 
+                    new KabupatenData(t.getAlamat().getKabupaten().getId());
             perusahaanData.setKabupaten(kabupatenData);
-            KecamatanData kecamatanData = new KecamatanData(t.getAlamat().getKecamatan().getId());
+            KecamatanData kecamatanData = 
+                    new KecamatanData(t.getAlamat().getKecamatan().getId());
             perusahaanData.setKecamatan(kecamatanData);
             DesaData desaData = new DesaData(t.getAlamat().getDesa().getId());
             perusahaanData.setDesa(desaData);
             perusahaanData.setDetailAlamat(t.getAlamat().getKeterangan());
-            KategoriModelPerizinanData kategoriModelPerizinanData = new KategoriModelPerizinanData(t.getKategori_model_erizinan().getId());
+            KategoriModelPerizinanData kategoriModelPerizinanData = 
+                    new KategoriModelPerizinanData(
+                        t.getKategori_model_perizinan().getId()
+                    );
             perusahaanData.setModelPerizinan(kategoriModelPerizinanData);
-            KategoriSkalaUsahaData kategoriSkalaUsahaData = new KategoriSkalaUsahaData(t.getKategori_skala_usaha().getId());
+            KategoriSkalaUsahaData kategoriSkalaUsahaData = 
+                    new KategoriSkalaUsahaData(
+                        t.getPelaku_usaha()
+                        .getKategori_pelaku_usaha()
+                        .getKategori_skala_usaha().getId()
+                    );
             perusahaanData.setSkalaUsaha(kategoriSkalaUsahaData);
-            DetailPelakuUsahaData pelakuUsahaData = new DetailPelakuUsahaData(t.getPelaku_usaha().getId());
+            DetailPelakuUsahaData pelakuUsahaData = 
+                    new DetailPelakuUsahaData(t.getPelaku_usaha().getId());
             perusahaanData.setPelakuUsaha(pelakuUsahaData);            
             perusahaanData.setStatusVerifikasi(false);
             perusahaanData.setTelepone(t.getKontak().getTelepone());

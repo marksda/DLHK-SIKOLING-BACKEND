@@ -26,10 +26,8 @@ public class PerusahaanDTO {
             this.id = t.getId();
             this.npwp = t.getNpwp();
             this.nama = t.getNama();
-            this.kategori_model_perizinan = t.getKategori_model_erizinan() != null ?
-                new KategoriModelPerizinanDTO(t.getKategori_model_erizinan()) : null;
-            this.kategori_skala_usaha = t.getKategori_skala_usaha() != null ?
-                    new KategoriSkalaUsahaDTO(t.getKategori_skala_usaha()) : null;
+            this.kategori_model_perizinan = t.getKategori_model_perizinan() != null ?
+                new KategoriModelPerizinanDTO(t.getKategori_model_perizinan()) : null;
             this.pelaku_usaha = t.getPelaku_usaha() != null ? new PelakuUsahaDTO(t.getPelaku_usaha()) : null;
             this.alamat = t.getAlamat() != null ? new AlamatDTO(t.getAlamat()) : null;
             this.kontak = t.getKontak() != null ? new KontakDTO(t.getKontak()) : null;
@@ -113,9 +111,12 @@ public class PerusahaanDTO {
                     this.id, 
                     this.npwp,
                     this.nama, 
-                    this.kategori_model_perizinan != null ? this.kategori_model_perizinan.toKategoriModelPerizinan() : null, 
-                    this.kategori_skala_usaha != null ? this.kategori_skala_usaha.toKategoriSkalaUsaha() : null, 
-                    this.pelaku_usaha != null ? this.pelaku_usaha.toPelakuUsaha() : null, 
+                    this.kategori_model_perizinan != null ? 
+                        this.kategori_model_perizinan.toKategoriModelPerizinan() 
+                        : null, 
+                    this.pelaku_usaha != null ? 
+                        this.pelaku_usaha.toPelakuUsaha() 
+                        : null, 
                     this.alamat != null ? this.alamat.toAlamat() : null, 
                     this.kontak != null ? this.kontak.toKontak() : null
                 );
