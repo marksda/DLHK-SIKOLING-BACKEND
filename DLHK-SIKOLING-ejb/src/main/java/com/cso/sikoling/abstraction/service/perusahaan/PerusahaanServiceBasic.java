@@ -8,6 +8,7 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
+import java.util.Date;
 
 
 public class PerusahaanServiceBasic implements Service<Perusahaan> {
@@ -21,7 +22,18 @@ public class PerusahaanServiceBasic implements Service<Perusahaan> {
 
     @Override
     public Perusahaan save(Perusahaan t) throws SQLException {
-        return repository.save(t);
+        if(t.getTanggal_registrasi() == null) {
+            Perusahaan perusahaan = new Perusahaan(
+                t.getId(), t.getNpwp(), t.getNama(), 
+                t.getKategori_model_perizinan(), t.getPelaku_usaha(), 
+                t.getAlamat(), t.getKontak(), new Date()
+            );
+            
+            return repository.save(perusahaan);
+        }
+        else {
+            return repository.save(t);            
+        }
     }
 
     @Override

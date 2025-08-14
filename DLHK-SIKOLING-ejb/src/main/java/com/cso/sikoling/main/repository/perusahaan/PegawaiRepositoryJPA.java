@@ -354,7 +354,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                     kategoriModelPerizinan, 
                     pelakuUsaha, 
                     alamat, 
-                    kontak
+                    kontak,
+                    perusahaanData.getTanggalRegistrasi()
                 );
             }
 

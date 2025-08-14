@@ -3,6 +3,7 @@ package com.cso.sikoling.abstraction.entity.perusahaan;
 import com.cso.sikoling.abstraction.entity.alamat.Alamat;
 import com.cso.sikoling.abstraction.entity.alamat.Kontak;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 public class Perusahaan implements Serializable {
@@ -15,11 +16,12 @@ public class Perusahaan implements Serializable {
     private final PelakuUsaha pelaku_usaha;
     private final Alamat alamat;
     private final Kontak kontak;
+    private final Date tanggal_registrasi;
 
 //    public Perusahaan(String id, String npwp, String nama, KategoriModelPerizinan kategori_model_erizinan, 
 //        KategoriSkalaUsaha kategori_skala_usaha, PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak) {
     public Perusahaan(String id, String npwp, String nama, KategoriModelPerizinan kategori_model_perizinan,
-            PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak) {
+            PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak, Date tanggal_registrasi) {
         
         this.id = id;
         this.npwp = npwp;
@@ -29,6 +31,7 @@ public class Perusahaan implements Serializable {
         this.pelaku_usaha = pelaku_usaha;
         this.alamat = alamat;
         this.kontak = kontak;
+        this.tanggal_registrasi = tanggal_registrasi;
         
     }
 
@@ -62,6 +65,10 @@ public class Perusahaan implements Serializable {
     
     public PelakuUsaha getPelaku_usaha() {
         return pelaku_usaha;
+    }
+
+    public Date getTanggal_registrasi() {
+        return tanggal_registrasi;
     }
 	
     @Override

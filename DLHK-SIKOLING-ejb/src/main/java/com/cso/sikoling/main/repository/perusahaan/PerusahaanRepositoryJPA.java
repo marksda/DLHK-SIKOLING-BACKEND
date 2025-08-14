@@ -345,7 +345,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                 kategoriModelPerizinan,
                 pelakuUsaha,   
                 alamat,
-                kontak    
+                kontak,
+                d.getTanggalRegistrasi()
             );
         }
 
@@ -390,7 +391,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
             perusahaanData.setStatusVerifikasi(false);
             perusahaanData.setTelepone(t.getKontak().getTelepone());
             perusahaanData.setFax(t.getKontak().getFax());
-            perusahaanData.setEmail(t.getKontak().getEmail());            
+            perusahaanData.setEmail(t.getKontak().getEmail());      
+            perusahaanData.setTanggalRegistrasi(t.getTanggal_registrasi());
         }
 
         return perusahaanData;

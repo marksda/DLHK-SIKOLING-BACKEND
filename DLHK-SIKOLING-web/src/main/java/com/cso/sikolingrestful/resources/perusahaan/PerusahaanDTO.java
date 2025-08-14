@@ -3,6 +3,11 @@ package com.cso.sikolingrestful.resources.perusahaan;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikolingrestful.resources.alamat.AlamatDTO;
 import com.cso.sikolingrestful.resources.alamat.KontakDTO;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -16,6 +21,7 @@ public class PerusahaanDTO {
     private PelakuUsahaDTO pelaku_usaha;
     private AlamatDTO alamat;
     private KontakDTO kontak;
+    private Date tanggal_registrasi;
 
     public PerusahaanDTO() {
     }
@@ -31,6 +37,7 @@ public class PerusahaanDTO {
             this.pelaku_usaha = t.getPelaku_usaha() != null ? new PelakuUsahaDTO(t.getPelaku_usaha()) : null;
             this.alamat = t.getAlamat() != null ? new AlamatDTO(t.getAlamat()) : null;
             this.kontak = t.getKontak() != null ? new KontakDTO(t.getKontak()) : null;
+            this.tanggal_registrasi = t.getTanggal_registrasi();
         }
         
     }
@@ -98,6 +105,16 @@ public class PerusahaanDTO {
     public void setKontak(KontakDTO kontak) {
         this.kontak = kontak;
     }
+
+    public String getTanggal_registrasi() {
+//        return this.tanggal_registrasi;
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        return df.format(this.tanggal_registrasi);
+    }
+
+    public void setTanggal_registrasi(Date tanggal_registrasi) {
+        this.tanggal_registrasi = tanggal_registrasi;
+    }
     
     public Perusahaan toPerusahaan() {
         if( this.id == null) {
@@ -118,7 +135,8 @@ public class PerusahaanDTO {
                         this.pelaku_usaha.toPelakuUsaha() 
                         : null, 
                     this.alamat != null ? this.alamat.toAlamat() : null, 
-                    this.kontak != null ? this.kontak.toKontak() : null
+                    this.kontak != null ? this.kontak.toKontak() : null,
+                    this.tanggal_registrasi
                 );
             }
             else {
