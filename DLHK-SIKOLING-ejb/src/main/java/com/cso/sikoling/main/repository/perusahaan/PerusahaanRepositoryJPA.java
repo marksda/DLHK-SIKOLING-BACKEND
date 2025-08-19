@@ -144,6 +144,7 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -177,6 +178,14 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("nama")));
+                            }
+                        }
+                        case "tanggal_registrasi" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("tanggalRegistrasi")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("tanggalRegistrasi")));
                             }
                         }
                         default -> {
