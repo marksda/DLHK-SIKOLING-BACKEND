@@ -30,6 +30,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -357,8 +358,10 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
         PerusahaanData perusahaanData = null;
 		
         if(t != null) {
+            String idPerusahaan = t.getId();
             perusahaanData = new PerusahaanData();
-            perusahaanData.setId(t.getId());
+            perusahaanData.setId(idPerusahaan != null ? 
+                    idPerusahaan : getGenerateIdRegisterPerusahaanData());
             perusahaanData.setNpwp(t.getNpwp());
             perusahaanData.setNama(t.getNama());
             PropinsiData propinsiData = 
@@ -407,6 +410,32 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
         }
 
         return kategoriSkalaUsaha;	
+    }
+    
+    private String getGenerateIdRegisterPerusahaanData() {
+        int tahun = LocalDate.now().getYear();
+        String hasil;
+
+        Query q = entityManager.createQuery("SELECT MAX(p.id) "
+                        + "FROM PerusahaanData p "
+                        + "WHERE EXTRACT(YEAR FROM p.tanggalRegistrasi) = :tahun");
+
+        q.setParameter("tahun", tahun);
+
+        try {
+                hasil = (String) q.getSingleResult();
+                hasil = hasil.substring(0, 4);
+                Long idBaru = Long.parseLong(hasil)  + 1;
+                hasil = LPad(Long.toString(idBaru), 4, '0');
+                return hasil.concat(Integer.toString(tahun));
+        } catch (NumberFormatException e) {			
+                hasil = "0001";			
+                return hasil.concat(Integer.toString(tahun));
+        }		
+    }
+    
+    private String LPad(String str, Integer length, char car) {
+        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
     }
 
 }

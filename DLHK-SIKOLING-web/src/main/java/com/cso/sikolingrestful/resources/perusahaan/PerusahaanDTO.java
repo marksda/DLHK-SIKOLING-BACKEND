@@ -17,7 +17,6 @@ public class PerusahaanDTO {
     private String npwp;
     private String nama;
     private KategoriModelPerizinanDTO kategori_model_perizinan;
-    private KategoriSkalaUsahaDTO kategori_skala_usaha;	
     private PelakuUsahaDTO pelaku_usaha;
     private AlamatDTO alamat;
     private KontakDTO kontak;
@@ -74,14 +73,6 @@ public class PerusahaanDTO {
         this.kategori_model_perizinan = kategori_model_perizinan;
     }
 
-    public KategoriSkalaUsahaDTO getKategori_skala_usaha() {
-        return kategori_skala_usaha;
-    }
-
-    public void setKategori_skala_usaha(KategoriSkalaUsahaDTO kategori_skala_usaha) {
-        this.kategori_skala_usaha = kategori_skala_usaha;
-    }
-
     public PelakuUsahaDTO getPelaku_usaha() {
         return pelaku_usaha;
     }
@@ -117,31 +108,26 @@ public class PerusahaanDTO {
     }
     
     public Perusahaan toPerusahaan() {
-        if( this.id == null) {
-            throw new IllegalArgumentException("format data json perusahaan tidak sesuai");
+        boolean isDigit = this.id.matches("[0-9]+");
+
+        if(isDigit) {  
+            return new Perusahaan(
+                this.id, 
+                this.npwp,
+                this.nama, 
+                this.kategori_model_perizinan != null ? 
+                    this.kategori_model_perizinan.toKategoriModelPerizinan() 
+                    : null, 
+                this.pelaku_usaha != null ? 
+                    this.pelaku_usaha.toPelakuUsaha() 
+                    : null, 
+                this.alamat != null ? this.alamat.toAlamat() : null, 
+                this.kontak != null ? this.kontak.toKontak() : null,
+                this.tanggal_registrasi
+            );
         }
         else {
-            boolean isDigit = this.id.matches("[0-9]+");
-            
-            if(isDigit) {  
-                return new Perusahaan(
-                    this.id, 
-                    this.npwp,
-                    this.nama, 
-                    this.kategori_model_perizinan != null ? 
-                        this.kategori_model_perizinan.toKategoriModelPerizinan() 
-                        : null, 
-                    this.pelaku_usaha != null ? 
-                        this.pelaku_usaha.toPelakuUsaha() 
-                        : null, 
-                    this.alamat != null ? this.alamat.toAlamat() : null, 
-                    this.kontak != null ? this.kontak.toKontak() : null,
-                    this.tanggal_registrasi
-                );
-            }
-            else {
-                throw new IllegalArgumentException("id pelaku usaha harus bilangan panjang 8 digit");
-            }
+            throw new IllegalArgumentException("id pelaku usaha harus bilangan panjang 8 digit");
         }
     }
 
