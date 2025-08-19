@@ -4,9 +4,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikolingrestful.resources.alamat.AlamatDTO;
 import com.cso.sikolingrestful.resources.alamat.KontakDTO;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -98,7 +96,6 @@ public class PerusahaanDTO {
     }
 
     public String getTanggal_registrasi() {
-//        return this.tanggal_registrasi;
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         return df.format(this.tanggal_registrasi);
     }
@@ -108,27 +105,20 @@ public class PerusahaanDTO {
     }
     
     public Perusahaan toPerusahaan() {
-        boolean isDigit = this.id.matches("[0-9]+");
-
-        if(isDigit) {  
-            return new Perusahaan(
-                this.id, 
-                this.npwp,
-                this.nama, 
-                this.kategori_model_perizinan != null ? 
-                    this.kategori_model_perizinan.toKategoriModelPerizinan() 
-                    : null, 
-                this.pelaku_usaha != null ? 
-                    this.pelaku_usaha.toPelakuUsaha() 
-                    : null, 
-                this.alamat != null ? this.alamat.toAlamat() : null, 
-                this.kontak != null ? this.kontak.toKontak() : null,
-                this.tanggal_registrasi
-            );
-        }
-        else {
-            throw new IllegalArgumentException("id pelaku usaha harus bilangan panjang 8 digit");
-        }
+        return new Perusahaan(
+            this.id, 
+            this.npwp,
+            this.nama, 
+            this.kategori_model_perizinan != null ? 
+                this.kategori_model_perizinan.toKategoriModelPerizinan() 
+                : null, 
+            this.pelaku_usaha != null ? 
+                this.pelaku_usaha.toPelakuUsaha() 
+                : null, 
+            this.alamat != null ? this.alamat.toAlamat() : null, 
+            this.kontak != null ? this.kontak.toKontak() : null,
+            this.tanggal_registrasi
+        );
     }
 
     @Override

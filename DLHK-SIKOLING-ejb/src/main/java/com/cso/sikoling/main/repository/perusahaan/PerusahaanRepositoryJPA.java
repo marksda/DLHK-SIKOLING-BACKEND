@@ -424,7 +424,7 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
 
         try {
                 hasil = (String) q.getSingleResult();
-                hasil = hasil.substring(0, 4);
+                hasil = hasil != null ? hasil.substring(0, 4) : "0000";
                 Long idBaru = Long.parseLong(hasil)  + 1;
                 hasil = LPad(Long.toString(idBaru), 4, '0');
                 return hasil.concat(Integer.toString(tahun));
