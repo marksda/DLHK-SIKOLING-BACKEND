@@ -20,6 +20,9 @@ import com.cso.sikoling.main.repository.alamat.DesaData;
 import com.cso.sikoling.main.repository.alamat.KabupatenData;
 import com.cso.sikoling.main.repository.alamat.KecamatanData;
 import com.cso.sikoling.main.repository.alamat.PropinsiData;
+import jakarta.json.JsonObject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -31,6 +34,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -145,6 +149,21 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                        case "rentang_tanggal" -> {
+                            Jsonb jsonb = JsonbBuilder.create();
+                            JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            LocalDate fromDate = LocalDate.parse(d.getString("from"), formatter);
+                            LocalDate toDate = LocalDate.parse(d.getString("to"), formatter);
+                            
+                            daftarPredicate.add(
+                                cb.between(
+                                    root.get("tanggalRegistrasi"), 
+                                    fromDate, 
+                                    toDate
+                                )
+                            );
+                        }
                         default -> {
                         }
                     }			
