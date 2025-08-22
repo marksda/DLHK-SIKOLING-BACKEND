@@ -34,6 +34,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -152,9 +153,9 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                         case "rentang_tanggal" -> {
                             Jsonb jsonb = JsonbBuilder.create();
                             JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                            LocalDate fromDate = LocalDate.parse(d.getString("from"), formatter);
-                            LocalDate toDate = LocalDate.parse(d.getString("to"), formatter);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
+                            Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
+                            Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
                             
                             daftarPredicate.add(
                                 cb.between(
@@ -260,6 +261,21 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                     case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                     case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                    case "rentang_tanggal" -> {
+                        Jsonb jsonb = JsonbBuilder.create();
+                        JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
+                        Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
+                        Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+
+                        daftarPredicate.add(
+                            cb.between(
+                                root.get("tanggalRegistrasi"), 
+                                fromDate, 
+                                toDate
+                            )
+                        );
+                    }
                     default -> {
                     }
                 }			
