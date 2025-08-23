@@ -4,6 +4,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikolingrestful.resources.alamat.AlamatDTO;
 import com.cso.sikolingrestful.resources.alamat.KontakDTO;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -18,23 +19,30 @@ public class PerusahaanDTO {
     private PelakuUsahaDTO pelaku_usaha;
     private AlamatDTO alamat;
     private KontakDTO kontak;
-    private Date tanggal_registrasi;
+    private String tanggal_registrasi;
 
     public PerusahaanDTO() {
     }
     
-    public PerusahaanDTO(Perusahaan t) {
-        
+    public PerusahaanDTO(Perusahaan t) {        
         if(t != null) {
             this.id = t.getId();
             this.npwp = t.getNpwp();
             this.nama = t.getNama();
-            this.kategori_model_perizinan = t.getKategori_model_perizinan() != null ?
-                new KategoriModelPerizinanDTO(t.getKategori_model_perizinan()) : null;
-            this.pelaku_usaha = t.getPelaku_usaha() != null ? new PelakuUsahaDTO(t.getPelaku_usaha()) : null;
-            this.alamat = t.getAlamat() != null ? new AlamatDTO(t.getAlamat()) : null;
-            this.kontak = t.getKontak() != null ? new KontakDTO(t.getKontak()) : null;
-            this.tanggal_registrasi = t.getTanggal_registrasi();
+            this.kategori_model_perizinan = 
+                    t.getKategori_model_perizinan() != null ? 
+                        new KategoriModelPerizinanDTO(
+                                t.getKategori_model_perizinan()
+                        ) : null;
+            this.pelaku_usaha = t.getPelaku_usaha() != null ? 
+                    new PelakuUsahaDTO(t.getPelaku_usaha()) : null;
+            this.alamat = t.getAlamat() != null ? 
+                    new AlamatDTO(t.getAlamat()) : null;
+            this.kontak = t.getKontak() != null ? 
+                    new KontakDTO(t.getKontak()) : null;
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Date tmpTglReg = t.getTanggal_registrasi();
+            this.tanggal_registrasi = tmpTglReg != null ? df.format(tmpTglReg) : null;
         }
         
     }
@@ -96,29 +104,49 @@ public class PerusahaanDTO {
     }
 
     public String getTanggal_registrasi() {
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        return df.format(this.tanggal_registrasi);
+        return this.tanggal_registrasi; 
     }
 
-    public void setTanggal_registrasi(Date tanggal_registrasi) {
+    public void setTanggal_registrasi(String tanggal_registrasi) {
         this.tanggal_registrasi = tanggal_registrasi;
     }
     
     public Perusahaan toPerusahaan() {
-        return new Perusahaan(
-            this.id, 
-            this.npwp,
-            this.nama, 
-            this.kategori_model_perizinan != null ? 
-                this.kategori_model_perizinan.toKategoriModelPerizinan() 
-                : null, 
-            this.pelaku_usaha != null ? 
-                this.pelaku_usaha.toPelakuUsaha() 
-                : null, 
-            this.alamat != null ? this.alamat.toAlamat() : null, 
-            this.kontak != null ? this.kontak.toKontak() : null,
-            this.tanggal_registrasi
-        );
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        
+        try {
+            Date date = df.parse(this.tanggal_registrasi);
+            return new Perusahaan(
+                this.id, 
+                this.npwp,
+                this.nama, 
+                this.kategori_model_perizinan != null ? 
+                    this.kategori_model_perizinan.toKategoriModelPerizinan() 
+                    : null, 
+                this.pelaku_usaha != null ? 
+                    this.pelaku_usaha.toPelakuUsaha() 
+                    : null, 
+                this.alamat != null ? this.alamat.toAlamat() : null, 
+                this.kontak != null ? this.kontak.toKontak() : null,
+                date
+            );
+        } catch (ParseException ex) {
+            return new Perusahaan(
+                this.id, 
+                this.npwp,
+                this.nama, 
+                this.kategori_model_perizinan != null ? 
+                    this.kategori_model_perizinan.toKategoriModelPerizinan() 
+                    : null, 
+                this.pelaku_usaha != null ? 
+                    this.pelaku_usaha.toPelakuUsaha() 
+                    : null, 
+                this.alamat != null ? this.alamat.toAlamat() : null, 
+                this.kontak != null ? this.kontak.toKontak() : null,
+                null
+            );
+        }
+        
     }
 
     @Override
