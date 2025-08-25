@@ -345,8 +345,7 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new Kabupaten(
                         kabupatenData.getId(), 
                         kabupatenData.getNama(), 
-                        kabupatenData.getPropinsi() != null ?
-                                kabupatenData.getPropinsi().getId() : null
+                        propinsi != null ? propinsi.getId() : null
                     )
                     : null;
             
@@ -355,8 +354,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new Kecamatan(
                         kecamatanData.getId(), 
                         kecamatanData.getNama(), 
-                        kecamatanData.getKabupaten() != null ?
-                                kecamatanData.getKabupaten().getId() : null
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null
                     )
                     : null;
             

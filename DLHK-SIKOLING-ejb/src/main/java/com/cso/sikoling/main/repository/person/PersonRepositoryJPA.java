@@ -246,10 +246,33 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
         Person person = null;
 		
         if(d != null) {
-            Propinsi propinsi = d.getPropinsi() != null ? new Propinsi(d.getPropinsi().getId(), d.getPropinsi().getNama()) : null;
-            Kabupaten kabupaten = d.getKabupaten() != null ? new Kabupaten(d.getKabupaten().getId(), d.getKabupaten().getNama(), propinsi != null ? propinsi.getId() : null) : null;
-            Kecamatan kecamatan = d.getKecamatan() != null ? new Kecamatan(d.getKecamatan().getId(), d.getKecamatan().getNama(), kabupaten != null ? kabupaten.getId() : null) : null;
-            Desa desa = d.getDesa() != null ? new Desa(d.getDesa().getId(), d.getDesa().getNama(), kecamatan != null ? kecamatan.getId() : null) : null;            
+            Propinsi propinsi = d.getPropinsi() != null ? 
+                    new Propinsi(
+                        d.getPropinsi().getId(), d.getPropinsi().getNama()
+                    ) 
+                    : null;
+            Kabupaten kabupaten = d.getKabupaten() != null ? 
+                    new Kabupaten(
+                        d.getKabupaten().getId(), 
+                        d.getKabupaten().getNama(), 
+                        propinsi != null ? propinsi.getId() : null
+                    ) 
+                    : null;
+            Kecamatan kecamatan = d.getKecamatan() != null ? 
+                    new Kecamatan(
+                        d.getKecamatan().getId(), 
+                        d.getKecamatan().getNama(), 
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null
+                    ) 
+                    : null;
+            Desa desa = d.getDesa() != null ? 
+                    new Desa(
+                        d.getDesa().getId(), 
+                        d.getDesa().getNama(), 
+                        kecamatan != null ? kecamatan.getId() : null
+                    ) 
+                    : null;            
             Alamat alamat = new Alamat(propinsi, kabupaten, kecamatan, desa, d.getDetailAlamat());            
             Kontak kontak = new Kontak(d.getTelepone(), d.getFax(), d.getEmail());
             JenisKelamin jenisKelamin = new JenisKelamin(d.getSex().getId(), d.getSex().getNama());

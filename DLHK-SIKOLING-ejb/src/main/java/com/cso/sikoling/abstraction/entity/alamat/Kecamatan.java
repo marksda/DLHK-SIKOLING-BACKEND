@@ -7,11 +7,13 @@ public class Kecamatan implements Serializable {
 
     private final String id;
     private final String nama;
+    private final String id_propinsi;
     private final String id_kabupaten;
 
-    public Kecamatan(String id, String nama, String id_kabupaten) {
+    public Kecamatan(String id, String nama, String id_propinsi, String id_kabupaten) {
         this.id = id;
         this.nama = nama;
+        this.id_propinsi = id_propinsi;
         this.id_kabupaten = id_kabupaten;
     }
 
@@ -21,6 +23,10 @@ public class Kecamatan implements Serializable {
 
     public String getNama() {
         return nama;
+    }
+
+    public String getId_propinsi() {
+        return id_propinsi;
     }
 
     public String getId_kabupaten() {

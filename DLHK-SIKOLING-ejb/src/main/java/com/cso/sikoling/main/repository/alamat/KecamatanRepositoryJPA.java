@@ -127,6 +127,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
                         case "id_kabupaten" -> daftarPredicate.add(cb.equal(root.get("kabupaten").get("id"), filter.getValue()));
                         default -> {
                         }
@@ -223,6 +224,7 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
                 switch (filter.getField_name()) {
                     case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                     case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                    case "id_propinsi" -> daftarPredicate.add(cb.equal(root.get("propinsi").get("id"), filter.getValue()));
                     case "id_kabupaten" -> daftarPredicate.add(cb.equal(root.get("kabupaten").get("id"), filter.getValue()));
                     default -> {
                     }
@@ -245,7 +247,11 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
         Kecamatan kecamatan = null;
 		
         if(d != null) {
-            kecamatan = new Kecamatan(d.getId(), d.getNama(), d.getKabupaten().getId());
+            kecamatan = new Kecamatan(
+                    d.getId(), d.getNama(), 
+                    d.getPropinsi().getId(),
+                    d.getKabupaten().getId()
+                );
         }
 
         return kecamatan;	
@@ -254,11 +260,13 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
     private KecamatanData convertKecamatanToKecamatanData(Kecamatan t) {
         KecamatanData kecamatanData = null;
 		
-        if(t != null) {
-            KabupatenData kabupatenData = new KabupatenData(t.getId_kabupaten());
+        if(t != null) {            
             kecamatanData = new KecamatanData();
             kecamatanData.setId(t.getId());
             kecamatanData.setNama(t.getNama());
+            PropinsiData propinsiData = new PropinsiData(t.getId_propinsi());
+            kecamatanData.setPropinsi(propinsiData);
+            KabupatenData kabupatenData = new KabupatenData(t.getId_kabupaten());
             kecamatanData.setKabupaten(kabupatenData);
         }
 

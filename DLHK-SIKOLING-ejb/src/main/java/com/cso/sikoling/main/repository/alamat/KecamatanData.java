@@ -1,4 +1,3 @@
-
 package com.cso.sikoling.main.repository.alamat;
 
 import jakarta.persistence.Basic;
@@ -47,6 +46,10 @@ public class KecamatanData implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kecamatan")
     private Collection<DesaData> desaDataCollection;
     
+    @JoinColumn(name = "propinsi", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private PropinsiData propinsi;
+    
     @JoinColumn(name = "kabupaten", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private KabupatenData kabupaten;
@@ -93,6 +96,14 @@ public class KecamatanData implements Serializable {
 
     public void setKabupaten(KabupatenData kabupaten) {
         this.kabupaten = kabupaten;
+    }
+    
+    public PropinsiData getPropinsi() {
+        return propinsi;
+    }
+
+    public void setPropinsi(PropinsiData propinsi) {
+        this.propinsi = propinsi;
     }
 
     @Override

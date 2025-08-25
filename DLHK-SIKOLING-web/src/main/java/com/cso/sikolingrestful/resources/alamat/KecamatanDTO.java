@@ -56,7 +56,7 @@ public class KecamatanDTO {
             throw new IllegalArgumentException("format data json kecamatan tidak sesuai");
         }
         else {
-            return new Kecamatan(this.id, this.nama, this.id_kabupaten);
+            return new Kecamatan(this.id, this.nama, null, this.id_kabupaten);
         }
         
     }

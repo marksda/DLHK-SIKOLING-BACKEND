@@ -308,8 +308,7 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                         new Kabupaten(
                             kabupatenData.getId(), 
                             kabupatenData.getNama(), 
-                            kabupatenData.getPropinsi() != null ?
-                                    kabupatenData.getPropinsi().getId() : null
+                            propinsi != null ? propinsi.getId() : null
                         )
                         : null;
 
@@ -318,8 +317,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                         new Kecamatan(
                             kecamatanData.getId(), 
                             kecamatanData.getNama(), 
-                            kecamatanData.getKabupaten() != null ?
-                                    kecamatanData.getKabupaten().getId() : null
+                            propinsi != null ? propinsi.getId() : null,
+                            kabupaten != null ? kabupaten.getId() : null
                         )
                         : null;
 
@@ -366,24 +365,25 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                 PropinsiData propinsiDataPerson =  personData.getPropinsi();
                 Propinsi propinsiPerson = propinsiDataPerson != null ? 
                         new Propinsi(
-                                propinsiDataPerson.getId(), 
-                                propinsiDataPerson.getNama()
+                            propinsiDataPerson.getId(), 
+                            propinsiDataPerson.getNama()
                         ) : null;
 
                 KabupatenData kabupatenDataPerson = personData.getKabupaten();
                 Kabupaten kabupatenPerson = kabupatenDataPerson != null ?
                     new Kabupaten(
-                            kabupatenDataPerson.getId(), 
-                            kabupatenDataPerson.getNama(), 
-                            propinsiPerson != null ? propinsiPerson.getId() : null
+                        kabupatenDataPerson.getId(), 
+                        kabupatenDataPerson.getNama(), 
+                        propinsiPerson != null ? propinsiPerson.getId() : null
                     ) : null;
 
                 KecamatanData kecamatanDataPerson = personData.getKecamatan();
                 Kecamatan kecamatanPerson = kecamatanDataPerson != null ? 
                         new Kecamatan(
-                                kecamatanDataPerson.getId(), 
-                                kecamatanDataPerson.getNama(), 
-                                kabupatenPerson != null ? kabupatenPerson.getId() : null
+                            kecamatanDataPerson.getId(), 
+                            kecamatanDataPerson.getNama(), 
+                            propinsiPerson != null ? propinsiPerson.getId() : null,
+                            kabupatenPerson != null ? kabupatenPerson.getId() : null
                         ) : null;
 
                 DesaData desaDataPerson = personData.getDesa();
@@ -443,11 +443,14 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
         if(t != null) {
             pegawaiData = new PegawaiPerusahaanData();
             pegawaiData.setId(t.getId());
-            PersonData personData = t.getPerson() != null ? new PersonData(t.getPerson().getId()) : null;            
+            PersonData personData = t.getPerson() != null ? 
+                    new PersonData(t.getPerson().getId()) : null;            
             pegawaiData.setPerson(personData);
-            PerusahaanData perusahaanData = t.getPerusahaan() != null ? new PerusahaanData(t.getPerusahaan().getId()) : null;
+            PerusahaanData perusahaanData = t.getPerusahaan() != null ? 
+                    new PerusahaanData(t.getPerusahaan().getId()) : null;
             pegawaiData.setPerusahaan(perusahaanData);
-            JabatanData jabatanData = t.getJabatan() != null ? new JabatanData(t.getJabatan().getId()) : null;
+            JabatanData jabatanData = t.getJabatan() != null ? 
+                    new JabatanData(t.getJabatan().getId()) : null;
             pegawaiData.setJabatan(jabatanData);
         }
 
