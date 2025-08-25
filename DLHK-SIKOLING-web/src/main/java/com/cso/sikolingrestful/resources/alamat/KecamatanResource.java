@@ -1,5 +1,8 @@
 package com.cso.sikolingrestful.resources.alamat;
 
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -38,6 +41,9 @@ public class KecamatanResource {
     @Inject
     private Service<Kecamatan> kecamatanService;
     
+    @Inject
+    private Service<Kabupaten> kabupatenService;
+    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<KecamatanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
@@ -71,9 +77,25 @@ public class KecamatanResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KecamatanDTO save(KecamatanDTO kecamatanDTO) throws SQLException { 
+        List<Filter> fields_filter = new ArrayList<>();
+        fields_filter.add(
+            new Filter("id", kecamatanDTO.getId_kabupaten())
+        );        
+        QueryParamFilters queryParamFilters = new QueryParamFilters(
+                                            false, null, fields_filter, null);        
+                
+        Kabupaten kabupaten = kabupatenService.getDaftarData(queryParamFilters)
+                                              .getFirst();
         
+        Kecamatan kecamatan = new Kecamatan(
+            kecamatanDTO.getId(), 
+            kecamatanDTO.getNama(), 
+            kabupaten.getId_propinsi(), 
+            kabupaten.getId()
+        );
+                
         try {            
-            return new KecamatanDTO(kecamatanService.save(kecamatanDTO.toKecamatan()));
+            return new KecamatanDTO(kecamatanService.save(kecamatan));
         } 
         catch (NullPointerException e) {
             throw new IllegalArgumentException("data json kecamatan harus disertakan di body post request");
