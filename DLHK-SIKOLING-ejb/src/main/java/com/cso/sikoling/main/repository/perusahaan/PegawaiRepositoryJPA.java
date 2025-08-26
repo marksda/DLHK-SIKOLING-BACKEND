@@ -327,8 +327,9 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                         new Desa(
                             desaData.getId(), 
                             desaData.getNama(), 
-                            desaData.getKecamatan() != null ?
-                                    desaData.getKecamatan().getId() : null
+                            propinsi != null ? propinsi.getId() : null,
+                            kabupaten != null ? kabupaten.getId() : null,
+                            kecamatan != null ? kecamatan.getId() : null
                         )
                         : null;
 
@@ -388,11 +389,13 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
 
                 DesaData desaDataPerson = personData.getDesa();
                 Desa desaPerson = desaDataPerson != null ? 
-                        new Desa(
-                                desaDataPerson.getId(), 
-                                desaDataPerson.getNama(), 
-                                kecamatanPerson != null ? kecamatanPerson.getId() : null
-                        ) : null;            
+                    new Desa(
+                        desaDataPerson.getId(), 
+                        desaDataPerson.getNama(), 
+                        propinsiPerson != null ? propinsiPerson.getId() : null,
+                        kabupatenPerson != null ? kabupatenPerson.getId() : null,
+                        kecamatanPerson != null ? kecamatanPerson.getId() : null
+                    ) : null;            
 
                 Alamat alamatPerson = new Alamat(
                         propinsiPerson, 

@@ -270,6 +270,8 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
                     new Desa(
                         d.getDesa().getId(), 
                         d.getDesa().getNama(), 
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null,
                         kecamatan != null ? kecamatan.getId() : null
                     ) 
                     : null;            

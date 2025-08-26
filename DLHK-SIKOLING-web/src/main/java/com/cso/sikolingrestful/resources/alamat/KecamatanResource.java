@@ -46,14 +46,18 @@ public class KecamatanResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<KecamatanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<KecamatanDTO> getDaftarData(
+                    @QueryParam("filters") String queryParamsStr) {
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                    jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return kecamatanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                return kecamatanService.getDaftarData(
+                            queryParamFiltersDTO.toQueryParamFilters()
+                        )
                         .stream()
                         .map(t -> new KecamatanDTO(t))
                         .collect(Collectors.toList());
@@ -109,7 +113,8 @@ public class KecamatanResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public KecamatanDTO update(@PathParam("idLama") String idLama, KecamatanDTO kecamatanDTO) throws SQLException {
+    public KecamatanDTO update(@PathParam("idLama") String idLama, 
+                            KecamatanDTO kecamatanDTO) throws SQLException {
                 
         boolean isDigit = idLama.matches("[0-9]+");
 
@@ -117,7 +122,25 @@ public class KecamatanResource {
             try {                
                 boolean isIdSame = idLama.equals(kecamatanDTO.getId());
                 if(isIdSame) {
-                    return new KecamatanDTO(kecamatanService.update(kecamatanDTO.toKecamatan()));
+                    List<Filter> fields_filter = new ArrayList<>();
+                    fields_filter.add(
+                        new Filter("id", kecamatanDTO.getId_kabupaten())
+                    );        
+                    QueryParamFilters queryParamFilters = 
+                        new QueryParamFilters(false, null, fields_filter, null);        
+
+                    Kabupaten kabupaten = kabupatenService
+                                            .getDaftarData(queryParamFilters)
+                                            .getFirst();
+                    
+                    Kecamatan kecamatan = new Kecamatan(
+                        kecamatanDTO.getId(), 
+                        kecamatanDTO.getNama(), 
+                        kabupaten.getId_propinsi(), 
+                        kabupaten.getId()
+                    );
+                    
+                    return new KecamatanDTO(kecamatanService.update(kecamatan));
                 }
                 else {
                     throw new IllegalArgumentException("id lama dan baru kabupaten harus sama");
@@ -146,7 +169,27 @@ public class KecamatanResource {
                 boolean isIdSame = idLama.equals(kecamatanDTO.getId());
                 
                 if(!isIdSame) {
-                    return new KecamatanDTO(kecamatanService.updateId(idLama, kecamatanDTO.toKecamatan()));
+                    List<Filter> fields_filter = new ArrayList<>();
+                    fields_filter.add(
+                        new Filter("id", kecamatanDTO.getId_kabupaten())
+                    );        
+                    QueryParamFilters queryParamFilters = 
+                        new QueryParamFilters(false, null, fields_filter, null);        
+
+                    Kabupaten kabupaten = kabupatenService
+                                            .getDaftarData(queryParamFilters)
+                                            .getFirst();
+                    
+                    Kecamatan kecamatan = new Kecamatan(
+                        kecamatanDTO.getId(), 
+                        kecamatanDTO.getNama(), 
+                        kabupaten.getId_propinsi(), 
+                        kabupaten.getId()
+                    );
+                    
+                    return new KecamatanDTO(
+                            kecamatanService.updateId(idLama, kecamatan)
+                        );
                 }
                 else {
                     throw new IllegalArgumentException("id lama dan baru kabupaten harus beda");

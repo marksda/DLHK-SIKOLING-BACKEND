@@ -364,8 +364,9 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
                     new Desa(
                         desaData.getId(), 
                         desaData.getNama(), 
-                        desaData.getKecamatan() != null ?
-                                desaData.getKecamatan().getId() : null
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null,
+                        kecamatan != null ? kecamatan.getId() : null
                     )
                     : null;
                     

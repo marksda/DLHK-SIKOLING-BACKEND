@@ -55,7 +55,7 @@ public class DesaDTO {
             throw new IllegalArgumentException("format data json desa tidak sesuai");
         }
         else {
-            return new Desa(this.id, this.nama, this.id_kecamatan);
+            return new Desa(this.id, this.nama, null, null, this.id_kecamatan);
         }
     }
     

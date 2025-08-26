@@ -39,6 +39,15 @@ public class DesaData implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
+    @JoinColumn(name = "propinsi", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private PropinsiData propinsi;
+    
+    @JoinColumn(name = "kabupaten", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private KabupatenData kabupaten;
+    
     @JoinColumn(name = "kecamatan", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private KecamatanData kecamatan;
@@ -77,6 +86,22 @@ public class DesaData implements Serializable {
 
     public void setKecamatan(KecamatanData kecamatan) {
         this.kecamatan = kecamatan;
+    }
+
+    public PropinsiData getPropinsi() {
+        return propinsi;
+    }
+
+    public void setPropinsi(PropinsiData propinsi) {
+        this.propinsi = propinsi;
+    }
+
+    public KabupatenData getKabupaten() {
+        return kabupaten;
+    }
+
+    public void setKabupaten(KabupatenData kabupaten) {
+        this.kabupaten = kabupaten;
     }
 
     @Override
