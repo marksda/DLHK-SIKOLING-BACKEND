@@ -1,5 +1,7 @@
 package com.cso.sikolingrestful.resources.alamat;
 
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -23,6 +25,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.alamat.Desa;
+import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
@@ -37,6 +40,9 @@ public class DesaResource {
     
     @Inject
     private Service<Desa> desaService;
+    
+    @Inject
+    private Service<Kecamatan> kecamatanService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -71,9 +77,26 @@ public class DesaResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public DesaDTO save(DesaDTO desaDTO) throws SQLException { 
+        List<Filter> fields_filter = new ArrayList<>();
+        fields_filter.add(
+            new Filter("id", desaDTO.getId_kecamatan())
+        );        
+        QueryParamFilters queryParamFilters = new QueryParamFilters(
+                                            false, null, fields_filter, null);
+        
+        Kecamatan kecamatan = kecamatanService.getDaftarData(queryParamFilters)
+                                              .getFirst();
+        
+        Desa desa = new Desa(
+                desaDTO.getId(), 
+                desaDTO.getNama(), 
+                kecamatan.getId_propinsi(), 
+                kecamatan.getId_kabupaten(), 
+                kecamatan.getId()
+            );
         
         try {            
-            return new DesaDTO(desaService.save(desaDTO.toDesa()));
+            return new DesaDTO(desaService.save(desa));
         } 
         catch (NullPointerException e) {
             throw new IllegalArgumentException("data json desa harus disertakan di body post request");
@@ -95,7 +118,25 @@ public class DesaResource {
             try {                
                 boolean isIdSame = idLama.equals(desaDTO.getId());
                 if(isIdSame) {
-                    return new DesaDTO(desaService.update(desaDTO.toDesa()));
+                    List<Filter> fields_filter = new ArrayList<>();
+                    fields_filter.add(
+                        new Filter("id", desaDTO.getId_kecamatan())
+                    );        
+                    QueryParamFilters queryParamFilters = new QueryParamFilters(
+                                                        false, null, fields_filter, null);
+
+                    Kecamatan kecamatan = kecamatanService.getDaftarData(queryParamFilters)
+                                                          .getFirst();
+
+                    Desa desa = new Desa(
+                            desaDTO.getId(), 
+                            desaDTO.getNama(), 
+                            kecamatan.getId_propinsi(), 
+                            kecamatan.getId_kabupaten(), 
+                            kecamatan.getId()
+                        );
+                    
+                    return new DesaDTO(desaService.update(desa));
                 }
                 else {
                     throw new IllegalArgumentException("id kabupaten harus sama");
@@ -125,7 +166,25 @@ public class DesaResource {
                 boolean isIdSame = idLama.equals(desaDTO.getId());
                 
                 if(!isIdSame) {
-                    return new DesaDTO(desaService.updateId(idLama, desaDTO.toDesa()));
+                    List<Filter> fields_filter = new ArrayList<>();
+                    fields_filter.add(
+                        new Filter("id", desaDTO.getId_kecamatan())
+                    );        
+                    QueryParamFilters queryParamFilters = 
+                        new QueryParamFilters(false, null, fields_filter, null);
+
+                    Kecamatan kecamatan = kecamatanService.getDaftarData(queryParamFilters)
+                                                          .getFirst();
+
+                    Desa desa = new Desa(
+                            desaDTO.getId(), 
+                            desaDTO.getNama(), 
+                            kecamatan.getId_propinsi(), 
+                            kecamatan.getId_kabupaten(), 
+                            kecamatan.getId()
+                        );
+                    
+                    return new DesaDTO(desaService.updateId(idLama, desa));
                 }
                 else {
                     throw new IllegalArgumentException("id lama dan baru kabupaten harus beda");
