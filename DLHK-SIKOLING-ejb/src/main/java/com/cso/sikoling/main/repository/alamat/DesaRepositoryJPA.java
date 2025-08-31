@@ -39,7 +39,8 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             return convertDesaDataToDesa(desaData);  
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan "
+                    + "dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data desa");
@@ -55,7 +56,8 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             return convertDesaDataToDesa(desaData);   
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan "
+                    + "dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data desa");
@@ -74,11 +76,13 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
                 return true;
             }
             else {
-                throw new SQLException("desa dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException(
+                        "desa dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan "
+                    + "dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -102,7 +106,8 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
             }
         }  
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kecamatan harus ada di table kecamatan dan berupa bilangan dengan panjang 10 digit");
+            throw new SQLException("id kecamatan harus ada di table kecamatan "
+                    + "dan berupa bilangan dengan panjang 10 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Dulpikasi id desa");
