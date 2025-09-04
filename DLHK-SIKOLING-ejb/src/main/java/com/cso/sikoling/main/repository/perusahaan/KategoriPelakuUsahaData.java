@@ -27,6 +27,7 @@ import java.util.Collection;
 public class KategoriPelakuUsahaData implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
