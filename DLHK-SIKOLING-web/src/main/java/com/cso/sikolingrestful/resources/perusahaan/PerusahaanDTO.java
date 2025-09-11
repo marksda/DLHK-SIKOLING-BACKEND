@@ -115,7 +115,7 @@ public class PerusahaanDTO {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         
         try {
-            Date date = df.parse(this.tanggal_registrasi);
+            Date date = this.tanggal_registrasi != null ? df.parse(this.tanggal_registrasi) : null;
             return new Perusahaan(
                 this.id, 
                 this.npwp,
