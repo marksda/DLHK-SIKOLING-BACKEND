@@ -11,15 +11,12 @@ public class Perusahaan implements Serializable {
     private final String id;	
     private final String npwp;	
     private final String nama;
-    private final KategoriModelPerizinan kategori_model_perizinan;
-//    private final KategoriSkalaUsaha kategori_skala_usaha;	
-    private final PelakuUsaha pelaku_usaha;
     private final Alamat alamat;
     private final Kontak kontak;
+    private final PelakuUsaha pelaku_usaha;
+    private final KategoriModelPerizinan kategori_model_perizinan;
     private final Date tanggal_registrasi;
 
-//    public Perusahaan(String id, String npwp, String nama, KategoriModelPerizinan kategori_model_erizinan, 
-//        KategoriSkalaUsaha kategori_skala_usaha, PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak) {
     public Perusahaan(String id, String npwp, String nama, KategoriModelPerizinan kategori_model_perizinan,
             PelakuUsaha pelaku_usaha, Alamat alamat, Kontak kontak, Date tanggal_registrasi) {
         
@@ -27,7 +24,6 @@ public class Perusahaan implements Serializable {
         this.npwp = npwp;
         this.nama = nama;
         this.kategori_model_perizinan = kategori_model_perizinan;
-//        this.kategori_skala_usaha = kategori_skala_usaha;
         this.pelaku_usaha = pelaku_usaha;
         this.alamat = alamat;
         this.kontak = kontak;
