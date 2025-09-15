@@ -8,6 +8,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.VersiKbli;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPermohonan;
 import com.cso.sikoling.abstraction.entity.person.Person;
@@ -56,6 +57,7 @@ import com.cso.sikoling.abstraction.service.KeyService;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.abstraction.service.TokenService;
+import com.cso.sikoling.abstraction.service.dokumen.VersiKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.HashingPasswordTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.JwaTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.UserServiceBasic;
@@ -170,6 +172,12 @@ public class RestfulProvider {
     public Service<Dokumen> getDokumenService(
             @Infrastructure Repository<Dokumen, QueryParamFilters, Filter> dokumenRepository) {
         return new DokumenServiceBasic(dokumenRepository);
+    }
+    
+    @Produces
+    public Service<VersiKbli> getVersiKbliService(
+            @Infrastructure Repository<VersiKbli, QueryParamFilters, Filter> versiKbliRepository) {
+        return new VersiKbliServiceBasic(versiKbliRepository);
     }
     
     @Produces
