@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.dokumen.VersiKbli;
+import com.cso.sikoling.abstraction.entity.dokumen.KategoriKbli;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
@@ -32,30 +32,30 @@ import java.util.ArrayList;
 
 @Stateless
 @LocalBean
-@Path("versi_kbli")
-public class VersiKbliResource {
+@Path("kategori_kbli")
+public class KategoriKbliResource {
     
     @Inject
-    private Service<VersiKbli> versiKbliService;
+    private Service<KategoriKbli> kategoriKbliService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<VersiKbliDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<KategoriKbliDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return versiKbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                return kategoriKbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
                         .stream()
-                        .map(t -> new VersiKbliDTO(t))
+                        .map(t -> new KategoriKbliDTO(t))
                         .collect(Collectors.toList());
             }
             else {
-                return versiKbliService.getDaftarData(null)
+                return kategoriKbliService.getDaftarData(null)
                         .stream()
-                        .map(t -> new VersiKbliDTO(t))
+                        .map(t -> new KategoriKbliDTO(t))
                         .collect(Collectors.toList());
             }             
         } 
@@ -70,13 +70,13 @@ public class VersiKbliResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public VersiKbliDTO save(VersiKbliDTO versiKbliDTO) throws SQLException { 
+    public KategoriKbliDTO save(KategoriKbliDTO kategoriKbliDTO) throws SQLException { 
         
         try {            
-            return new VersiKbliDTO(versiKbliService.save(versiKbliDTO.toVersiKbli()));
+            return new KategoriKbliDTO(kategoriKbliService.save(kategoriKbliDTO.toKategoriKbli()));
         } 
         catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json versi kbli harus disertakan di body post request");
+            throw new IllegalArgumentException("data json kategori kbli harus disertakan di body post request");
         }    
         
     }
@@ -87,18 +87,18 @@ public class VersiKbliResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public VersiKbliDTO update(@PathParam("idLama") String idLama, VersiKbliDTO versiKbliDTO) throws SQLException {
+    public KategoriKbliDTO update(@PathParam("idLama") String idLama, KategoriKbliDTO kategoriKbliDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(versiKbliDTO.getId());
+            boolean isIdSame = idLama.equals(kategoriKbliDTO.getId());
             if(isIdSame) {
-                return new VersiKbliDTO(versiKbliService.update(versiKbliDTO.toVersiKbli()));
+                return new KategoriKbliDTO(kategoriKbliService.update(kategoriKbliDTO.toKategoriKbli()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru versi kbli harus sama");
+                throw new IllegalArgumentException("id lama dan baru kategori kbli harus sama");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json versi kbli harus disertakan di body put request");
+            throw new IllegalArgumentException("data json kategori kbli harus disertakan di body put request");
         }
         
     }
@@ -109,44 +109,44 @@ public class VersiKbliResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public VersiKbliDTO updateId(@PathParam("idLama") String idLama, VersiKbliDTO versiKbliDTO) throws SQLException {
+    public KategoriKbliDTO updateId(@PathParam("idLama") String idLama, KategoriKbliDTO kategoriKbliDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(versiKbliDTO.getId());
+            boolean isIdSame = idLama.equals(kategoriKbliDTO.getId());
 
             if(!isIdSame) {
-                return new VersiKbliDTO(versiKbliService.updateId(idLama, versiKbliDTO.toVersiKbli()));
+                return new KategoriKbliDTO(kategoriKbliService.updateId(idLama, kategoriKbliDTO.toKategoriKbli()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru versi kbli harus beda");
+                throw new IllegalArgumentException("id lama dan baru kategori kbli harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json versi kbli harus disertakan di body put request");
+            throw new IllegalArgumentException("data json kategori kbli harus disertakan di body put request");
         }
         
     } 
     
-    @Path("/{idVersiKbli}")
+    @Path("/{idKategoriKbli}")
     @DELETE
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject delete(@PathParam("idVersiKbli") String idVersiKbli) throws SQLException {
+    public JsonObject delete(@PathParam("idKategoriKbli") String idKategoriKbli) throws SQLException {
         
-        boolean isDigit = idVersiKbli.matches("[0-9]{2}");
+        boolean isDigit = idKategoriKbli.matches("[a-zA-Z]");
         
         if(isDigit) {		
             
             JsonObject model = Json.createObjectBuilder()
-                    .add("status", versiKbliService.delete(idVersiKbli) == true ? "sukses" : "gagal")
+                    .add("status", kategoriKbliService.delete(idKategoriKbli) == true ? "sukses" : "gagal")
                     .build();
             
             
             return model;
         }
         else {
-            throw new IllegalArgumentException("id versi kbli harus bilangan panjang 2 digit");
+            throw new IllegalArgumentException("id kategori kbli harus abjad panjang 1 digit");
         }        
         
     }
@@ -165,7 +165,7 @@ public class VersiKbliResource {
                 JsonObject model = Json.createObjectBuilder()
                     .add(
                         "jumlah", 
-                        versiKbliService.getJumlahData(
+                        kategoriKbliService.getJumlahData(
                             filters
                                 .stream()
                                 .map(t -> t.toFilter())
@@ -178,7 +178,7 @@ public class VersiKbliResource {
             }
             else {
                 JsonObject model = Json.createObjectBuilder()
-                    .add("jumlah", versiKbliService.getJumlahData(null))
+                    .add("jumlah", kategoriKbliService.getJumlahData(null))
                     .build();            
             
                 return model;

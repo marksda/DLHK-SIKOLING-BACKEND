@@ -1,20 +1,24 @@
 package com.cso.sikolingrestful.resources.dokumen;
 
+import com.cso.sikoling.abstraction.entity.dokumen.KategoriKbli;
 import com.cso.sikoling.abstraction.entity.dokumen.VersiKbli;
 import java.util.Objects;
 
-public class VersiKbliDTO {
+public class KategoriKbliDTO {
 
     private String id;
     private String nama;
+    private VersiKbliDTO versi_kbli;
 
-    public VersiKbliDTO() {
+    public KategoriKbliDTO() {
     }
     
-    public VersiKbliDTO(VersiKbli t ) {
+    public KategoriKbliDTO(KategoriKbli t ) {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
+            this.versi_kbli = t.getVersiKbli() != null ?
+                                new VersiKbliDTO(t.getVersiKbli()) : null;
         }
     }
 
@@ -33,18 +37,28 @@ public class VersiKbliDTO {
     public void setNama(String nama) {
         this.nama = nama;
     }
+
+    public VersiKbliDTO getVersi_kbli() {
+        return versi_kbli;
+    }
+
+    public void setVersi_kbli(VersiKbliDTO versi_kbli) {
+        this.versi_kbli = versi_kbli;
+    }
     
-    public VersiKbli toVersiKbli() {
-        if( this.id == null || this.nama == null) {
+    public KategoriKbli toKategoriKbli() {
+        if( this.id == null || this.nama == null || this.versi_kbli == null) {
             throw new IllegalArgumentException("format data json versi kbli tidak sesuai");
         }
         else {
-            boolean isDigit = this.id.matches("[0-9]{2}");
-            if(isDigit) {
-                return new VersiKbli(this.id, this.nama);
+            boolean isOneAbjad = this.id.matches("[a-zA-Z]");
+            if(isOneAbjad) {
+                VersiKbli versiKbli = versi_kbli != null ?
+                                        versi_kbli.toVersiKbli() : null;
+                return new KategoriKbli(this.id, this.nama, versiKbli);
             }
             else {
-                throw new IllegalArgumentException("id versi kbli harus bilangan panjang 2 digit");
+                throw new IllegalArgumentException("id kategori kbli harus abjad panjang 1 digit");
             }
         }
     }
@@ -67,13 +81,13 @@ public class VersiKbliDTO {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final VersiKbliDTO other = (VersiKbliDTO) obj;
+        final KategoriKbliDTO other = (KategoriKbliDTO) obj;
         return Objects.equals(this.id, other.id);
     }
     
     @Override
     public String toString() {
-        return "VersiKbliDTO{ id="
+        return "KategoriKbliDTO{ id="
                 .concat(this.id)
                 .concat(", nama=")
                 .concat(nama)
