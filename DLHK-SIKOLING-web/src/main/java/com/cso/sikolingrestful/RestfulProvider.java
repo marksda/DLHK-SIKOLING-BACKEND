@@ -9,6 +9,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.KategoriKbli;
+import com.cso.sikoling.abstraction.entity.dokumen.Kbli;
 import com.cso.sikoling.abstraction.entity.dokumen.VersiKbli;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPermohonan;
@@ -59,6 +60,7 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.dokumen.KategoriKbliServiceBasic;
+import com.cso.sikoling.abstraction.service.dokumen.KbliServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.VersiKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.HashingPasswordTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.JwaTypeServiceBasic;
@@ -186,6 +188,12 @@ public class RestfulProvider {
     public Service<KategoriKbli> getKategoriKbliService(
             @Infrastructure Repository<KategoriKbli, QueryParamFilters, Filter> kategoriKbliRepository) {
         return new KategoriKbliServiceBasic(kategoriKbliRepository);
+    }
+    
+    @Produces
+    public Service<Kbli> getKbliService(
+            @Infrastructure Repository<Kbli, QueryParamFilters, Filter> kbliRepository) {
+        return new KbliServiceBasic(kbliRepository);
     }
     
     @Produces

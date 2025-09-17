@@ -2,33 +2,33 @@ package com.cso.sikoling.abstraction.service.dokumen;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.dokumen.KategoriKbli;
+import com.cso.sikoling.abstraction.entity.dokumen.Kbli;
 import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 
 
-public class KategoriKbliServiceBasic implements Service<KategoriKbli> {
+public class KbliServiceBasic implements Service<Kbli> {
     
-    private final Repository<KategoriKbli, QueryParamFilters, Filter> repository;
+    private final Repository<Kbli, QueryParamFilters, Filter> repository;
 
-    public KategoriKbliServiceBasic(Repository repository) {
+    public KbliServiceBasic(Repository repository) {
         this.repository = repository;
     }
 
     @Override
-    public KategoriKbli save(KategoriKbli t) throws SQLException {
+    public Kbli save(Kbli t) throws SQLException {
         return repository.save(t);
     }
 
     @Override
-    public KategoriKbli update(KategoriKbli t) throws SQLException {
+    public Kbli update(Kbli t) throws SQLException {
         return repository.update(t);
     }
 
     @Override
-    public KategoriKbli updateId(String idLama, KategoriKbli t) throws SQLException {
+    public Kbli updateId(String idLama, Kbli t) throws SQLException {
         return repository.updateId(idLama, t);
     }
 
@@ -38,7 +38,7 @@ public class KategoriKbliServiceBasic implements Service<KategoriKbli> {
     }
 
     @Override
-    public List<KategoriKbli> getDaftarData(QueryParamFilters queryParamFilters) {
+    public List<Kbli> getDaftarData(QueryParamFilters queryParamFilters) {
         return repository.getDaftarData(queryParamFilters);
     }
 
