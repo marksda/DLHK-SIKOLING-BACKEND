@@ -127,8 +127,9 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
                     Filter filter = (Filter) iterFilter.next();
 
                     switch (filter.getField_name()) {
-                        case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue().toUpperCase()));
+                        case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "kode" -> daftarPredicate.add(cb.equal(root.get("kode"), filter.getValue().toUpperCase()));
                         case "id_versi" -> daftarPredicate.add(cb.equal(root.get("versiKbli").get("id"), filter.getValue()));
                         default -> {
                         }
@@ -163,6 +164,14 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("nama")));
+                            }
+                        }
+                        case "kode" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("kode")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("kode")));
                             }
                         }
                         case "id_versi" -> {
@@ -224,6 +233,7 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "kode" -> daftarPredicate.add(cb.equal(root.get("kode"), filter.getValue().toUpperCase()));
                 case "id_versi" -> daftarPredicate.add(cb.equal(root.get("versiKbli").get("id"), filter.getValue()));
                 default -> {
                 }
@@ -248,7 +258,7 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
             VersiKbliData versiKbliData = d.getVersiKbli();
             VersiKbli versiKbli = versiKbliData != null ?
                     new VersiKbli(versiKbliData.getId(), versiKbliData.getNama()) : null;
-            kategoriKbli = new KategoriKbli(d.getId(), d.getNama(), versiKbli);
+            kategoriKbli = new KategoriKbli(d.getId(), d.getNama(), d.getKode(), versiKbli);
         }
 
         return kategoriKbli;	
@@ -261,6 +271,7 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
             kategoriKbliData = new KategoriKbliData();
             kategoriKbliData.setId(t.getId());
             kategoriKbliData.setNama(t.getNama());
+            kategoriKbliData.setKode(t.getKode());
             VersiKbliData versiKbliData = new VersiKbliData();
             versiKbliData.setId(t.getVersiKbli().getId());
             versiKbliData.setNama(t.getVersiKbli().getNama());

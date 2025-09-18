@@ -26,13 +26,17 @@ public class KategoriKbliData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 1)
+    @Size(min = 1, max = 4)
     @Column(name = "id")
     private String id;
     
     @Size(max = 2147483647)
     @Column(name = "nama")
     private String nama;
+    
+    @Size(max = 2147483647)
+    @Column(name = "kode")
+    private String kode;
     
     @JoinColumn(name = "versi", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -59,6 +63,14 @@ public class KategoriKbliData implements Serializable {
 
     public void setNama(String nama) {
         this.nama = nama;
+    }
+
+    public String getKode() {
+        return kode;
+    }
+
+    public void setKode(String kode) {
+        this.kode = kode;
     }
 
     public VersiKbliData getVersiKbli() {

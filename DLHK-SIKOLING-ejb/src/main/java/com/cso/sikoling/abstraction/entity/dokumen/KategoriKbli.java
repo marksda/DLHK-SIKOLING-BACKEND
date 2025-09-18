@@ -8,11 +8,13 @@ public class KategoriKbli implements Serializable {
     
     private final String id;
     private final String nama;
+    private final String kode;
     private final VersiKbli versiKbli;
 
-    public KategoriKbli(String id, String nama, VersiKbli versiKbli) {
+    public KategoriKbli(String id, String nama, String kode, VersiKbli versiKbli) {
         this.id = id;
         this.nama = nama;
+        this.kode = kode;
         this.versiKbli = versiKbli;
     }
 
@@ -22,6 +24,10 @@ public class KategoriKbli implements Serializable {
 
     public String getNama() {
         return nama;
+    }
+
+    public String getKode() {
+        return kode;
     }
 
     public VersiKbli getVersiKbli() {

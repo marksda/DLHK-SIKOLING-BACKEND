@@ -265,6 +265,7 @@ public class KbliRepositoryJPA implements Repository<Kbli, QueryParamFilters, Fi
                     new KategoriKbli(
                             kategoriKbliData.getId(), 
                             kategoriKbliData.getNama(), 
+                            kategoriKbliData.getKode(),
                             versiKbli
                     ) : null;
             
@@ -288,6 +289,7 @@ public class KbliRepositoryJPA implements Repository<Kbli, QueryParamFilters, Fi
             KategoriKbliData kategoriKbliData = new KategoriKbliData();
             kategoriKbliData.setId(t.getKategoriKbli().getId());
             kategoriKbliData.setNama(t.getKategoriKbli().getNama());
+            kategoriKbliData.setKode(t.getKategoriKbli().getKode());
             kategoriKbliData.setVersiKbli(versiKbliData);            
             kbliData.setKategoriKbli(kategoriKbliData);
         }

@@ -134,7 +134,7 @@ public class KategoriKbliResource {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idKategoriKbli") String idKategoriKbli) throws SQLException {
         
-        boolean isDigit = idKategoriKbli.matches("[a-zA-Z]");
+        boolean isDigit = idKategoriKbli.matches("[0-9]{4}");
         
         if(isDigit) {		
             

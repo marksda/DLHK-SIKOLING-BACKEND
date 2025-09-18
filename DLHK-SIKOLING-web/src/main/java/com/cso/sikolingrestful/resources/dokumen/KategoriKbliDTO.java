@@ -8,6 +8,7 @@ public class KategoriKbliDTO {
 
     private String id;
     private String nama;
+    private String kode;
     private VersiKbliDTO versi_kbli;
 
     public KategoriKbliDTO() {
@@ -17,6 +18,7 @@ public class KategoriKbliDTO {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
+            this.kode = t.getKode();
             this.versi_kbli = t.getVersiKbli() != null ?
                                 new VersiKbliDTO(t.getVersiKbli()) : null;
         }
@@ -38,6 +40,14 @@ public class KategoriKbliDTO {
         this.nama = nama;
     }
 
+    public String getKode() {
+        return kode;
+    }
+
+    public void setKode(String kode) {
+        this.kode = kode;
+    }
+
     public VersiKbliDTO getVersi_kbli() {
         return versi_kbli;
     }
@@ -51,11 +61,11 @@ public class KategoriKbliDTO {
             throw new IllegalArgumentException("format data json kategori kbli tidak sesuai");
         }
         else {
-            boolean isOneAbjad = this.id.matches("[a-zA-Z]");
-            if(isOneAbjad) {
+            boolean isDigit = this.id.matches("[0-9]{4}");
+            if(isDigit) {
                 VersiKbli versiKbli = versi_kbli != null ?
                                         versi_kbli.toVersiKbli() : null;
-                return new KategoriKbli(this.id, this.nama, versiKbli);
+                return new KategoriKbli(this.id, this.nama, this.kode, versiKbli);
             }
             else {
                 throw new IllegalArgumentException("id kategori kbli harus abjad panjang 1 digit");
