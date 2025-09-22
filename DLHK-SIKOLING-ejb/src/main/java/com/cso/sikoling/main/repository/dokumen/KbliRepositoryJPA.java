@@ -128,7 +128,7 @@ public class KbliRepositoryJPA implements Repository<Kbli, QueryParamFilters, Fi
                     Filter filter = (Filter) iterFilter.next();
 
                     switch (filter.getField_name()) {
-                        case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue().toUpperCase()));
+                        case "id" -> daftarPredicate.add(cb.like(cb.lower(root.get("id")), filter.getValue()+"%"));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         case "id_versi" -> daftarPredicate.add(cb.equal(root.get("versiKbli").get("id"), filter.getValue()));
                         case "id_kategori" -> daftarPredicate.add(cb.equal(root.get("kategoriKbli").get("id"), filter.getValue()));
@@ -232,7 +232,7 @@ public class KbliRepositoryJPA implements Repository<Kbli, QueryParamFilters, Fi
             Filter filter = (Filter) iterFilter.next();
 
             switch (filter.getField_name()) {
-                case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                case "id" -> daftarPredicate.add(cb.like(cb.lower(root.get("id")), filter.getValue()+"%"));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                 case "id_versi" -> daftarPredicate.add(cb.equal(root.get("versiKbli").get("id"), filter.getValue()));
                 case "id_kategori" -> daftarPredicate.add(cb.equal(root.get("kategoriKbli").get("id"), filter.getValue()));
