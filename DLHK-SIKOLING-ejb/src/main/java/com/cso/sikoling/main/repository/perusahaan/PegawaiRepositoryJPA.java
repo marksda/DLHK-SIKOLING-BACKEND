@@ -405,7 +405,7 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                         personData.getDetailAlamat()
                 );    
 
-                Kontak kontakPerson = new Kontak(personData.getTelepone(), personData.getFax(), personData.getEmail());
+                Kontak kontakPerson = new Kontak(personData.getTelepone(), null, personData.getEmail());
                 JenisKelaminData jenisKelaminData = personData.getSex();
                 JenisKelamin jenisKelamin = jenisKelaminData != null ?
                         new JenisKelamin(jenisKelaminData.getId(), jenisKelaminData.getNama()) : null;

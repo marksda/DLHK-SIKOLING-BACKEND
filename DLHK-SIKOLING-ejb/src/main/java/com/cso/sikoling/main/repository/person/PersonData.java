@@ -1,13 +1,11 @@
 
 package com.cso.sikoling.main.repository.person;
 
-import com.cso.sikoling.main.repository.security.AutorisasiData;
 import com.cso.sikoling.main.repository.alamat.DesaData;
 import com.cso.sikoling.main.repository.alamat.KabupatenData;
 import com.cso.sikoling.main.repository.alamat.KecamatanData;
 import com.cso.sikoling.main.repository.alamat.PropinsiData;
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,12 +13,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
 
 
 @Entity
@@ -33,7 +29,6 @@ import java.util.Collection;
     @NamedQuery(name = "PersonData.findByDetailAlamat", query = "SELECT p FROM PersonData p WHERE p.detailAlamat = :detailAlamat"),
     @NamedQuery(name = "PersonData.findByScanKtp", query = "SELECT p FROM PersonData p WHERE p.scanKtp = :scanKtp"),
     @NamedQuery(name = "PersonData.findByEmail", query = "SELECT p FROM PersonData p WHERE p.email = :email"),
-    @NamedQuery(name = "PersonData.findByFax", query = "SELECT p FROM PersonData p WHERE p.fax = :fax"),
     @NamedQuery(name = "PersonData.findByIsValidated", query = "SELECT p FROM PersonData p WHERE p.isValidated = :isValidated"),
     @NamedQuery(name = "PersonData.updateId", query = "UPDATE PersonData SET id = :idBaru WHERE id = :idLama")})
 public class PersonData implements Serializable {
@@ -67,11 +62,6 @@ public class PersonData implements Serializable {
     @Column(name = "email")
     private String email;
     
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
-    @Size(max = 2147483647)
-    @Column(name = "fax")
-    private String fax;
-    
     @Column(name = "is_validated")
     private Boolean isValidated;
     
@@ -95,8 +85,8 @@ public class PersonData implements Serializable {
     @ManyToOne
     private PropinsiData propinsi;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
-    private Collection<AutorisasiData> autorisasiDataCollection;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+//    private Collection<AutorisasiData> autorisasiDataCollection;
 
     public PersonData() {
     }
@@ -161,14 +151,6 @@ public class PersonData implements Serializable {
         this.email = email;
     }
 
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
     public Boolean getIsValidated() {
         return isValidated;
     }
@@ -209,13 +191,13 @@ public class PersonData implements Serializable {
         this.propinsi = propinsi;
     }
 
-    public Collection<AutorisasiData> getAutorisasiDataCollection() {
-        return autorisasiDataCollection;
-    }
-
-    public void setAutorisasiDataCollection(Collection<AutorisasiData> autorisasiDataCollection) {
-        this.autorisasiDataCollection = autorisasiDataCollection;
-    }
+//    public Collection<AutorisasiData> getAutorisasiDataCollection() {
+//        return autorisasiDataCollection;
+//    }
+//
+//    public void setAutorisasiDataCollection(Collection<AutorisasiData> autorisasiDataCollection) {
+//        this.autorisasiDataCollection = autorisasiDataCollection;
+//    }
 
     @Override
     public int hashCode() {

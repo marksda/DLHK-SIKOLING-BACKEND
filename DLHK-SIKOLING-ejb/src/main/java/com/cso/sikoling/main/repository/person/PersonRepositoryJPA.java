@@ -276,7 +276,7 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
                     ) 
                     : null;            
             Alamat alamat = new Alamat(propinsi, kabupaten, kecamatan, desa, d.getDetailAlamat());            
-            Kontak kontak = new Kontak(d.getTelepone(), d.getFax(), d.getEmail());
+            Kontak kontak = new Kontak(d.getTelepone(), null, d.getEmail());
             JenisKelamin jenisKelamin = new JenisKelamin(d.getSex().getId(), d.getSex().getNama());
             person = new Person(d.getId(), d.getNama(), jenisKelamin, alamat, d.getScanKtp(), kontak, d.getIsValidated());
         }
@@ -295,7 +295,6 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
             personData.setNama(t.getNama());
             personData.setTelepone(t.getKontak().getTelepone());
             personData.setEmail(t.getKontak().getEmail());
-            personData.setFax(t.getKontak().getFax());
             personData.setScanKtp(t.getScanKTP());            
             JenisKelaminData jenisKelaminData = new JenisKelaminData();
             jenisKelaminData.setId(t.getJenisKelamin().getId());
