@@ -28,11 +28,13 @@ import com.cso.sikoling.main.repository.security.oauth2.JwaTypeRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.KeyRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.RealmRepositoryJPA;
 import com.cso.sikoling.main.repository.security.oauth2.TokenRepositoryJPA;
+import com.cso.sikoling.main.repository.storage.LocalStorageImpl;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.inject.Produces;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.Properties;
 
 @Stateless
 @LocalBean
@@ -184,6 +186,11 @@ public class RepositoryProvider {
     @Produces
     public HashingPasswordTypeRepositoryJPA getHashingPasswordTypeRepositoryJPA(EntityManager entityManager) {
         return new HashingPasswordTypeRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public LocalStorageImpl getLocalStorageImpl(Properties properties) {
+        return new LocalStorageImpl(properties.getProperty("STORAGE_PATH"));
     }
     
 }

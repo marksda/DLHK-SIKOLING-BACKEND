@@ -23,12 +23,22 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.service.LocalStorageService;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.resources.FilterDTO;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.UUID;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.apache.commons.io.FilenameUtils;
 
 @Stateless
 @LocalBean
@@ -37,6 +47,9 @@ public class PersonResource {
     
     @Inject
     private Service<Person> personService;
+    
+    @Inject
+    private LocalStorageService localStorageService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -65,21 +78,55 @@ public class PersonResource {
         
     }
     
+//    @POST
+//    @RequiredAuthorization
+//    @RequiredRole({Role.ADMINISTRATOR})
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public PersonDTO save(PersonDTO personDTO) throws SQLException { 
+//        
+//        try {            
+//            return new PersonDTO(personService.save(personDTO.toPerson()));
+//        } 
+//        catch (NullPointerException e) {
+//            throw new IllegalArgumentException("data json person harus disertakan di body post request");
+//        }    
+//        
+//    }
+    
     @POST
-    @RequiredAuthorization
-    @RequiredRole({Role.ADMINISTRATOR})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Produces({MediaType.APPLICATION_JSON})
-    public PersonDTO save(PersonDTO personDTO) throws SQLException { 
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
+    public PersonDTO save(
+            @FormDataParam("personData") String personData,
+            @FormDataParam("imageKtp") File imageKtp, 
+            @FormDataParam("imageKtp") FormDataContentDisposition contentDisposition) throws SQLException { 
+        Jsonb jsonb = JsonbBuilder.create();
+        PersonDTO personDTO = jsonb.fromJson(personData, PersonDTO.class);
+        String namaFile = contentDisposition.getFileName();
+        String extensionFile = FilenameUtils.getExtension(namaFile);
+        String fileKey = UUID.randomUUID().toString()
+                .concat("-").concat(personDTO.getId())
+                .concat(".").concat(extensionFile);
+        personDTO.setScan_ktp(fileKey);
         
-        try {            
-            return new PersonDTO(personService.save(personDTO.toPerson()));
+        try {       
+            personService.save(personDTO.toPerson());
+            InputStream uploadedInputStream = new FileInputStream(imageKtp);
+            String subPathLocation = File.separator.concat("identitas_personal");
+            localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);            
+            return personDTO;
         } 
-        catch (NullPointerException e) {
+        catch (NullPointerException | FileNotFoundException  e) {
             throw new IllegalArgumentException("data json person harus disertakan di body post request");
-        }    
-        
+        } catch (IOException ex) {
+//            System.getLogger(PersonResource.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            throw new IllegalArgumentException("data json person harus disertakan di body post request");
+        }        
     }
+    
     
     @Path("/{idLama}")
     @PUT

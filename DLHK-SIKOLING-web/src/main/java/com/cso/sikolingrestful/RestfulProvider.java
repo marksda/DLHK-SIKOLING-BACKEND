@@ -29,6 +29,7 @@ import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
+import com.cso.sikoling.abstraction.repository.LocalStorageRepository;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
@@ -56,6 +57,7 @@ import com.cso.sikoling.abstraction.service.security.oauth2.KeyServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.TokenServiceBasic;
 import com.cso.sikoling.abstraction.service.KeyService;
+import com.cso.sikoling.abstraction.service.LocalStorageService;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.abstraction.service.TokenService;
@@ -65,6 +67,7 @@ import com.cso.sikoling.abstraction.service.dokumen.VersiKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.HashingPasswordTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.JwaTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.UserServiceBasic;
+import com.cso.sikoling.abstraction.service.storage.LocalStorageServiceBasic;
 
 @Stateless
 @LocalBean
@@ -232,6 +235,11 @@ public class RestfulProvider {
     public Service<HashingPasswordType> getHashingPasswordTypeService(
             @Infrastructure Repository<HashingPasswordType, QueryParamFilters, Filter> hashingPasswordTypeRepository) {
         return new HashingPasswordTypeServiceBasic(hashingPasswordTypeRepository);
+    }
+    
+    @Produces
+    public LocalStorageService getLocalStorageService(@Infrastructure LocalStorageRepository localStorageRepository) {
+        return new LocalStorageServiceBasic(localStorageRepository);
     }
     
 }
