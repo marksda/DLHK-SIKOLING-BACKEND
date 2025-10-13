@@ -17,6 +17,9 @@ import com.cso.sikoling.main.repository.alamat.DesaData;
 import com.cso.sikoling.main.repository.alamat.KabupatenData;
 import com.cso.sikoling.main.repository.alamat.KecamatanData;
 import com.cso.sikoling.main.repository.alamat.PropinsiData;
+import jakarta.json.JsonObject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -27,7 +30,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -139,6 +145,22 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.like(root.get("id"), filter.getValue()+"%"));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                        case "rentang_tanggal" -> {
+                            Jsonb jsonb = JsonbBuilder.create();
+                            JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
+                            Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
+                            Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+                            
+                            daftarPredicate.add(
+                                cb.between(
+                                    root.get("tanggalRegistrasi"), 
+                                    fromDate, 
+                                    toDate
+                                )
+                            );
+                        }
                         default -> {
                         }
                     }			
@@ -172,6 +194,14 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("nama")));
+                            }
+                        }
+                        case "tanggal_registrasi" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("tanggalRegistrasi")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("tanggalRegistrasi")));
                             }
                         }
                         default -> {
@@ -225,6 +255,22 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.like(root.get("id"), filter.getValue()+"%"));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                case "rentang_tanggal" -> {
+                    Jsonb jsonb = JsonbBuilder.create();
+                    JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
+                    Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
+                    Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+
+                    daftarPredicate.add(
+                        cb.between(
+                            root.get("tanggalRegistrasi"), 
+                            fromDate, 
+                            toDate
+                        )
+                    );
+                }
                 default -> {
                 }
             }			
@@ -278,7 +324,7 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
             Alamat alamat = new Alamat(propinsi, kabupaten, kecamatan, desa, d.getDetailAlamat());            
             Kontak kontak = new Kontak(d.getTelepone(), null, d.getEmail());
             JenisKelamin jenisKelamin = new JenisKelamin(d.getSex().getId(), d.getSex().getNama());
-            person = new Person(d.getId(), d.getNama(), jenisKelamin, alamat, d.getScanKtp(), kontak, d.getIsValidated());
+            person = new Person(d.getId(), d.getNama(), jenisKelamin, alamat, d.getScanKtp(), kontak, d.getIsValidated(), d.getTanggalRegistrasi());
         }
 
         return person;	
@@ -313,6 +359,7 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
             personData.setPropinsi(
                 new PropinsiData(t.getAlamat().getPropinsi().getId(), t.getAlamat().getPropinsi().getNama())
             );
+            personData.setTanggalRegistrasi(t.getTanggal_registrasi());
         }
 
         return personData;

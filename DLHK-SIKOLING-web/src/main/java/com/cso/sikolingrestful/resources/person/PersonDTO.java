@@ -4,6 +4,10 @@ import java.util.Objects;
 import com.cso.sikoling.abstraction.entity.person.Person;
 import com.cso.sikolingrestful.resources.alamat.AlamatDTO;
 import com.cso.sikolingrestful.resources.alamat.KontakDTO;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PersonDTO {
     
@@ -14,6 +18,7 @@ public class PersonDTO {
     private String scan_ktp;
     private KontakDTO kontak;
     private Boolean status_verified;
+    private String tanggal_registrasi;
 
     public PersonDTO() {
     }
@@ -27,6 +32,9 @@ public class PersonDTO {
             this.scan_ktp = t.getScanKTP();
             this.kontak = t.getKontak() != null ? new KontakDTO(t.getKontak()) : null;
             this.status_verified = t.getStatusVerified();
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Date tmpTglReg = t.getTanggal_registrasi();
+            this.tanggal_registrasi = tmpTglReg != null ? df.format(tmpTglReg) : null;
         }
     }
 
@@ -85,21 +93,45 @@ public class PersonDTO {
     public void setStatus_verified(Boolean status_verified) {
         this.status_verified = status_verified;
     }
+
+    public String getTanggal_registrasi() {
+        return tanggal_registrasi;
+    }
+
+    public void setTanggal_registrasi(String tanggal_registrasi) {
+        this.tanggal_registrasi = tanggal_registrasi;
+    }
     
     public Person toPerson() {
         if( this.id == null || this.nama == null || this.alamat == null || this.kontak == null ) {
             throw new IllegalArgumentException("format data json person tidak sesuai");
         }
         else {
-            return new Person(
-                this.id, 
-                this.nama, 
-                this.jenis_kelamin != null ? this.jenis_kelamin.toJenisKelamin() : null, 
-                this.alamat != null ? this.alamat.toAlamat() : null, 
-                scan_ktp, 
-                this.kontak != null ? this.kontak.toKontak() : null, 
-                this.status_verified
-            );
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                Date date = this.tanggal_registrasi != null ? df.parse(this.tanggal_registrasi) : null;
+                return new Person(
+                    this.id, 
+                    this.nama, 
+                    this.jenis_kelamin != null ? this.jenis_kelamin.toJenisKelamin() : null, 
+                    this.alamat != null ? this.alamat.toAlamat() : null, 
+                    scan_ktp, 
+                    this.kontak != null ? this.kontak.toKontak() : null, 
+                    this.status_verified,
+                    date
+                );
+            } catch (ParseException ex) {
+                return new Person(
+                    this.id, 
+                    this.nama, 
+                    this.jenis_kelamin != null ? this.jenis_kelamin.toJenisKelamin() : null, 
+                    this.alamat != null ? this.alamat.toAlamat() : null, 
+                    scan_ktp, 
+                    this.kontak != null ? this.kontak.toKontak() : null, 
+                    this.status_verified,
+                    null
+                );
+            }
         }
     }
     
@@ -138,7 +170,7 @@ public class PersonDTO {
             return null;
         }			
 
-        return "JenisKelaminDTO{" + "id=" + this.id + ", nama=" + this.nama + "}";	    
+        return "personDTO{" + "id=" + this.id + ", nama=" + this.nama + "}";	    
     }
 
 }

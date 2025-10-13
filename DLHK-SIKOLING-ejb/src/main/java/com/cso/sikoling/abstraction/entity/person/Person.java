@@ -3,6 +3,7 @@ package com.cso.sikoling.abstraction.entity.person;
 import com.cso.sikoling.abstraction.entity.alamat.Alamat;
 import com.cso.sikoling.abstraction.entity.alamat.Kontak;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 public class Person implements Serializable {
@@ -14,8 +15,11 @@ public class Person implements Serializable {
     private final String scanKTP;
     private final Kontak kontak;
     private final Boolean statusVerified;
+    private final Date tanggal_registrasi;
 
-    public Person(String id, String nama, JenisKelamin jenisKelamin, Alamat alamat, String scanKTP, Kontak kontak, Boolean statusVerified) {
+    public Person(String id, String nama, JenisKelamin jenisKelamin, 
+            Alamat alamat, String scanKTP, Kontak kontak, 
+            Boolean statusVerified, Date tanggal_registrasi) {
         this.id = id;
         this.nama = nama;
         this.jenisKelamin = jenisKelamin;
@@ -23,6 +27,7 @@ public class Person implements Serializable {
         this.scanKTP = scanKTP;
         this.kontak = kontak;
         this.statusVerified = statusVerified;
+        this.tanggal_registrasi = tanggal_registrasi;
     }
 
     public String getId() {
@@ -51,6 +56,10 @@ public class Person implements Serializable {
 
     public JenisKelamin getJenisKelamin() {
         return jenisKelamin;
+    }
+
+    public Date getTanggal_registrasi() {
+        return tanggal_registrasi;
     }
     
     @Override

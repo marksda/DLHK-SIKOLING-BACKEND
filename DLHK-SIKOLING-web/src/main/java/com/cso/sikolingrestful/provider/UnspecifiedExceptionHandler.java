@@ -1,7 +1,6 @@
 package com.cso.sikolingrestful.provider;
 
 import com.cso.sikolingrestful.exception.ExceptionResponse;
-import com.cso.sikolingrestful.exception.KeyException;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

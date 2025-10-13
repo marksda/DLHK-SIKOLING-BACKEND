@@ -416,7 +416,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                         alamatPerson, 
                         personData.getScanKtp(), 
                         kontakPerson, 
-                        personData.getIsValidated()
+                        personData.getIsValidated(),
+                        personData.getTanggalRegistrasi()
                 );
 
             }

@@ -14,9 +14,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 
 
 @Entity
@@ -25,6 +28,7 @@ import java.io.Serializable;
     @NamedQuery(name = "PersonData.findAll", query = "SELECT p FROM PersonData p"),
     @NamedQuery(name = "PersonData.findById", query = "SELECT p FROM PersonData p WHERE p.id = :id"),
     @NamedQuery(name = "PersonData.findByNama", query = "SELECT p FROM PersonData p WHERE p.nama = :nama"),
+    @NamedQuery(name = "PersonData.findByTanggalRegistrasi", query = "SELECT p FROM PersonData p WHERE p.tanggalRegistrasi = :tanggalRegistrasi"),
     @NamedQuery(name = "PersonData.findByTelepone", query = "SELECT p FROM PersonData p WHERE p.telepone = :telepone"),
     @NamedQuery(name = "PersonData.findByDetailAlamat", query = "SELECT p FROM PersonData p WHERE p.detailAlamat = :detailAlamat"),
     @NamedQuery(name = "PersonData.findByScanKtp", query = "SELECT p FROM PersonData p WHERE p.scanKtp = :scanKtp"),
@@ -84,6 +88,10 @@ public class PersonData implements Serializable {
     @JoinColumn(name = "propinsi", referencedColumnName = "id")
     @ManyToOne
     private PropinsiData propinsi;
+    
+    @Column(name = "tanggal_registrasi")
+    @Temporal(TemporalType.DATE)
+    private Date tanggalRegistrasi;
     
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
 //    private Collection<AutorisasiData> autorisasiDataCollection;
@@ -189,6 +197,14 @@ public class PersonData implements Serializable {
 
     public void setPropinsi(PropinsiData propinsi) {
         this.propinsi = propinsi;
+    }
+
+    public Date getTanggalRegistrasi() {
+        return tanggalRegistrasi;
+    }
+
+    public void setTanggalRegistrasi(Date tanggalRegistrasi) {
+        this.tanggalRegistrasi = tanggalRegistrasi;
     }
 
 //    public Collection<AutorisasiData> getAutorisasiDataCollection() {

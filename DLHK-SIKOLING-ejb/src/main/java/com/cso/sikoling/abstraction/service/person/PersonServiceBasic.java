@@ -8,6 +8,7 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
+import java.util.Date;
 
 
 public class PersonServiceBasic implements Service<Person> {
@@ -21,7 +22,22 @@ public class PersonServiceBasic implements Service<Person> {
 
     @Override
     public Person save(Person t) throws SQLException {
-        return repository.save(t);
+        if(t.getTanggal_registrasi() == null) {
+            Person person = new Person(
+                    t.getId(), 
+                    t.getNama(), 
+                    t.getJenisKelamin(), 
+                    t.getAlamat(), 
+                    t.getScanKTP(), 
+                    t.getKontak(), 
+                    Boolean.FALSE, 
+                    new Date()
+                );
+            return repository.save(person);
+        }
+        else {
+            return repository.save(t);
+        }
     }
 
     @Override
