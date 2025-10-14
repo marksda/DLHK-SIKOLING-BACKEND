@@ -37,8 +37,8 @@ public class JenisKelaminData implements Serializable {
     @Column(name = "nama")
     private String nama;
     
-    @OneToMany(mappedBy = "sex")
-    private Collection<PersonData> personDataCollection;
+//    @OneToMany(mappedBy = "sex")
+//    private Collection<PersonData> personDataCollection;
 
     public JenisKelaminData() {
     }
@@ -63,13 +63,13 @@ public class JenisKelaminData implements Serializable {
         this.nama = nama;
     }
 
-    public Collection<PersonData> getPersonDataCollection() {
-        return personDataCollection;
-    }
+//    public Collection<PersonData> getPersonDataCollection() {
+//        return personDataCollection;
+//    }
 
-    public void setPersonDataCollection(Collection<PersonData> personDataCollection) {
-        this.personDataCollection = personDataCollection;
-    }
+//    public void setPersonDataCollection(Collection<PersonData> personDataCollection) {
+//        this.personDataCollection = personDataCollection;
+//    }
 
     @Override
     public int hashCode() {
