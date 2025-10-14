@@ -1,5 +1,7 @@
 package com.cso.sikolingrestful.resources.person;
 
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -78,22 +80,6 @@ public class PersonResource {
         
     }
     
-//    @POST
-//    @RequiredAuthorization
-//    @RequiredRole({Role.ADMINISTRATOR})
-//    @Consumes({MediaType.APPLICATION_JSON})
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public PersonDTO save(PersonDTO personDTO) throws SQLException { 
-//        
-//        try {            
-//            return new PersonDTO(personService.save(personDTO.toPerson()));
-//        } 
-//        catch (NullPointerException e) {
-//            throw new IllegalArgumentException("data json person harus disertakan di body post request");
-//        }    
-//        
-//    }
-    
     @POST
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Produces({MediaType.APPLICATION_JSON})
@@ -122,54 +108,105 @@ public class PersonResource {
         catch (NullPointerException | FileNotFoundException  e) {
             throw new IllegalArgumentException("data json person harus disertakan di body post request");
         } catch (IOException ex) {
-//            System.getLogger(PersonResource.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            throw new IllegalArgumentException("data json person harus disertakan di body post request");
+            throw new IllegalArgumentException("file scan ktp tidak bisa disimpan");
         }        
     }
     
     
     @Path("/{idLama}")
     @PUT
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    @Produces({MediaType.APPLICATION_JSON})
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public PersonDTO update(@PathParam("idLama") String idLama, PersonDTO personDTO) throws SQLException {
-         
+    public PersonDTO update(@PathParam("idLama") String idLama, 
+        @FormDataParam("personData") String personData, @FormDataParam("imageKtp") File imageKtp, 
+        @FormDataParam("imageKtp") FormDataContentDisposition contentDisposition) throws SQLException {
+        
+        Jsonb jsonb = JsonbBuilder.create();
+        PersonDTO personDTO = jsonb.fromJson(personData, PersonDTO.class);
+                 
         try {                
             boolean isIdSame = idLama.equals(personDTO.getId());
-            if(isIdSame) {
-                return new PersonDTO(personService.update(personDTO.toPerson()));
+            if(isIdSame) {                  
+                if(imageKtp != null) {
+                    String namaFileLama = personDTO.getScan_ktp();
+                    if(namaFileLama != null) {
+                        localStorageService.delete(namaFileLama, "identitas_personal");
+                    }
+                    
+                    InputStream uploadedInputStream = new FileInputStream(imageKtp);
+                    String namaFile = contentDisposition.getFileName();
+                    String extensionFile = FilenameUtils.getExtension(namaFile);
+                    String fileKey = UUID.randomUUID().toString()
+                            .concat("-").concat(personDTO.getId())
+                            .concat(".").concat(extensionFile);
+                    personDTO.setScan_ktp(fileKey);
+                    String subPathLocation = File.separator.concat("identitas_personal");
+                    localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);                    
+                }
+                
+                personService.save(personDTO.toPerson());  
+                
+                return personDTO;
             }
             else {
                 throw new IllegalArgumentException("id person harus sama");
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json person harus disertakan di body put request");
-        }
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("file scan ktp tidak bisa disimpan");
+        }  
         
     }
     
     @Path("/update_id/{idLama}")
     @PUT
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    @Produces({MediaType.APPLICATION_JSON})
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public PersonDTO updateId(@PathParam("idLama") String idLama, PersonDTO personDTO) throws SQLException {
+    public PersonDTO updateId(@PathParam("idLama") String idLama, 
+        @FormDataParam("personData") String personData, @FormDataParam("imageKtp") File imageKtp, 
+        @FormDataParam("imageKtp") FormDataContentDisposition contentDisposition) throws SQLException {
+        
+        Jsonb jsonb = JsonbBuilder.create();
+        PersonDTO personDTO = jsonb.fromJson(personData, PersonDTO.class);
         
         try {                
             boolean isIdSame = idLama.equals(personDTO.getId());
 
             if(!isIdSame) {
-                return new PersonDTO(personService.updateId(idLama, personDTO.toPerson()));
+                if(imageKtp != null) {
+                    String namaFileLama = personDTO.getScan_ktp();
+                    if(namaFileLama != null) {
+                        localStorageService.delete(namaFileLama, "identitas_personal");
+                    }
+                    
+                    InputStream uploadedInputStream = new FileInputStream(imageKtp);
+                    String namaFile = contentDisposition.getFileName();
+                    String extensionFile = FilenameUtils.getExtension(namaFile);
+                    String fileKey = UUID.randomUUID().toString()
+                            .concat("-").concat(personDTO.getId())
+                            .concat(".").concat(extensionFile);
+                    personDTO.setScan_ktp(fileKey);
+                    String subPathLocation = File.separator.concat("identitas_personal");
+                    localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);                    
+                }
+                
+                personService.updateId(idLama, personDTO.toPerson());
+                
+                return personDTO;
             }
             else {
                 throw new IllegalArgumentException("id lama dan baru person harus beda");
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json person harus disertakan di body put request");
-        }
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("file scan ktp tidak bisa disimpan");
+        }  
         
     } 
     
@@ -180,12 +217,41 @@ public class PersonResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idPerson") String idPerson) throws SQLException {
+        List<Filter> fields_filter = new ArrayList<>();
+        fields_filter.add(
+            new Filter("id", idPerson)
+        ); 
         
-        JsonObject model = Json.createObjectBuilder()
-                .add("status", personService.delete(idPerson) == true ? "sukses" : "gagal")
-                .build();
+        QueryParamFilters queryParamFilters = 
+                new QueryParamFilters(false, null, fields_filter, null);
+        
+        Person person = personService.getDaftarData(queryParamFilters).getFirst();
 
-        return model;
+        if(person != null) {
+            try {
+                String namaFileScanKtp = person.getScanKTP();
+                if(namaFileScanKtp != null) {
+                    localStorageService.delete(namaFileScanKtp, "identitas_personal");
+                }
+
+                JsonObject model = Json.createObjectBuilder()
+                    .add("status", personService.delete(idPerson) == true ? "sukses" : "gagal")
+                    .build();
+                return model;
+            }
+            catch (IOException ex) {
+                JsonObject model = Json.createObjectBuilder()
+                    .add("status", "gagal")
+                    .build();
+                return model;
+            }  
+        }
+        else {
+            JsonObject model = Json.createObjectBuilder()
+                .add("status", "gagal")
+                .build();
+            return model;
+        }
         
     }
     
