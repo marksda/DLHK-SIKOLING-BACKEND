@@ -32,8 +32,8 @@ public class LocalStorageImpl implements LocalStorageRepository {
     }
 
     @Override
-    public File download(String fileNameParam) throws IOException {
-        File file=new File(this.rootPath.concat(fileNameParam));   
+    public File download(String fileName, String subPath) throws IOException {
+        File file=new File(rootPath.concat(subPath).concat(File.separator).concat(fileName));   
         if(file.exists()) {
             return file;
         }

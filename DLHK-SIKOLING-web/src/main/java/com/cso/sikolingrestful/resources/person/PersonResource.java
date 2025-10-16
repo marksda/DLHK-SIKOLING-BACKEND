@@ -30,12 +30,15 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
+import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -78,6 +81,46 @@ public class PersonResource {
             throw new JsonbException("format query data json tidak sesuai");
         }
         
+    }
+    
+    @Path("/image/{id}/{namaFile}")
+    @GET
+//    @RequiredAuthorization
+//    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
+    public Response getImageKTP(@PathParam("id") String id, @PathParam("namaFile") String namaFile) throws UnspecifiedException {
+        try {
+            List<Filter> fields_filter = new ArrayList<>();
+            fields_filter.add(new Filter("id", id)); 
+
+            QueryParamFilters queryParamFilters = 
+                    new QueryParamFilters(false, null, fields_filter, null);
+
+            Person person = personService.getDaftarData(queryParamFilters).getFirst();
+
+            if(person != null) {
+                if(namaFile.equalsIgnoreCase(person.getScanKTP())) {
+                    String subPathLocation = File.separator.concat("identitas_personal");
+                    File tempFile = localStorageService.download(namaFile, subPathLocation);
+                    String fileType = Files.probeContentType(tempFile.toPath());
+                    String fileSize = String.valueOf(tempFile.length());
+
+                    return Response.status( Response.Status.OK )
+                                .header("Content-Length", fileSize)
+                                .header("Content-Type", fileType)
+                                .entity(tempFile)
+                                .build();  
+                }
+                else {
+                    throw new UnspecifiedException(500, "image ktp tidak ada");
+                }
+            }
+            else {
+                throw new UnspecifiedException(500, "id tidak dikenali sistem");
+            }
+        } 
+        catch (IOException ex) {
+            throw new IllegalArgumentException("file scan ktp tidak ditemukan");
+        }
     }
     
     @POST

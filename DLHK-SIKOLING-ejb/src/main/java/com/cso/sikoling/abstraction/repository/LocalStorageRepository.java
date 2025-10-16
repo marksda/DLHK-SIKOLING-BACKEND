@@ -7,7 +7,7 @@ import java.io.InputStream;
 public interface LocalStorageRepository {
     void upload(String fileKey, InputStream inputStream, String subPath) throws IOException;
     void create(String fileKey, String subPath) throws IOException;
-    File download(String fileNameParam) throws IOException;
+    File download(String fileName, String subPath) throws IOException;
     void delete(String fileName, String subPath) throws IOException;
     void move(String fileNameParamAsal, String fileNameParamTujuan) throws IOException;
     void moveDir(String directoryAsal, String directoryTujuan) throws IOException;

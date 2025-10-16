@@ -20,8 +20,8 @@ public class LocalStorageServiceBasic implements LocalStorageService {
     }
 
     @Override
-    public File download(String fileNameParam) throws IOException {
-        return localStorageRepository.download(fileNameParam);
+    public File download(String fileName, String subPath) throws IOException {
+        return localStorageRepository.download(fileName, subPath);
     }
 
     @Override

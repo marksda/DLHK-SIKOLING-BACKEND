@@ -23,8 +23,8 @@ public class LocalStorageEJB implements LocalStorageRepository {
     }
 
     @Override
-    public File download(String fileNameParam) throws IOException {
-        return localStorageImpl.download(fileNameParam);
+    public File download(String fileName, String subPath) throws IOException {
+        return localStorageImpl.download(fileName, subPath);
     }
 
     @Override
