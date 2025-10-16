@@ -153,8 +153,7 @@ public class PersonResource {
         } catch (IOException ex) {
             throw new IllegalArgumentException("file scan ktp tidak bisa disimpan");
         }        
-    }
-    
+    }    
     
     @Path("/{idLama}")
     @PUT
