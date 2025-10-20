@@ -48,7 +48,7 @@ public class LocalStorageImpl implements LocalStorageRepository {
             File file = new File(rootPath.concat(subPath).concat(File.separator).concat(fileName));
             file.delete();
         } catch (Exception e) {
-            throw new IOException("Delete file gagal");
+//            throw new IOException("Delete file gagal");
         }
     }
 

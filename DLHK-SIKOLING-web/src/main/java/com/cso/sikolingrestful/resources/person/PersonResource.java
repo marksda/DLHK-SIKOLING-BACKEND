@@ -85,8 +85,6 @@ public class PersonResource {
     
     @Path("/image/{id}/{namaFile}")
     @GET
-//    @RequiredAuthorization
-//    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     public Response getImageKTP(@PathParam("id") String id, @PathParam("namaFile") String namaFile) throws UnspecifiedException {
         try {
             List<Filter> fields_filter = new ArrayList<>();
