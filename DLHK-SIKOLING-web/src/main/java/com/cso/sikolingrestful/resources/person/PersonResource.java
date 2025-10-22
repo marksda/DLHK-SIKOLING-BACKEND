@@ -39,7 +39,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -168,27 +171,53 @@ public class PersonResource {
                  
         try {                
             boolean isIdSame = idLama.equals(personDTO.getId());
-            if(isIdSame) {                  
-                if(imageKtp != null) {
-                    String namaFileLama = personDTO.getScan_ktp();
-                    if(namaFileLama != null) {
-                        localStorageService.delete(namaFileLama, "identitas_personal");
+            if(isIdSame) {      
+                List<Filter> fields_filter = new ArrayList<>();
+                fields_filter.add(
+                    new Filter("id", personDTO.getId())
+                ); 
+
+                QueryParamFilters queryParamFilters = 
+                        new QueryParamFilters(false, null, fields_filter, null);
+
+                Person personLama = personService.getDaftarData(queryParamFilters).getFirst();
+                
+                if(personLama != null) {
+                    if(imageKtp != null) {
+                        String namaFileLama = personDTO.getScan_ktp();
+                        if(namaFileLama.equals(personLama.getScanKTP())) {
+                            String subPathLocation = File.separator.concat("identitas_personal");
+                            localStorageService.delete(namaFileLama, subPathLocation);
+
+                            InputStream uploadedInputStream = new FileInputStream(imageKtp);
+                            String namaFile = contentDisposition.getFileName();
+                            String extensionFile = FilenameUtils.getExtension(namaFile);
+                            String fileKey = UUID.randomUUID().toString()
+                                    .concat("-").concat(personDTO.getId())
+                                    .concat(".").concat(extensionFile);
+                            personDTO.setScan_ktp(fileKey);
+                            localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);  
+                        }
+                        else {
+                            throw new IllegalArgumentException("akses ditolak");
+                        }
                     }
                     
-                    InputStream uploadedInputStream = new FileInputStream(imageKtp);
-                    String namaFile = contentDisposition.getFileName();
-                    String extensionFile = FilenameUtils.getExtension(namaFile);
-                    String fileKey = UUID.randomUUID().toString()
-                            .concat("-").concat(personDTO.getId())
-                            .concat(".").concat(extensionFile);
-                    personDTO.setScan_ktp(fileKey);
-                    String subPathLocation = File.separator.concat("identitas_personal");
-                    localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);                    
+                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    if(personLama.getTanggal_registrasi() == null) {                        
+                        personDTO.setTanggal_registrasi(df.format(new Date()));
+                    }
+                    else {
+                        personDTO.setTanggal_registrasi(df.format(personLama.getTanggal_registrasi()));
+                    }
+
+                    personService.update(personDTO.toPerson());  
+
+                    return personDTO;                    
                 }
-                
-                personService.update(personDTO.toPerson());  
-                
-                return personDTO;
+                else {
+                    throw new IllegalArgumentException("akses ditolak");
+                }
             }
             else {
                 throw new IllegalArgumentException("id person harus sama");
@@ -218,26 +247,53 @@ public class PersonResource {
             boolean isIdSame = idLama.equals(personDTO.getId());
 
             if(!isIdSame) {
-                if(imageKtp != null) {
-                    String namaFileLama = personDTO.getScan_ktp();
-                    if(namaFileLama != null) {
-                        localStorageService.delete(namaFileLama, "identitas_personal");
+                List<Filter> fields_filter = new ArrayList<>();
+                fields_filter.add(
+                    new Filter("id", personDTO.getId())
+                ); 
+
+                QueryParamFilters queryParamFilters = 
+                        new QueryParamFilters(false, null, fields_filter, null);
+
+                Person personLama = personService.getDaftarData(queryParamFilters).getFirst();
+                
+                if(personLama != null) {
+                
+                    if(imageKtp != null) {
+                        String namaFileLama = personDTO.getScan_ktp();
+                        if(namaFileLama.equals(personLama.getScanKTP())) {
+                            String subPathLocation = File.separator.concat("identitas_personal");
+                            localStorageService.delete(namaFileLama, subPathLocation);
+
+                            InputStream uploadedInputStream = new FileInputStream(imageKtp);
+                            String namaFile = contentDisposition.getFileName();
+                            String extensionFile = FilenameUtils.getExtension(namaFile);
+                            String fileKey = UUID.randomUUID().toString()
+                                    .concat("-").concat(personDTO.getId())
+                                    .concat(".").concat(extensionFile);
+                            personDTO.setScan_ktp(fileKey);
+                            localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);       
+                        }
+                        else {
+                            throw new IllegalArgumentException("akses ditolak");
+                        }
+                    }
+
+                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    if(personLama.getTanggal_registrasi() == null) {                        
+                        personDTO.setTanggal_registrasi(df.format(new Date()));
+                    }
+                    else {
+                        personDTO.setTanggal_registrasi(df.format(personLama.getTanggal_registrasi()));
                     }
                     
-                    InputStream uploadedInputStream = new FileInputStream(imageKtp);
-                    String namaFile = contentDisposition.getFileName();
-                    String extensionFile = FilenameUtils.getExtension(namaFile);
-                    String fileKey = UUID.randomUUID().toString()
-                            .concat("-").concat(personDTO.getId())
-                            .concat(".").concat(extensionFile);
-                    personDTO.setScan_ktp(fileKey);
-                    String subPathLocation = File.separator.concat("identitas_personal");
-                    localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);                    
+                    personService.updateId(idLama, personDTO.toPerson());
+
+                    return personDTO;
                 }
-                
-                personService.updateId(idLama, personDTO.toPerson());
-                
-                return personDTO;
+                else {
+                    throw new IllegalArgumentException("id person harus sama");
+                }
             }
             else {
                 throw new IllegalArgumentException("id lama dan baru person harus beda");
@@ -270,8 +326,9 @@ public class PersonResource {
         if(person != null) {
             try {
                 String namaFileScanKtp = person.getScanKTP();
+                String subPathLocation = File.separator.concat("identitas_personal");
                 if(namaFileScanKtp != null) {
-                    localStorageService.delete(namaFileScanKtp, "identitas_personal");
+                    localStorageService.delete(namaFileScanKtp, subPathLocation);
                 }
 
                 JsonObject model = Json.createObjectBuilder()
