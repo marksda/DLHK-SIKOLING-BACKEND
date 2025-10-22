@@ -186,7 +186,7 @@ public class PersonResource {
                     localStorageService.upload(fileKey, uploadedInputStream, subPathLocation);                    
                 }
                 
-                personService.save(personDTO.toPerson());  
+                personService.update(personDTO.toPerson());  
                 
                 return personDTO;
             }
