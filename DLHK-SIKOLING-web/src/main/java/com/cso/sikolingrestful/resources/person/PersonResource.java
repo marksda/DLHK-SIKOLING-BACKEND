@@ -249,7 +249,7 @@ public class PersonResource {
             if(!isIdSame) {
                 List<Filter> fields_filter = new ArrayList<>();
                 fields_filter.add(
-                    new Filter("id", personDTO.getId())
+                    new Filter("id", idLama)
                 ); 
 
                 QueryParamFilters queryParamFilters = 
