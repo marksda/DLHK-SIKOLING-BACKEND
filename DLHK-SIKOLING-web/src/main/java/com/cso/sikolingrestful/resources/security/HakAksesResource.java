@@ -39,6 +39,8 @@ public class HakAksesResource {
     private Service<HakAkses> hakAksesService;
     
     @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Produces({MediaType.APPLICATION_JSON})
     public List<HakAksesDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
@@ -66,6 +68,8 @@ public class HakAksesResource {
     }
     
     @POST
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public HakAksesDTO save(HakAksesDTO hakAksesDTO) throws SQLException { 
@@ -81,6 +85,8 @@ public class HakAksesResource {
     
     @Path("/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public HakAksesDTO update(@PathParam("idLama") String idLama, HakAksesDTO hakAksesDTO) throws SQLException {
@@ -101,6 +107,8 @@ public class HakAksesResource {
     
     @Path("/update_id/{idLama}")
     @PUT
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public HakAksesDTO updateId(@PathParam("idLama") String idLama, HakAksesDTO hakAksesDTO) throws SQLException {
@@ -122,6 +130,8 @@ public class HakAksesResource {
     
     @Path("/{idHakAkses}")
     @DELETE
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idHakAkses") String idHakAkses) throws SQLException {
