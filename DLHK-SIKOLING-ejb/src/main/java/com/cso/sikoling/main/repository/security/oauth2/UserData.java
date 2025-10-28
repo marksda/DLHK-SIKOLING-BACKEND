@@ -1,6 +1,5 @@
 package com.cso.sikoling.main.repository.security.oauth2;
 
-import com.cso.sikoling.main.repository.alamat.PropinsiData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

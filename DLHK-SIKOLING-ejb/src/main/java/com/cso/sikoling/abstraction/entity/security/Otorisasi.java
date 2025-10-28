@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Otorisasi implements Serializable {
 
     private final String id;
-    private final String id_lama;
+    private final String id_user;
     private final Boolean is_verified;
     private final String user_name;
     private final Date tanggal_registrasi;
@@ -17,11 +17,11 @@ public class Otorisasi implements Serializable {
     private final Person person;
 
     public Otorisasi(
-            String id, String id_lama, Boolean is_verified, 
+            String id, String id_user, Boolean is_verified, 
             String user_name, Date tanggal_registrasi,  HakAkses hak_akses, 
             Person person) {
         this.id = id;
-        this.id_lama = id_lama;
+        this.id_user = id_user;
         this.is_verified = is_verified;
         this.user_name = user_name;
         this.tanggal_registrasi = tanggal_registrasi;
@@ -33,8 +33,8 @@ public class Otorisasi implements Serializable {
         return id;
     }
 
-    public String getId_lama() {
-        return id_lama;
+    public String getId_user() {
+        return id_user;
     }
 
     public Boolean getIs_verified() {

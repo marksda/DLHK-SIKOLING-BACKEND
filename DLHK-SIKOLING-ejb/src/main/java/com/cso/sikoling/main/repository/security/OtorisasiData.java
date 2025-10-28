@@ -22,7 +22,7 @@ import java.util.Date;
 @Table(name = "master.tbl_otorisasi")
 @NamedQueries({
     @NamedQuery(name = "OtorisasiData.findAll", query = "SELECT a FROM OtorisasiData a"),
-    @NamedQuery(name = "OtorisasiData.findByIdLama", query = "SELECT a FROM OtorisasiData a WHERE a.idLama = :idLama"),
+    @NamedQuery(name = "OtorisasiData.findByIdUser", query = "SELECT a FROM OtorisasiData a WHERE a.idUser = :idUser"),
     @NamedQuery(name = "OtorisasiData.findByIsVerified", query = "SELECT a FROM OtorisasiData a WHERE a.isVerified = :isVerified"),
     @NamedQuery(name = "OtorisasiData.findByUserName", query = "SELECT a FROM OtorisasiData a WHERE a.userName = :userName"),
     @NamedQuery(name = "OtorisasiData.findById", query = "SELECT a FROM OtorisasiData a WHERE a.id = :id"),
@@ -41,8 +41,8 @@ public class OtorisasiData implements Serializable {
     private String id;
     
     @Size(max = 2147483647)
-    @Column(name = "id_lama")
-    private String idLama;
+    @Column(name = "id_user")
+    private String idUser;
     
     @Column(name = "is_verified")
     private Boolean isVerified;
@@ -83,12 +83,12 @@ public class OtorisasiData implements Serializable {
         this.userName = userName;
     }
 
-    public String getIdLama() {
-        return idLama;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setIdLama(String idLama) {
-        this.idLama = idLama;
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public Boolean getIsVerified() {

@@ -339,7 +339,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
             
             otorisasi = new Otorisasi(
                     d.getId(), 
-                    d.getIdLama(), 
+                    d.getIdUser(), 
                     d.getIsVerified(), 
                     d.getUserName(), 
                     d.getTanggalRegistrasi(), 
@@ -357,7 +357,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
         if(t != null) {
             autorisasiData = new OtorisasiData();
             autorisasiData.setId(t.getId());
-            autorisasiData.setIdLama(t.getId_lama());
+            autorisasiData.setIdUser(t.getId_user());
             autorisasiData.setIsVerified(t.getIs_verified());
             autorisasiData.setUserName(t.getUser_name());
             autorisasiData.setTanggalRegistrasi(t.getTanggal_registrasi());

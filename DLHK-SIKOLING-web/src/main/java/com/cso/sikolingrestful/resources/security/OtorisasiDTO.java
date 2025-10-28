@@ -10,7 +10,7 @@ import java.util.Objects;
 public class OtorisasiDTO implements Serializable {
     
     private String id;
-    private String id_lama;
+    private String id_user;
     private Boolean is_verified;
     private String user_name;
     private Date tanggal_registrasi;
@@ -23,7 +23,7 @@ public class OtorisasiDTO implements Serializable {
     public OtorisasiDTO(Otorisasi t) {
         if(t != null) {
             this.id = t.getId();
-            this.id_lama = t.getId_lama();
+            this.id_user = t.getId_user();
             this.is_verified = t.getIs_verified();
             this.user_name = t.getUser_name();
             this.tanggal_registrasi = t.getTanggal_registrasi();
@@ -42,12 +42,12 @@ public class OtorisasiDTO implements Serializable {
         this.id = id;
     }
 
-    public String getId_lama() {
-        return id_lama;
+    public String getId_user() {
+        return id_user;
     }
 
-    public void setId_lama(String id_lama) {
-        this.id_lama = id_lama;
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
 
     public Boolean getIs_verified() {
@@ -93,7 +93,7 @@ public class OtorisasiDTO implements Serializable {
     public Otorisasi toOtorisasi() {
         return new Otorisasi(
             this.id, 
-            this.id_lama, 
+            this.id_user, 
             this.is_verified, 
             this.user_name, 
             this.tanggal_registrasi, 
