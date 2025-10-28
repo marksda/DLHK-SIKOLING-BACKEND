@@ -1,7 +1,7 @@
 package com.cso.sikoling.main.repository.permohonan;
 
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
-import com.cso.sikoling.main.repository.security.AutorisasiData;
+import com.cso.sikoling.main.repository.security.OtorisasiData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,7 +57,7 @@ public class RegisterPermohonanData implements Serializable {
     
     @JoinColumn(name = "pengakses", referencedColumnName = "id")
     @ManyToOne
-    private AutorisasiData pengakses;
+    private OtorisasiData pengakses;
     
     @JoinColumn(name = "kategori_pengurus_permohonan", referencedColumnName = "id")
     @ManyToOne
@@ -122,11 +122,11 @@ public class RegisterPermohonanData implements Serializable {
         this.perusahaan = perusahaan;
     }
 
-    public AutorisasiData getPengakses() {
+    public OtorisasiData getPengakses() {
         return pengakses;
     }
 
-    public void setPengakses(AutorisasiData pengakses) {
+    public void setPengakses(OtorisasiData pengakses) {
         this.pengakses = pengakses;
     }
 

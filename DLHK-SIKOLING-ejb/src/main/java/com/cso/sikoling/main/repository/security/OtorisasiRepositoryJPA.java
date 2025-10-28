@@ -2,10 +2,24 @@ package com.cso.sikoling.main.repository.security;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
+import com.cso.sikoling.abstraction.entity.alamat.Alamat;
+import com.cso.sikoling.abstraction.entity.alamat.Desa;
+import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
+import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
+import com.cso.sikoling.abstraction.entity.alamat.Kontak;
+import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
+import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
+import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.main.repository.alamat.DesaData;
+import com.cso.sikoling.main.repository.alamat.KabupatenData;
+import com.cso.sikoling.main.repository.alamat.KecamatanData;
+import com.cso.sikoling.main.repository.alamat.PropinsiData;
+import com.cso.sikoling.main.repository.person.JenisKelaminData;
 import com.cso.sikoling.main.repository.person.PersonData;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -23,21 +37,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryParamFilters, Filter> {
+public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public AutorisasiRepositoryJPA(EntityManager entityManager) {
+    public OtorisasiRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public Autorisasi save(Autorisasi t) throws SQLException {   
+    public Otorisasi save(Otorisasi t) throws SQLException {   
         try {
-            AutorisasiData autorisasiData = convertAutorisasiToAutorisasiData(t);
+            OtorisasiData autorisasiData = convertOtorisasiToOtorisasiData(t);
             entityManager.persist(autorisasiData);
             entityManager.flush();             
-            return convertAutorisasiDataToAutorisasi(autorisasiData);  
+            return convertOtorisasiDataToOtorisasi(autorisasiData);  
         } 
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id autorisasi harus bilangan");
@@ -48,12 +62,12 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
     }
 
     @Override
-    public Autorisasi update(Autorisasi t) throws SQLException {
+    public Otorisasi update(Otorisasi t) throws SQLException {
         
         try {
-            AutorisasiData autorisasiData = convertAutorisasiToAutorisasiData(t);  
+            OtorisasiData autorisasiData = convertOtorisasiToOtorisasiData(t);  
             autorisasiData = entityManager.merge(autorisasiData);
-            return convertAutorisasiDataToAutorisasi(autorisasiData);   
+            return convertOtorisasiDataToOtorisasi(autorisasiData);   
         }         
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id autorisasi harus bilangan");
@@ -65,7 +79,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
     }
 
     @Override
-    public Autorisasi updateId(String idLama, Autorisasi t) throws SQLException {
+    public Otorisasi updateId(String idLama, Otorisasi t) throws SQLException {
         
         Query query = entityManager.createNamedQuery("AutorisasiData.updateId");
         query.setParameter("idBaru", t.getId());
@@ -92,7 +106,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
     public boolean delete(String id) throws SQLException {
         
         try {
-            AutorisasiData autorisasiData = entityManager.find(AutorisasiData.class, id);
+            OtorisasiData autorisasiData = entityManager.find(OtorisasiData.class, id);
             if(autorisasiData != null) {
                 entityManager.remove(autorisasiData);	
                 entityManager.flush();
@@ -112,12 +126,12 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
     }
 
     @Override
-    public List<Autorisasi> getDaftarData(QueryParamFilters q) {
+    public List<Otorisasi> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<AutorisasiData> cq = cb.createQuery(AutorisasiData.class);
-            Root<AutorisasiData> root = cq.from(AutorisasiData.class);		
+            CriteriaQuery<OtorisasiData> cq = cb.createQuery(OtorisasiData.class);
+            Root<OtorisasiData> root = cq.from(OtorisasiData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -172,7 +186,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
             }
 
 
-            TypedQuery<AutorisasiData> typedQuery;	
+            TypedQuery<OtorisasiData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -186,14 +200,14 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
 
             return typedQuery.getResultList()
                             .stream()
-                            .map(d -> convertAutorisasiDataToAutorisasi(d))
+                            .map(d -> convertOtorisasiDataToOtorisasi(d))
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("AutorisasiData.findAll", AutorisasiData.class)
+            return entityManager.createNamedQuery("AutorisasiData.findAll", OtorisasiData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertAutorisasiDataToAutorisasi(d))
+                 .map(d -> convertOtorisasiDataToOtorisasi(d))
                             .collect(Collectors.toList());
         }
         
@@ -204,7 +218,7 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<AutorisasiData> root = cq.from(AutorisasiData.class);		
+        Root<OtorisasiData> root = cq.from(OtorisasiData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -232,38 +246,127 @@ public class AutorisasiRepositoryJPA implements Repository<Autorisasi, QueryPara
         
     }
     
-    private Autorisasi convertAutorisasiDataToAutorisasi(AutorisasiData d) {
-        Autorisasi autorisasi = null;
+    private Otorisasi convertOtorisasiDataToOtorisasi(OtorisasiData d) {
+        Otorisasi otorisasi = null;
 		
         if(d != null) {
-            autorisasi = new Autorisasi(
+            PersonData personData = d.getPerson();
+            JenisKelaminData jenisKelaminData = personData != null ?
+                                                personData.getSex() : null;
+            JenisKelamin jenisKelamin = jenisKelaminData != null ?
+                                        new JenisKelamin(
+                                                jenisKelaminData.getId(), 
+                                                jenisKelaminData.getNama()
+                                        ) : null;
+            
+            PropinsiData propinsiData = personData != null ?
+                                        personData.getPropinsi() : null;
+            Propinsi propinsi = propinsiData != null ?
+                    new Propinsi(
+                        propinsiData.getId(), 
+                        propinsiData.getNama()
+                    )
+                    : null;
+            
+            KabupatenData kabupatenData = personData != null ?
+                                        personData.getKabupaten() : null;
+            Kabupaten kabupaten = kabupatenData != null ?
+                    new Kabupaten(
+                        kabupatenData.getId(), 
+                        kabupatenData.getNama(), 
+                        propinsi != null ? propinsi.getId() : null
+                    )
+                    : null;
+            
+            KecamatanData kecamatanData = personData != null ?
+                                        personData.getKecamatan() : null;
+            Kecamatan kecamatan = kecamatanData != null ?
+                    new Kecamatan(
+                        kecamatanData.getId(), 
+                        kecamatanData.getNama(), 
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null
+                    )
+                    : null;
+            
+            DesaData desaData = personData != null ?
+                                personData.getDesa() : null;
+            Desa desa = desaData != null ?
+                    new Desa(
+                        desaData.getId(), 
+                        desaData.getNama(), 
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null,
+                        kecamatan != null ? kecamatan.getId() : null
+                    )
+                    : null;
+                    
+            Alamat alamat = new Alamat(
+                propinsi, 
+                kabupaten, 
+                kecamatan, 
+                desa, 
+                personData != null ? personData.getDetailAlamat() : null
+            );        
+            
+            Kontak kontak = new Kontak(
+                personData != null ? personData.getTelepone() : null, 
+                null, 
+                personData != null ? personData.getEmail() : null
+            );
+            
+            
+            Person person = personData != null ?
+                    new Person(
+                        personData.getId(), 
+                        personData.getNama(), 
+                        jenisKelamin, 
+                        alamat, 
+                        personData.getScanKtp(), 
+                        kontak, 
+                        personData.getIsValidated(), 
+                        personData.getTanggalRegistrasi()
+                    ) : null;
+            
+            HakAksesData hakAksesData = d.getHakAkses();
+            
+            HakAkses hakAkses = hakAksesData != null ?
+                    new HakAkses(
+                        hakAksesData.getId(), 
+                        hakAksesData.getNama(), 
+                        hakAksesData.getKeterangan()
+                    ) : null;
+            
+            otorisasi = new Otorisasi(
                     d.getId(), 
-                    d.getIdUser(), 
-                    d.getStatusInternal(), 
+                    d.getIdLama(), 
                     d.getIsVerified(), 
                     d.getUserName(), 
                     d.getTanggalRegistrasi(), 
-                    d.getHakAkses().getId(), 
-                    d.getPerson().getId()
+                    hakAkses, 
+                    person
                 );
         }
 
-        return autorisasi;	
+        return otorisasi;	
     }
     
-    private AutorisasiData convertAutorisasiToAutorisasiData(Autorisasi t) {
-        AutorisasiData autorisasiData = null;
+    private OtorisasiData convertOtorisasiToOtorisasiData(Otorisasi t) {
+        OtorisasiData autorisasiData = null;
 		
         if(t != null) {
-            autorisasiData = new AutorisasiData();
+            autorisasiData = new OtorisasiData();
             autorisasiData.setId(t.getId());
-            autorisasiData.setIdUser(t.getId_user());
-            autorisasiData.setStatusInternal(t.getStatus_internal());
+            autorisasiData.setIdLama(t.getId_lama());
             autorisasiData.setIsVerified(t.getIs_verified());
             autorisasiData.setUserName(t.getUser_name());
             autorisasiData.setTanggalRegistrasi(t.getTanggal_registrasi());
-            autorisasiData.setHakAkses(new HakAksesData(t.getId_hak_akses()));
-            autorisasiData.setPerson(new PersonData(t.getId_person()));
+            HakAkses hakAkses = t.getHak_akses();
+            HakAksesData hakAksesData = new HakAksesData();
+            hakAksesData.setId(hakAkses != null ? hakAkses.getId() : null);
+            autorisasiData.setHakAkses(hakAksesData);
+            Person person = t.getPerson();
+            autorisasiData.setPerson(new PersonData(person.getId()));
         }
 
         return autorisasiData;

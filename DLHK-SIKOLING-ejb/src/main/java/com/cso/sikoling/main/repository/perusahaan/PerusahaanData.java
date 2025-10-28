@@ -1,7 +1,7 @@
 
 package com.cso.sikoling.main.repository.perusahaan;
 
-import com.cso.sikoling.main.repository.security.AutorisasiData;
+import com.cso.sikoling.main.repository.security.OtorisasiData;
 import com.cso.sikoling.main.repository.alamat.DesaData;
 import com.cso.sikoling.main.repository.alamat.KabupatenData;
 import com.cso.sikoling.main.repository.alamat.KecamatanData;
@@ -90,11 +90,11 @@ public class PerusahaanData implements Serializable {
     
     @JoinColumn(name = "kreator", referencedColumnName = "id")
     @ManyToOne
-    private AutorisasiData kreator;
+    private OtorisasiData kreator;
     
     @JoinColumn(name = "verifikator", referencedColumnName = "id")
     @ManyToOne
-    private AutorisasiData verifikator;
+    private OtorisasiData verifikator;
     
     @JoinColumn(name = "desa", referencedColumnName = "id")
     @ManyToOne
@@ -216,19 +216,19 @@ public class PerusahaanData implements Serializable {
         this.idLama = idLama;
     }
 
-    public AutorisasiData getKreator() {
+    public OtorisasiData getKreator() {
         return kreator;
     }
 
-    public void setKreator(AutorisasiData kreator) {
+    public void setKreator(OtorisasiData kreator) {
         this.kreator = kreator;
     }
 
-    public AutorisasiData getVerifikator() {
+    public OtorisasiData getVerifikator() {
         return verifikator;
     }
 
-    public void setVerifikator(AutorisasiData verifikator) {
+    public void setVerifikator(OtorisasiData verifikator) {
         this.verifikator = verifikator;
     }
 

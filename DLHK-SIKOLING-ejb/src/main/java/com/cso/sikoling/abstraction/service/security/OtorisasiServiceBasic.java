@@ -1,7 +1,7 @@
 package com.cso.sikoling.abstraction.service.security;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
@@ -10,26 +10,26 @@ import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 
 
-public class AutorisasiServiceBasic implements Service<Autorisasi> {
+public class OtorisasiServiceBasic implements Service<Otorisasi> {
     
-    private final Repository<Autorisasi, QueryParamFilters, Filter> repository;
+    private final Repository<Otorisasi, QueryParamFilters, Filter> repository;
 
-    public AutorisasiServiceBasic(Repository repository) {
+    public OtorisasiServiceBasic(Repository repository) {
         this.repository = repository;
     }    
 
     @Override
-    public Autorisasi save(Autorisasi t) throws SQLException {
+    public Otorisasi save(Otorisasi t) throws SQLException {
         return repository.save(t);
     }
 
     @Override
-    public Autorisasi update(Autorisasi t) throws SQLException {
+    public Otorisasi update(Otorisasi t) throws SQLException {
         return repository.update(t);
     }
 
     @Override
-    public Autorisasi updateId(String idLama, Autorisasi t) throws SQLException {
+    public Otorisasi updateId(String idLama, Otorisasi t) throws SQLException {
         return repository.updateId(idLama, t);
     }
 
@@ -39,7 +39,7 @@ public class AutorisasiServiceBasic implements Service<Autorisasi> {
     }
 
     @Override
-    public List<Autorisasi> getDaftarData(QueryParamFilters queryParamFilters) {
+    public List<Otorisasi> getDaftarData(QueryParamFilters queryParamFilters) {
         return repository.getDaftarData(queryParamFilters);
     }
 

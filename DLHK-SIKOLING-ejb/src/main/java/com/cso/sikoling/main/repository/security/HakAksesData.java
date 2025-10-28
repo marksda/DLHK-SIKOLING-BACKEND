@@ -44,7 +44,7 @@ public class HakAksesData implements Serializable {
     private String keterangan;
     
     @OneToMany(mappedBy = "hakAkses")
-    private Collection<AutorisasiData> autorisasiDataCollection;
+    private Collection<OtorisasiData> autorisasiDataCollection;
 
     public HakAksesData() {
     }
@@ -77,11 +77,11 @@ public class HakAksesData implements Serializable {
         this.keterangan = keterangan;
     }
 
-    public Collection<AutorisasiData> getAutorisasiDataCollection() {
+    public Collection<OtorisasiData> getAutorisasiDataCollection() {
         return autorisasiDataCollection;
     }
 
-    public void setAutorisasiDataCollection(Collection<AutorisasiData> autorisasiDataCollection) {
+    public void setAutorisasiDataCollection(Collection<OtorisasiData> autorisasiDataCollection) {
         this.autorisasiDataCollection = autorisasiDataCollection;
     }
 

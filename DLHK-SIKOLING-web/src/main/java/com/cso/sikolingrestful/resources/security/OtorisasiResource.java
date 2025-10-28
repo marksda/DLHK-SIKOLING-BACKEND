@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
@@ -30,32 +30,32 @@ import com.cso.sikoling.abstraction.service.Service;
 
 @Stateless
 @LocalBean
-@Path("autorisasi")
-public class AutorisasiResource {
+@Path("otorisasi")
+public class OtorisasiResource {
     
     @Inject
-    private Service<Autorisasi> autorisasiService;
+    private Service<Otorisasi> otorisasiService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    public List<AutorisasiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<OtorisasiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return autorisasiService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                return otorisasiService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
                         .stream()
-                        .map(t -> new AutorisasiDTO(t))
+                        .map(t -> new OtorisasiDTO(t))
                         .collect(Collectors.toList());
             }
             else {
-                return autorisasiService.getDaftarData(null)
+                return otorisasiService.getDaftarData(null)
                         .stream()
-                        .map(t -> new AutorisasiDTO(t))
+                        .map(t -> new OtorisasiDTO(t))
                         .collect(Collectors.toList());
             }             
         } 
@@ -70,13 +70,13 @@ public class AutorisasiResource {
     @Produces({MediaType.APPLICATION_JSON})    
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    public AutorisasiDTO save(AutorisasiDTO autorisasiDTO) throws SQLException { 
+    public OtorisasiDTO save(OtorisasiDTO otorisasiDTO) throws SQLException { 
         
         try {            
-            return new AutorisasiDTO(autorisasiService.save(autorisasiDTO.toAutorisasi()));
+            return new OtorisasiDTO(otorisasiService.save(otorisasiDTO.toOtorisasi()));
         } 
         catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json autorisasi harus disertakan di body post request");
+            throw new IllegalArgumentException("data json otorisasi harus disertakan di body post request");
         }    
         
     }
@@ -87,18 +87,18 @@ public class AutorisasiResource {
     @Produces({MediaType.APPLICATION_JSON})
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    public AutorisasiDTO update(@PathParam("idLama") String idLama, AutorisasiDTO autorisasiDTO) throws SQLException {
+    public OtorisasiDTO update(@PathParam("idLama") String idLama, OtorisasiDTO otorisasiDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(autorisasiDTO.getId());
+            boolean isIdSame = idLama.equals(otorisasiDTO.getId());
             if(isIdSame) {
-                return new AutorisasiDTO(autorisasiService.update(autorisasiDTO.toAutorisasi()));
+                return new OtorisasiDTO(otorisasiService.update(otorisasiDTO.toOtorisasi()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru autorisasi harus sama");
+                throw new IllegalArgumentException("id lama dan baru otorisasi harus sama");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json autorisasi harus disertakan di body put request");
+            throw new IllegalArgumentException("data json otorisasi harus disertakan di body put request");
         }
         
     }
@@ -109,43 +109,43 @@ public class AutorisasiResource {
     @Produces({MediaType.APPLICATION_JSON})
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    public AutorisasiDTO updateId(@PathParam("idLama") String idLama, AutorisasiDTO autorisasiDTO) throws SQLException {
+    public OtorisasiDTO updateId(@PathParam("idLama") String idLama, OtorisasiDTO otorisasiDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(autorisasiDTO.getId());
+            boolean isIdSame = idLama.equals(otorisasiDTO.getId());
 
             if(!isIdSame) {
-                return new AutorisasiDTO(autorisasiService.updateId(idLama, autorisasiDTO.toAutorisasi()));
+                return new OtorisasiDTO(otorisasiService.updateId(idLama, otorisasiDTO.toOtorisasi()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru autorisasi harus beda");
+                throw new IllegalArgumentException("id lama dan baru otorisasi harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json autorisasi harus disertakan di body put request");
+            throw new IllegalArgumentException("data json otorisasi harus disertakan di body put request");
         }
         
     } 
     
-    @Path("/{idAutorisasi}")
+    @Path("/{idOtorisasi}")
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
-    public JsonObject delete(@PathParam("idAutorisasi") String idAutorisasi) throws SQLException {
+    public JsonObject delete(@PathParam("idOtorisasi") String idOtorisasi) throws SQLException {
         
-        boolean isDigit = idAutorisasi.matches("[0-9]+");
+        boolean isDigit = idOtorisasi.matches("[0-9]+");
         
         if(isDigit) {		
             
             JsonObject model = Json.createObjectBuilder()
-                    .add("status", autorisasiService.delete(idAutorisasi) == true ? "sukses" : "gagal")
+                    .add("status", otorisasiService.delete(idOtorisasi) == true ? "sukses" : "gagal")
                     .build();            
             
             return model;
         }
         else {
-            throw new IllegalArgumentException("id autorisasi harus bilanagan");
+            throw new IllegalArgumentException("id otorisasi harus bilanagan");
         }        
         
     }

@@ -1,42 +1,40 @@
 package com.cso.sikoling.abstraction.entity.security;
 
+import com.cso.sikoling.abstraction.entity.person.Person;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 
-public class Autorisasi implements Serializable {
+public class Otorisasi implements Serializable {
 
     private final String id;
-    private final String id_user;
-    private final Boolean status_internal;
+    private final String id_lama;
     private final Boolean is_verified;
     private final String user_name;
     private final Date tanggal_registrasi;
-    private final String id_hak_akses;
-    private final String id_person;
+    private final HakAkses hak_akses;
+    private final Person person;
 
-    public Autorisasi(String id, String id_user, Boolean status_internal, Boolean is_verified, String user_name, Date tanggal_registrasi, String id_hak_akses, String id_person) {
+    public Otorisasi(
+            String id, String id_lama, Boolean is_verified, 
+            String user_name, Date tanggal_registrasi,  HakAkses hak_akses, 
+            Person person) {
         this.id = id;
-        this.id_user = id_user;
-        this.status_internal = status_internal;
+        this.id_lama = id_lama;
         this.is_verified = is_verified;
         this.user_name = user_name;
         this.tanggal_registrasi = tanggal_registrasi;
-        this.id_hak_akses = id_hak_akses;
-        this.id_person = id_person;
+        this.hak_akses = hak_akses;
+        this.person = person;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getId_user() {
-        return id_user;
-    }
-
-    public Boolean getStatus_internal() {
-        return status_internal;
+    public String getId_lama() {
+        return id_lama;
     }
 
     public Boolean getIs_verified() {
@@ -51,12 +49,12 @@ public class Autorisasi implements Serializable {
         return tanggal_registrasi;
     }
 
-    public String getId_hak_akses() {
-        return id_hak_akses;
+    public HakAkses getHak_akses() {
+        return hak_akses;
     }
 
-    public String getId_person() {
-        return id_person;
+    public Person getPerson() {
+        return person;
     }
 
     @Override
@@ -77,7 +75,7 @@ public class Autorisasi implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Autorisasi other = (Autorisasi) obj;
+        final Otorisasi other = (Otorisasi) obj;
         return Objects.equals(this.id, other.id);
     }
     

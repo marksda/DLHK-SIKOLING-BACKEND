@@ -21,7 +21,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.security.oauth2.HashingPasswordType;
 import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
@@ -51,7 +51,7 @@ import com.cso.sikoling.abstraction.service.perusahaan.KategoriPelakuUsahaServic
 import com.cso.sikoling.abstraction.service.perusahaan.PegawaiUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PelakuUsahaServiceBasic;
 import com.cso.sikoling.abstraction.service.perusahaan.PerusahaanServiceBasic;
-import com.cso.sikoling.abstraction.service.security.AutorisasiServiceBasic;
+import com.cso.sikoling.abstraction.service.security.OtorisasiServiceBasic;
 import com.cso.sikoling.abstraction.service.security.HakAksesServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.KeyServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.RealmServiceBasic;
@@ -140,9 +140,9 @@ public class RestfulProvider {
     }
     
     @Produces
-    public Service<Autorisasi> getAutorisasiService(
-            @Infrastructure Repository<Autorisasi, QueryParamFilters, Filter> autorisasiRepository) {
-        return new AutorisasiServiceBasic(autorisasiRepository);
+    public Service<Otorisasi> getAutorisasiService(
+            @Infrastructure Repository<Otorisasi, QueryParamFilters, Filter> autorisasiRepository) {
+        return new OtorisasiServiceBasic(autorisasiRepository);
     }
     
     @Produces

@@ -2,34 +2,35 @@ package com.cso.sikolingrestful.resources.security;
 
 import java.io.Serializable;
 import java.util.Date;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
+import com.cso.sikolingrestful.resources.person.PersonDTO;
 import java.util.Objects;
 
 
-public class AutorisasiDTO implements Serializable {
+public class OtorisasiDTO implements Serializable {
     
     private String id;
     private String id_lama;
-    private Boolean status_internal;
     private Boolean is_verified;
     private String user_name;
     private Date tanggal_registrasi;
-    private String id_hak_akses;
-    private String id_person;
+    private HakAksesDTO hak_akses;
+    private PersonDTO person;
 
-    public AutorisasiDTO() {
+    public OtorisasiDTO() {
     }
     
-    public AutorisasiDTO(Autorisasi t) {
+    public OtorisasiDTO(Otorisasi t) {
         if(t != null) {
             this.id = t.getId();
-            this.id_lama = t.getId_user();
-            this.status_internal = t.getStatus_internal();
+            this.id_lama = t.getId_lama();
             this.is_verified = t.getIs_verified();
             this.user_name = t.getUser_name();
             this.tanggal_registrasi = t.getTanggal_registrasi();
-            this.id_hak_akses = t.getId_hak_akses();
-            this.id_person = t.getId_person();
+            this.hak_akses = t.getHak_akses() != null ?
+                    new HakAksesDTO(t.getHak_akses()) : null;
+            this.person = t.getPerson() != null ?
+                    new PersonDTO(t.getPerson()) : null;
         }
     }
 
@@ -47,14 +48,6 @@ public class AutorisasiDTO implements Serializable {
 
     public void setId_lama(String id_lama) {
         this.id_lama = id_lama;
-    }
-
-    public Boolean getStatus_internal() {
-        return status_internal;
-    }
-
-    public void setStatus_internal(Boolean status_internal) {
-        this.status_internal = status_internal;
     }
 
     public Boolean getIs_verified() {
@@ -81,33 +74,32 @@ public class AutorisasiDTO implements Serializable {
         this.tanggal_registrasi = tanggal_registrasi;
     }
 
-    public String getId_hak_akses() {
-        return id_hak_akses;
+    public HakAksesDTO getHak_akses() {
+        return hak_akses;
     }
 
-    public void setId_hak_akses(String id_hak_akses) {
-        this.id_hak_akses = id_hak_akses;
+    public void setHak_akses(HakAksesDTO hak_akses) {
+        this.hak_akses = hak_akses;
     }
 
-    public String getId_person() {
-        return id_person;
+    public PersonDTO getPerson() {
+        return person;
     }
 
-    public void setId_person(String id_person) {
-        this.id_person = id_person;
+    public void setPerson(PersonDTO person) {
+        this.person = person;
     }
     
-    public Autorisasi toAutorisasi() {
-        return new Autorisasi(
-                this.id, 
-                this.id_lama, 
-                this.status_internal, 
-                this.is_verified, 
-                this.user_name, 
-                this.tanggal_registrasi, 
-                this.id_hak_akses, 
-                this.id_person
-            );
+    public Otorisasi toOtorisasi() {
+        return new Otorisasi(
+            this.id, 
+            this.id_lama, 
+            this.is_verified, 
+            this.user_name, 
+            this.tanggal_registrasi, 
+            this.hak_akses != null ? this.hak_akses.toHakAkses() : null, 
+            this.person != null ? this.person.toPerson() : null
+        );
     }
 
     @Override
@@ -127,7 +119,7 @@ public class AutorisasiDTO implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AutorisasiDTO other = (AutorisasiDTO) obj;
+        final OtorisasiDTO other = (OtorisasiDTO) obj;
         return Objects.equals(this.id, other.id);
     }
 

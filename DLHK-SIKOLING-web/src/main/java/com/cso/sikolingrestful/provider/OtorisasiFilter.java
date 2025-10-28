@@ -2,7 +2,7 @@ package com.cso.sikolingrestful.provider;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.security.Autorisasi;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
@@ -34,13 +34,13 @@ import java.util.NoSuchElementException;
 @Stateless
 @LocalBean
 @RequiredAuthorization
-public class AuthorizationFilter implements ContainerRequestFilter {
+public class OtorisasiFilter implements ContainerRequestFilter {
     
     @Inject
     private TokenService<Token> tokenService;
     
     @Inject
-    private Service<Autorisasi> autorisasiService;
+    private Service<Otorisasi> otorisasiService;
     
     @Context
     private ResourceInfo resourceInfo;
@@ -60,7 +60,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
             fields_filter.add(filter);
             QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
         
-            String idHakAkses = autorisasiService.getDaftarData(qFilter).getFirst().getId_hak_akses();
+            String idHakAkses = otorisasiService.getDaftarData(qFilter).getFirst().getHak_akses().getId();
             Method resourceMethod = resourceInfo.getResourceMethod();
             List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
                                         .orElseThrow(() -> new NotAuthorizedException("Role not found"));
