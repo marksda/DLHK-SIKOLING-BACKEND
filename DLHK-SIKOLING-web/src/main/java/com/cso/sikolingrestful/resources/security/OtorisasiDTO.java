@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikolingrestful.resources.person.PersonDTO;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 
@@ -13,7 +16,7 @@ public class OtorisasiDTO implements Serializable {
     private String id_user;
     private Boolean is_verified;
     private String user_name;
-    private Date tanggal_registrasi;
+    private String tanggal_registrasi;
     private HakAksesDTO hak_akses;
     private PersonDTO person;
 
@@ -26,7 +29,9 @@ public class OtorisasiDTO implements Serializable {
             this.id_user = t.getId_user();
             this.is_verified = t.getIs_verified();
             this.user_name = t.getUser_name();
-            this.tanggal_registrasi = t.getTanggal_registrasi();
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Date tmpTglReg = t.getTanggal_registrasi();
+            this.tanggal_registrasi = tmpTglReg != null ? df.format(tmpTglReg) : null;
             this.hak_akses = t.getHak_akses() != null ?
                     new HakAksesDTO(t.getHak_akses()) : null;
             this.person = t.getPerson() != null ?
@@ -66,11 +71,11 @@ public class OtorisasiDTO implements Serializable {
         this.user_name = user_name;
     }
 
-    public Date getTanggal_registrasi() {
+    public String getTanggal_registrasi() {
         return tanggal_registrasi;
     }
 
-    public void setTanggal_registrasi(Date tanggal_registrasi) {
+    public void setTanggal_registrasi(String tanggal_registrasi) {
         this.tanggal_registrasi = tanggal_registrasi;
     }
 
@@ -91,15 +96,30 @@ public class OtorisasiDTO implements Serializable {
     }
     
     public Otorisasi toOtorisasi() {
-        return new Otorisasi(
-            this.id, 
-            this.id_user, 
-            this.is_verified, 
-            this.user_name, 
-            this.tanggal_registrasi, 
-            this.hak_akses != null ? this.hak_akses.toHakAkses() : null, 
-            this.person != null ? this.person.toPerson() : null
-        );
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");        
+        try {
+            Date date = this.tanggal_registrasi != null ? df.parse(this.tanggal_registrasi) : null;
+            return new Otorisasi(
+                this.id, 
+                this.id_user, 
+                this.is_verified, 
+                this.user_name, 
+                date, 
+                this.hak_akses != null ? this.hak_akses.toHakAkses() : null, 
+                this.person != null ? this.person.toPerson() : null
+            );
+        } catch (ParseException ex) {
+            return new Otorisasi(
+                this.id, 
+                this.id_user, 
+                this.is_verified, 
+                this.user_name, 
+                null, 
+                this.hak_akses != null ? this.hak_akses.toHakAkses() : null, 
+                this.person != null ? this.person.toPerson() : null
+            );
+        }
+        
     }
 
     @Override

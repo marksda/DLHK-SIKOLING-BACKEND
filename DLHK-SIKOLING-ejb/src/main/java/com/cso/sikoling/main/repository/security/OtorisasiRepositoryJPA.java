@@ -81,7 +81,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
     @Override
     public Otorisasi updateId(String idLama, Otorisasi t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("AutorisasiData.updateId");
+        Query query = entityManager.createNamedQuery("OtorisasiData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
@@ -204,7 +204,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("AutorisasiData.findAll", OtorisasiData.class)
+            return entityManager.createNamedQuery("OtorisasiData.findAll", OtorisasiData.class)
                  .getResultList()
                  .stream()
                  .map(d -> convertOtorisasiDataToOtorisasi(d))
