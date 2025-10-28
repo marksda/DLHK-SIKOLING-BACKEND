@@ -21,13 +21,13 @@ import java.util.Date;
 @Entity
 @Table(name = "master.tbl_otorisasi")
 @NamedQueries({
-    @NamedQuery(name = "AutorisasiData.findAll", query = "SELECT a FROM AutorisasiData a"),
-    @NamedQuery(name = "AutorisasiData.findByIdLama", query = "SELECT a FROM AutorisasiData a WHERE a.idLama = :idLama"),
-    @NamedQuery(name = "AutorisasiData.findByIsVerified", query = "SELECT a FROM AutorisasiData a WHERE a.isVerified = :isVerified"),
-    @NamedQuery(name = "AutorisasiData.findByUserName", query = "SELECT a FROM AutorisasiData a WHERE a.userName = :userName"),
-    @NamedQuery(name = "AutorisasiData.findById", query = "SELECT a FROM AutorisasiData a WHERE a.id = :id"),
-    @NamedQuery(name = "AutorisasiData.findByTanggalRegistrasi", query = "SELECT a FROM AutorisasiData a WHERE a.tanggalRegistrasi = :tanggalRegistrasi"),
-    @NamedQuery(name = "AutorisasiData.updateId", query = "UPDATE AutorisasiData SET id = :idBaru WHERE id = :idLama")
+    @NamedQuery(name = "OtorisasiData.findAll", query = "SELECT a FROM OtorisasiData a"),
+    @NamedQuery(name = "OtorisasiData.findByIdLama", query = "SELECT a FROM OtorisasiData a WHERE a.idLama = :idLama"),
+    @NamedQuery(name = "OtorisasiData.findByIsVerified", query = "SELECT a FROM OtorisasiData a WHERE a.isVerified = :isVerified"),
+    @NamedQuery(name = "OtorisasiData.findByUserName", query = "SELECT a FROM OtorisasiData a WHERE a.userName = :userName"),
+    @NamedQuery(name = "OtorisasiData.findById", query = "SELECT a FROM OtorisasiData a WHERE a.id = :id"),
+    @NamedQuery(name = "OtorisasiData.findByTanggalRegistrasi", query = "SELECT a FROM OtorisasiData a WHERE a.tanggalRegistrasi = :tanggalRegistrasi"),
+    @NamedQuery(name = "OtorisasiData.updateId", query = "UPDATE OtorisasiData SET id = :idBaru WHERE id = :idLama")
 })
 public class OtorisasiData implements Serializable {
 
