@@ -230,6 +230,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "id_user" -> daftarPredicate.add(cb.equal(root.get("idUser"), filter.getValue()));
                 default -> {
                 }
             }			
