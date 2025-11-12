@@ -34,6 +34,7 @@ import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
+import com.cso.sikolingrestful.resources.FilterDTO;
 import com.cso.sikolingrestful.resources.security.CredentialDTO;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -94,14 +95,22 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public UserDTO save(CredentialDTO credentialDTO) throws SQLException {         
-        try {            
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUser_name(credentialDTO.getEmail());
-            userDTO.setPassword(credentialDTO.getPassword());
-            userDTO.setHashing_password_type_id("05");
-            Date currentDate = new Date();
-            userDTO.setTanggal_registrasi(currentDate);
-            return new UserDTO(userService.save(userDTO.toUser()));
+        try {    
+            User user = new User(
+                    null, 
+                    credentialDTO.getEmail(), 
+                    credentialDTO.getPassword(), 
+                    null, 
+                    "05"
+                );
+            return new UserDTO(userService.save(user));
+//            UserDTO userDTO = new UserDTO();
+//            userDTO.setUser_name(credentialDTO.getEmail());
+//            userDTO.setPassword(credentialDTO.getPassword());
+//            userDTO.setHashing_password_type_id("05");
+//            Date currentDate = new Date();
+//            userDTO.setTanggal_registrasi(currentDate);
+//            return new UserDTO(userService.save(userDTO.toUser()));
         } 
         catch (NullPointerException e) {
             throw new IllegalArgumentException("data json user harus disertakan di body post request");
@@ -222,6 +231,44 @@ public class UserResource {
                     .build();
             
             return model;
+    }
+    
+    @Path("/jumlah")
+    @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject getJumlahData(@QueryParam("filters") String qfilters) {
+        try {
+            if(qfilters != null) {
+                Jsonb jsonb = JsonbBuilder.create();
+                List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
+                
+                JsonObject model = Json.createObjectBuilder()
+                    .add(
+                        "jumlah", 
+                        userService.getJumlahData(
+                            filters
+                                .stream()
+                                .map(t -> t.toFilter())
+                                .collect(Collectors.toList())
+                        )
+                    )
+                    .build();            
+            
+                return model;
+            }
+            else {
+                JsonObject model = Json.createObjectBuilder()
+                    .add("jumlah", userService.getJumlahData(null))
+                    .build();            
+            
+                return model;
+            }
+        }
+        catch (JsonbException e) {
+            throw new JsonbException("format query data json tidak sesuai");
+        }
     }
     
 }

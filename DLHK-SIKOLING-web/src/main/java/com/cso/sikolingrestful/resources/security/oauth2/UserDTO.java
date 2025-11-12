@@ -2,6 +2,9 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,7 +15,7 @@ public class UserDTO implements Serializable {
     private String id;
     private String user_name;
     private String password;
-    private Date tanggal_registrasi;
+    private String tanggal_registrasi;
     private String hashing_password_type_id;
 	
     public UserDTO() {		
@@ -23,7 +26,9 @@ public class UserDTO implements Serializable {
             this.id = t.getId();
             this.user_name = t.getUser_name();
             this.password = t.getPassword();
-            this.tanggal_registrasi = t.getTanggal_registrasi();
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Date tmpTglReg = t.getTanggal_registrasi();
+            this.tanggal_registrasi = tmpTglReg != null ? df.format(tmpTglReg) : null;
             this.hashing_password_type_id = t.getHashing_password_type_id();
         }
     }
@@ -52,11 +57,11 @@ public class UserDTO implements Serializable {
         this.password = password;
     }
 
-    public Date getTanggal_registrasi() {
+    public String getTanggal_registrasi() {
         return tanggal_registrasi;
     }
 
-    public void setTanggal_registrasi(Date tanggal_registrasi) {
+    public void setTanggal_registrasi(String tanggal_registrasi) {
         this.tanggal_registrasi = tanggal_registrasi;
     }
 
@@ -69,10 +74,27 @@ public class UserDTO implements Serializable {
     }    
     
     public User toUser() {
-        return new User(
-                this.id, this.user_name, this.password, 
-                this.tanggal_registrasi, this.hashing_password_type_id
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date date = this.tanggal_registrasi != null ? df.parse(this.tanggal_registrasi) : null;
+            return new User(
+                this.id, 
+                this.user_name, 
+                this.password, 
+                date, 
+                this.hashing_password_type_id
             );
+        }
+        catch (ParseException ex) {
+            return new User(
+                this.id, 
+                this.user_name, 
+                this.password, 
+                null, 
+                this.hashing_password_type_id
+            );
+        }
+        
     }
 
     @Override

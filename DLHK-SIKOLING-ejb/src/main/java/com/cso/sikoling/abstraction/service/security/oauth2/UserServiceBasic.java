@@ -16,6 +16,7 @@ import com.password4j.types.Argon2;
 import com.password4j.types.Bcrypt;
 import com.password4j.types.Hmac;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class UserServiceBasic implements UserService<User> {
@@ -53,15 +54,28 @@ public class UserServiceBasic implements UserService<User> {
                 hashPassword = PasswordHasher.getArgon2(t.getPassword(), 15, 32, 2, 48, Argon2.ID, 19, salt, null);
             }
             default -> throw new AssertionError();
-        } 
-
-        User user = new User(
-                GeneratorID.getUserId(), t.getUser_name(), 
-                hashPassword, t.getTanggal_registrasi(), 
+        }
+        
+        if(t.getTanggal_registrasi() == null) {
+            User user = new User(
+                GeneratorID.getUserId(), 
+                t.getUser_name(), 
+                hashPassword, 
+                new Date(), 
                 t.getHashing_password_type_id()
             );
-        
-        return repository.save(user);
+            return repository.save(user);
+        }
+        else {
+            User userWithDate = new User(
+                GeneratorID.getUserId(), 
+                t.getUser_name(), 
+                hashPassword, 
+                t.getTanggal_registrasi(), 
+                t.getHashing_password_type_id()
+            );
+            return repository.save(userWithDate);
+        }        
     }
 
     @Override
