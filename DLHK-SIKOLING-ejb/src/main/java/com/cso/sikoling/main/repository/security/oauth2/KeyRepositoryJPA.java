@@ -4,7 +4,11 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
+import com.cso.sikoling.abstraction.entity.security.oauth2.EncodingScheme;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Jwa;
+import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.github.f4b6a3.uuid.UuidCreator;
 import jakarta.persistence.EntityManager;
@@ -246,10 +250,47 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
         Key key = null;
 		
         if(d != null) {
+            RealmData realmData = d.getRealm();
+            Realm realm = realmData != null ?
+                    new Realm(
+                        realmData.getId(), 
+                        realmData.getNama()
+                    ) : null;
+            
+            JwaData jwaData = d.getJwa();            
+            
+            JwaTypeData jwaTypeData = jwaData != null ? jwaData.getJwa_type() : null;
+            
+            JwaType jwaType = jwaTypeData != null ?
+                    new JwaType(
+                        jwaTypeData.getId(), 
+                        jwaTypeData.getNama()
+                    ) : null;
+            
+            Jwa jwa = jwaData != null ?
+                    new Jwa(
+                        jwaData.getId(), 
+                        jwaData.getNama(), 
+                        jwaData.getKeterangan(), 
+                        jwaType
+                    ) : null;
+            
+            EncodingSchemaData encodingSchemaData = d.getEncoding_scheme();
+            EncodingScheme encodingScheme = encodingSchemaData != null ?
+                    new EncodingScheme(
+                        encodingSchemaData.getId(), 
+                        encodingSchemaData.getNama()
+                    ) : null;
+            
             key =  new Key(
-                    d.getId(), d.getRealm().getId(), d.getJwa().getId(), 
-                    d.getEncoding_scheme().getId(), d.getSecretKey(), 
-                    d.getPrivateKey(), d.getPublicKey(), d.getTanggal()
+                    d.getId(), 
+                    realm, 
+                    jwa, 
+                    encodingScheme, 
+                    d.getSecretKey(), 
+                    d.getPrivateKey(), 
+                    d.getPublicKey(), 
+                    d.getTanggal()
                 );
         }
 
@@ -270,12 +311,19 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
                keyData.setId(uuid.toString()); 
             }
             
-            RealmData realmData = new RealmData(t.getId_realm());
+            Realm realm = t.getRealm();
+            RealmData realmData = realm != null ? new RealmData(realm.getId()) : null;
             keyData.setRealm(realmData);
-            JwaData jwaData = new JwaData(t.getId_jwa());
+            
+            Jwa jwa = t.getJwa();                
+            JwaData jwaData = jwa != null ? new JwaData(jwa.getId()) : null;
             keyData.setJwa(jwaData);
-            EncodingSchemaData encodingSchemaData = new EncodingSchemaData(t.getId_encoding_scheme());
+            
+            EncodingScheme encodingScheme = t.getEncoding_scheme();
+            EncodingSchemaData encodingSchemaData = encodingScheme != null ? 
+                    new EncodingSchemaData(encodingScheme.getId()) : null;
             keyData.setEncoding_scheme(encodingSchemaData);
+            
             keyData.setSecretKey(t.getSecred_key());
             keyData.setPrivateKey(t.getPrivate_key());
             keyData.setPublicKey(t.getPublic_key());

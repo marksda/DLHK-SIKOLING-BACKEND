@@ -8,13 +8,13 @@ public class Jwa implements Serializable {
     private final String id;
     private final String nama;
     private final String keterangan;
-    private final String id_jwa_type;
+    private final JwaType jwa_type;
 
-    public Jwa(String id, String nama, String keterangan, String id_jwa_type) {
+    public Jwa(String id, String nama, String keterangan, JwaType jwa_type) {
         this.id = id;
         this.nama = nama;
         this.keterangan = keterangan;
-        this.id_jwa_type = id_jwa_type;
+        this.jwa_type = jwa_type;
     }
 
     public String getId() {
@@ -29,8 +29,8 @@ public class Jwa implements Serializable {
         return keterangan;
     }
 
-    public String getId_jwa_type() {
-        return id_jwa_type;
+    public JwaType getJwa_type() {
+        return jwa_type;
     }
 
     @Override

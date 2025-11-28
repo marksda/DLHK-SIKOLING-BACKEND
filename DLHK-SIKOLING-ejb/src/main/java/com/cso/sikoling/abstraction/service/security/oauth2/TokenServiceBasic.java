@@ -45,11 +45,11 @@ public class TokenServiceBasic implements TokenService<Token> {
         Token token;        
         String idToken = generateIdToken();
         
-        switch (key.getId_jwa()) {
+        switch (key.getJwa().getId()) {
             case "01" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), 
-                        key.getId_encoding_scheme()
+                        key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -62,7 +62,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             case "02" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                         key.getSecred_key(), 
-                        key.getId_encoding_scheme()
+                        key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -74,7 +74,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "03" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
-                        key.getSecred_key(), key.getId_encoding_scheme()
+                        key.getSecred_key(), key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -86,7 +86,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "04" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -98,7 +98,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "05" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -110,7 +110,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "06" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -122,7 +122,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "07" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -134,7 +134,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "08" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -146,7 +146,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "09" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -158,7 +158,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "10" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -170,7 +170,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "11" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -182,7 +182,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "12" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -194,7 +194,7 @@ public class TokenServiceBasic implements TokenService<Token> {
             }
             case "36" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
-                        key.getPrivate_key(), key.getId_jwa(),  key.getId_encoding_scheme()
+                        key.getPrivate_key(), key.getJwa().getId(),  key.getEncoding_scheme().getId()
                     );
                 String jwt = Jwts.builder()                        
                         .header().add(header).and()
@@ -208,7 +208,7 @@ public class TokenServiceBasic implements TokenService<Token> {
                 AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToAESSecretKey(
                         key.getSecred_key(), 
-                        key.getId_encoding_scheme()
+                        key.getEncoding_scheme().getId()
                     );
                 String message = (String) payload.get("content");
                 byte[] content = message.getBytes(StandardCharsets.UTF_8);
@@ -224,8 +224,8 @@ public class TokenServiceBasic implements TokenService<Token> {
             case "19" -> {  
                 PublicKey publicKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                         key.getPublic_key(), 
-                                        key.getId_jwa(), 
-                                        key.getId_encoding_scheme()
+                                        key.getJwa().getId(), 
+                                        key.getEncoding_scheme().getId()
                                     );
                 
                 KeyAlgorithm<PublicKey, PrivateKey> alg = Jwts.KEY.RSA_OAEP_256; //or RSA_OAEP or RSA_OAEP_256      
@@ -314,93 +314,93 @@ public class TokenServiceBasic implements TokenService<Token> {
             try {
                 Key key = repositoryKey.getDaftarData(qFilter).getFirst();
                 
-                switch (key.getId_jwa()) {
+                switch (key.getJwa().getId()) {
                     case "01" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                                 key.getSecred_key(), 
-                                key.getId_encoding_scheme()
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "02" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                                 key.getSecred_key(), 
-                                key.getId_encoding_scheme()
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "03" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
                                 key.getSecred_key(), 
-                                key.getId_encoding_scheme()
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "04" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "05" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "06" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "07" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "08" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "09" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "10" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "11" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "12" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     case "36" -> {
                         decodeKey = KeyToolGenerator.convertStringKeyToPublicKey(
                                 key.getPublic_key(), 
-                                key.getId_jwa(), 
-                                key.getId_encoding_scheme()
+                                key.getJwa().getId(), 
+                                key.getEncoding_scheme().getId()
                             );
                     }
                     default -> {

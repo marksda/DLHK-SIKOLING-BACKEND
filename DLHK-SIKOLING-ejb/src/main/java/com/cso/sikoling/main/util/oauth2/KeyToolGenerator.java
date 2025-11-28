@@ -1,6 +1,9 @@
 package com.cso.sikoling.main.util.oauth2;
 
+import com.cso.sikoling.abstraction.entity.security.oauth2.EncodingScheme;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Jwa;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.github.f4b6a3.uuid.UuidCreator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -365,25 +368,28 @@ public final class KeyToolGenerator {
         String id = uuid.toString();
         Key key = null;
         Date timeStamp = new Date();
+        Realm realm = new Realm(idRealm, null);
+        EncodingScheme encoding = new EncodingScheme(encodingScheme, null);
+        Jwa jwa = new Jwa(idJwa, null, null, null);
         
         switch (idJwa) {
             case "01" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS256; 
                 SecretKey secretKey = alg.key().build();
-                String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);                
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "02" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS384; 
                 SecretKey secretKey = alg.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "03" -> {   
                 MacAlgorithm alg = Jwts.SIG.HS512; 
                 SecretKey secretKey = alg.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);                
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "04" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS256; 
@@ -397,7 +403,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());                
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "05" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS384; 
@@ -411,7 +417,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "06" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
@@ -425,7 +431,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "07" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES256; 
@@ -439,7 +445,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "08" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES384; 
@@ -453,7 +459,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "09" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.ES512; 
@@ -467,7 +473,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "10" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS256; 
@@ -481,7 +487,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "11" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS384; 
@@ -495,7 +501,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "12" -> {   
                 SignatureAlgorithm alg = Jwts.SIG.PS512; 
@@ -509,7 +515,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "36" -> { 
                 Curve curve = Jwks.CRV.Ed448;  //or Ed25519
@@ -523,43 +529,43 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             case "13" -> {  
                 AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "14" -> {  
                 AeadAlgorithm enc = Jwts.ENC.A192CBC_HS384;
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "15" -> {  
                 AeadAlgorithm enc = Jwts.ENC.A256CBC_HS512;
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "16" -> {  
                 AeadAlgorithm enc = Jwts.ENC.A128GCM;
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "17" -> {  
                 AeadAlgorithm enc = Jwts.ENC.A192GCM;
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "18" -> {  
                 AeadAlgorithm enc = Jwts.ENC.A256GCM;
                 SecretKey secretKey = enc.key().build();
                 String secretKeyWithEncodingScheme = convertBinaryKeyToStringKey(secretKey.getEncoded(), encodingScheme);
-                key = new Key(id, idRealm, idJwa, encodingScheme, secretKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, secretKeyWithEncodingScheme, timeStamp);
             }
             case "19" -> {
                 SignatureAlgorithm alg = Jwts.SIG.RS512; 
@@ -573,7 +579,7 @@ public final class KeyToolGenerator {
                 PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
                 String privateKeyWithEncodingScheme = convertBinaryKeyToStringKey(pkcs8EncodedKeySpec.getEncoded(), encodingScheme);
                 
-                key = new Key(id, idRealm, idJwa, encodingScheme, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
+                key = new Key(id, realm, jwa, encoding, privateKeyWithEncodingScheme, publicKeyWithEncodingScheme, timeStamp);
             }
             default -> throw new AssertionError();
         }

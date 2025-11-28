@@ -127,7 +127,7 @@ public class TokenResource {
             Date nextYear = cal.getTime();
         
             jwsPayload.put("iss", "dlhk sidoarjo");
-            jwsPayload.put("sub", key.getId_realm());
+            jwsPayload.put("sub", key.getRealm());
             jwsPayload.put("aud", user.getId());
             jwsPayload.put("exp", nextYear);
             jwsPayload.put("iat", today);

@@ -5,6 +5,7 @@ import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Jwa;
+import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
 import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -234,7 +235,19 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
         Jwa jwa = null;
 		
         if(d != null) {
-            jwa = new Jwa(d.getId(), d.getNama(), d.getKeterangan(), d.getJwa_type().getId());
+            JwaTypeData jwaTypeData = d.getJwa_type();
+            JwaType jwaType = jwaTypeData != null ?
+                    new JwaType(
+                        jwaTypeData.getId(),
+                        jwaTypeData.getNama()
+                    ) 
+                    : null;
+            jwa = new Jwa(
+                    d.getId(), 
+                    d.getNama(), 
+                    d.getKeterangan(), 
+                    jwaType
+                );
         }
 
         return jwa;	
@@ -248,8 +261,12 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
             jwaData.setId(t.getId());
             jwaData.setNama(t.getNama());
             jwaData.setKeterangan(t.getKeterangan());
-            JwaTypeData jwaTypeData = new JwaTypeData(t.getId_jwa_type());
-            jwaData.setJwa_type(jwaTypeData);
+            
+            JwaTypeData jwaTypeData = new JwaTypeData();
+            JwaType jwaType = t.getJwa_type();
+            jwaTypeData.setId(jwaType.getId());
+            jwaTypeData.setNama(jwaType.getNama());
+            jwaData.setJwa_type(jwaTypeData);            
         }
 
         return jwaData;
