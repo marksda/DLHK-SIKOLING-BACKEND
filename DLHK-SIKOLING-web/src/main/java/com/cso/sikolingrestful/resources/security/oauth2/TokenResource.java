@@ -22,11 +22,18 @@ import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
+import com.cso.sikolingrestful.resources.FilterDTO;
+import com.cso.sikolingrestful.resources.QueryParamFiltersDTO;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.QueryParam;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -52,6 +60,34 @@ public class TokenResource {
 //    @Inject
 //    private SecurityContext SecurityContext;
   
+    @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<TokenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+        
+        try {            
+            if(queryParamsStr != null) {
+                Jsonb jsonb = JsonbBuilder.create();
+                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+
+                return tokenService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                        .stream()
+                        .map(t -> new TokenDTO(t))
+                        .collect(Collectors.toList());
+            }
+            else {
+                return tokenService.getDaftarData(null)
+                        .stream()
+                        .map(t -> new TokenDTO(t))
+                        .collect(Collectors.toList());
+            }             
+        } 
+        catch (JsonbException e) {
+            throw new JsonbException("format query data json tidak sesuai");
+        }
+        
+    }
     
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -125,5 +161,43 @@ public class TokenResource {
                 .build();
 
         return model;
+    }
+    
+    @Path("/jumlah")
+    @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject getJumlahData(@QueryParam("filters") String qfilters) {
+        try {
+            if(qfilters != null) {
+                Jsonb jsonb = JsonbBuilder.create();
+                List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
+                
+                JsonObject model = Json.createObjectBuilder()
+                    .add(
+                        "jumlah", 
+                        tokenService.getJumlahData(
+                            filters
+                                .stream()
+                                .map(t -> t.toFilter())
+                                .collect(Collectors.toList())
+                        )
+                    )
+                    .build();            
+            
+                return model;
+            }
+            else {
+                JsonObject model = Json.createObjectBuilder()
+                    .add("jumlah", tokenService.getJumlahData(null))
+                    .build();            
+            
+                return model;
+            }
+        }
+        catch (JsonbException e) {
+            throw new JsonbException("format query data json tidak sesuai");
+        }
     }
 }
