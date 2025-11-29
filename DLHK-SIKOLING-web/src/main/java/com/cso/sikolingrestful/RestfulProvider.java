@@ -24,6 +24,7 @@ import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
 import com.cso.sikoling.abstraction.entity.security.oauth2.HashingPasswordType;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Jwa;
 import com.cso.sikoling.abstraction.entity.security.oauth2.JwaType;
 import com.cso.sikoling.abstraction.entity.security.oauth2.User;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
@@ -65,6 +66,7 @@ import com.cso.sikoling.abstraction.service.dokumen.KategoriKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.KbliServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.VersiKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.HashingPasswordTypeServiceBasic;
+import com.cso.sikoling.abstraction.service.security.oauth2.JwaServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.JwaTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.UserServiceBasic;
 import com.cso.sikoling.abstraction.service.storage.LocalStorageServiceBasic;
@@ -229,6 +231,12 @@ public class RestfulProvider {
     public Service<JwaType> getJwaTypeService(
             @Infrastructure Repository<JwaType, QueryParamFilters, Filter> jwaTypeRepository) {
         return new JwaTypeServiceBasic(jwaTypeRepository);
+    }
+    
+    @Produces
+    public Service<Jwa> getJwaService(
+            @Infrastructure Repository<Jwa, QueryParamFilters, Filter> jwaRepository) {
+        return new JwaServiceBasic(jwaRepository);
     }
     
     @Produces
