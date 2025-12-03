@@ -129,6 +129,7 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "id_jwa_type" -> daftarPredicate.add(cb.equal(root.get("jwa_type").get("id"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -215,6 +216,7 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "id_jwa_type" -> daftarPredicate.add(cb.equal(root.get("jwa_type").get("id"), filter.getValue()));
                 default -> {
                 }
             }			
