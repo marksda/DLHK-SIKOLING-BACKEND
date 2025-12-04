@@ -2,6 +2,9 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,7 +15,7 @@ public class TokenDTO implements Serializable {
     private String access_token;
     private String refreshToken;
     private Long expires_in;
-    private Date tanggal_generate;
+    private String tanggal_generate;
 
     public TokenDTO() {
     }
@@ -23,7 +26,9 @@ public class TokenDTO implements Serializable {
             this.refreshToken = t.getRefresh_token();
             this.expires_in = t.getExpires_in();
             this.id = t.getId();
-            this.tanggal_generate = t.getTanggal_generate();
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date tmpTglReg = t.getTanggal_generate();
+            this.tanggal_generate = tmpTglReg != null ? df.format(tmpTglReg) : null;
         }
     }
 
@@ -59,23 +64,36 @@ public class TokenDTO implements Serializable {
         this.id = id;
     }
 
-    public Date getTanggal_generate() {
+    public String getTanggal_generate() {
         return tanggal_generate;
     }
 
-    public void setTanggal_generate(Date tanggal_generate) {
+    public void setTanggal_generate(String tanggal_generate) {
         this.tanggal_generate = tanggal_generate;
     }
     
-    
     public Token toToken() {
-        return new Token(
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        
+        try {
+            Date date = this.tanggal_generate != null ? df.parse(this.tanggal_generate) : null;
+            
+            return new Token(
                 this.id,
                 this.access_token, 
                 this.refreshToken, 
                 this.expires_in,
-                this.tanggal_generate
+                date
+            );            
+        } catch (ParseException ex) {
+            return new Token(
+                this.id,
+                this.access_token, 
+                this.refreshToken, 
+                this.expires_in,
+                null
             );
+        }        
     }
 
     @Override

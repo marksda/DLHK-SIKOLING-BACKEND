@@ -2,6 +2,9 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,7 +18,7 @@ public class KeyDTO implements Serializable {
     private String secred_key;
     private String private_key;
     private String public_key;
-    private Date tanggal;
+    private String tanggal;
 
     public KeyDTO() {
     }
@@ -31,7 +34,9 @@ public class KeyDTO implements Serializable {
             this.secred_key = t.getSecred_key();
             this.private_key = t.getPrivate_key();
             this.public_key = t.getPublic_key();
-            this.tanggal = t.getTanggal();
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date tmpTglReg = t.getTanggal();
+            this.tanggal = tmpTglReg != null ? df.format(tmpTglReg) : null;
         }
     }
 
@@ -91,16 +96,21 @@ public class KeyDTO implements Serializable {
         this.public_key = public_key;
     }
 
-    public Date getTanggal() {
+    public String getTanggal() {
         return tanggal;
     }
 
-    public void setTanggal(Date tanggal) {
+    public void setTanggal(String tanggal) {
         this.tanggal = tanggal;
     }
     
     public Key toKey() {
-        return new Key(
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        
+        try {
+            Date date = this.tanggal != null ? df.parse(this.tanggal) : null;
+            
+            return new Key(
                 this.id, 
                 this.realm != null ? this.realm.toRealm() : null, 
                 this.jwa != null ? this.jwa.toJwa() : null,
@@ -109,8 +119,21 @@ public class KeyDTO implements Serializable {
                 this.secred_key, 
                 this.private_key, 
                 this.public_key,
-                this.tanggal
+                date
             );
+        } catch (ParseException ex) {
+            return new Key(
+                this.id, 
+                this.realm != null ? this.realm.toRealm() : null, 
+                this.jwa != null ? this.jwa.toJwa() : null,
+                this.encoding_scheme != null ? 
+                        this.encoding_scheme.toEncodingScheme(): null,
+                this.secred_key, 
+                this.private_key, 
+                this.public_key,
+                null
+            );
+        }        
     }
 
     @Override
