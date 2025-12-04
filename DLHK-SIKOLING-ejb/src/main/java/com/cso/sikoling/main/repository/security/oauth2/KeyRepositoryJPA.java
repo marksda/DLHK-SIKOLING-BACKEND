@@ -25,6 +25,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -141,19 +142,34 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "id_realm" -> daftarPredicate.add(cb.equal(root.get("realm").get("id"), filter.getValue()));
                         case "id_jwa" -> daftarPredicate.add(cb.equal(root.get("jwa").get("id"), filter.getValue()));
-                        case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggal"), filter.getValue()));
-                        case "rentang_tanggal" -> {
-                            Jsonb jsonb = JsonbBuilder.create();
-                            JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
-                            Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
-                            Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+                        case "tanggal" -> {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            LocalDate targetDate = LocalDate.parse(filter.getValue(), formatter);
+                            LocalDateTime startOfDay = targetDate.atStartOfDay();
+                            LocalDateTime startOfNextDay = targetDate.plusDays(1).atStartOfDay();
                             
                             daftarPredicate.add(
                                 cb.between(
                                     root.get("tanggal"), 
-                                    fromDate, 
-                                    toDate
+                                    startOfDay, 
+                                    startOfNextDay
+                                )
+                            );                            
+                        }
+                        case "rentang_tanggal" -> {
+                            Jsonb jsonb = JsonbBuilder.create();
+                            JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");       
+                            LocalDate fromDate = LocalDate.parse(d.getString("from"), formatter);
+                            LocalDateTime fromDateTime = fromDate.atStartOfDay();
+                            LocalDate toDate = LocalDate.parse(d.getString("to"), formatter);
+                            LocalDateTime toDateTime = toDate.plusDays(1).atStartOfDay();
+                            
+                            daftarPredicate.add(
+                                cb.between(
+                                    root.get("tanggal"), 
+                                    fromDateTime, 
+                                    toDateTime
                                 )
                             );
                         }
@@ -252,19 +268,34 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "id_realm" -> daftarPredicate.add(cb.equal(root.get("realm").get("id"), filter.getValue()));
                 case "id_jwa" -> daftarPredicate.add(cb.equal(root.get("jwa").get("id"), filter.getValue()));
-                case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggal"), filter.getValue()));
-                case "rentang_tanggal" -> {
-                    Jsonb jsonb = JsonbBuilder.create();
-                    JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
-                    Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
-                    Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+                case "tanggal" -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    LocalDate targetDate = LocalDate.parse(filter.getValue(), formatter);
+                    LocalDateTime startOfDay = targetDate.atStartOfDay();
+                    LocalDateTime startOfNextDay = targetDate.plusDays(1).atStartOfDay();
 
                     daftarPredicate.add(
                         cb.between(
                             root.get("tanggal"), 
-                            fromDate, 
-                            toDate
+                            startOfDay, 
+                            startOfNextDay
+                        )
+                    );                            
+                }
+                case "rentang_tanggal" -> {
+                    Jsonb jsonb = JsonbBuilder.create();
+                    JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");       
+                    LocalDate fromDate = LocalDate.parse(d.getString("from"), formatter);
+                    LocalDateTime fromDateTime = fromDate.atStartOfDay();
+                    LocalDate toDate = LocalDate.parse(d.getString("to"), formatter);
+                    LocalDateTime toDateTime = toDate.plusDays(1).atStartOfDay();
+
+                    daftarPredicate.add(
+                        cb.between(
+                            root.get("tanggal"), 
+                            fromDateTime, 
+                            toDateTime
                         )
                     );
                 }
