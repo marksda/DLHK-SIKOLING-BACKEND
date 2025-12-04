@@ -127,7 +127,7 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
                             daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         }
                         case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                        case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                         case "rentang_tanggal" -> {
                             Jsonb jsonb = JsonbBuilder.create();
                             JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
@@ -235,7 +235,7 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                 case "rentang_tanggal" -> {
                     Jsonb jsonb = JsonbBuilder.create();
                     JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);

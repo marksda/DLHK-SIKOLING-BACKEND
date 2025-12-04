@@ -149,7 +149,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
-                        case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                        case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                         case "id_user" -> daftarPredicate.add(cb.equal(root.get("idUser"), filter.getValue()));
                         case "id_hak_akses" -> daftarPredicate.add(cb.equal(root.get("hakAkses").get("id"), filter.getValue()));
                         case "rentang_tanggal" -> {
@@ -269,7 +269,7 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
-                case "tanggal_registrasi" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
+                case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                 case "id_user" -> daftarPredicate.add(cb.equal(root.get("idUser"), filter.getValue()));
                 case "id_hak_akses" -> daftarPredicate.add(cb.equal(root.get("hakAkses").get("id"), filter.getValue()));
                 case "rentang_tanggal" -> {

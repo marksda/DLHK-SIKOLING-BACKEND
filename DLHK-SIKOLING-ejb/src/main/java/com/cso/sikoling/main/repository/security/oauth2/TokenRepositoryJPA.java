@@ -7,6 +7,9 @@ import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.github.f4b6a3.uuid.UuidCreator;
+import jakarta.json.JsonObject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -18,7 +21,10 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolationException;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -117,6 +123,22 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                        case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalGenerate"), filter.getValue()));
+                        case "rentang_tanggal" -> {
+                            Jsonb jsonb = JsonbBuilder.create();
+                            JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
+                            Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
+                            Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+                            
+                            daftarPredicate.add(
+                                cb.between(
+                                    root.get("tanggalGenerate"), 
+                                    fromDate, 
+                                    toDate
+                                )
+                            );
+                        }
                         default -> {
                         }
                     }			
@@ -199,6 +221,22 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalGenerate"), filter.getValue()));
+                case "rentang_tanggal" -> {
+                    Jsonb jsonb = JsonbBuilder.create();
+                    JsonObject d = jsonb.fromJson(filter.getValue(), JsonObject.class);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");                            
+                    Date fromDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("from"), formatter));
+                    Date toDate = java.sql.Date.valueOf(LocalDate.parse(d.getString("to"), formatter));
+
+                    daftarPredicate.add(
+                        cb.between(
+                            root.get("tanggalGenerate"), 
+                            fromDate, 
+                            toDate
+                        )
+                    );
+                }
                 default -> {
                 }
             }			
