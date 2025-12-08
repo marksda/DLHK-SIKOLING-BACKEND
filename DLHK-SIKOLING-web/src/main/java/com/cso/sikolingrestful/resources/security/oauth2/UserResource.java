@@ -156,7 +156,9 @@ public class UserResource {
             jwsPayload.put("iat", today);
             
             
-            token = tokenService.generateToken(key, jwsHeader, jwsPayload);
+            token = tokenService.generateToken(
+                    key, jwsHeader, jwsPayload,
+                    user.getUser_name(), key.getRealm());
             
             if(token != null) {
                 tokenService.save(token);

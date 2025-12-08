@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.resources.security.oauth2;
 
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -16,6 +17,8 @@ public class TokenDTO implements Serializable {
     private String refreshToken;
     private Long expires_in;
     private String tanggal_generate;
+    private String user_name;
+    private RealmDTO realm;
 
     public TokenDTO() {
     }
@@ -29,6 +32,9 @@ public class TokenDTO implements Serializable {
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Date tmpTglReg = t.getTanggal_generate();
             this.tanggal_generate = tmpTglReg != null ? df.format(tmpTglReg) : null;
+            this.user_name = t.getUserName();
+            this.realm = t.getRealm() != null ?
+                    new RealmDTO(t.getRealm()) : null;
         }
     }
 
@@ -71,9 +77,27 @@ public class TokenDTO implements Serializable {
     public void setTanggal_generate(String tanggal_generate) {
         this.tanggal_generate = tanggal_generate;
     }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public RealmDTO getRealm() {
+        return realm;
+    }
+
+    public void setRealm(RealmDTO realm) {
+        this.realm = realm;
+    }
+    
     
     public Token toToken() {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Realm realmTemp = this.realm != null ? this.realm.toRealm() : null;
         
         try {
             Date date = this.tanggal_generate != null ? df.parse(this.tanggal_generate) : null;
@@ -83,7 +107,9 @@ public class TokenDTO implements Serializable {
                 this.access_token, 
                 this.refreshToken, 
                 this.expires_in,
-                date
+                date,
+                this.user_name,
+                realmTemp
             );            
         } catch (ParseException ex) {
             return new Token(
@@ -91,7 +117,9 @@ public class TokenDTO implements Serializable {
                 this.access_token, 
                 this.refreshToken, 
                 this.expires_in,
-                null
+                null, 
+                this.user_name,
+                realmTemp  
             );
         }        
     }

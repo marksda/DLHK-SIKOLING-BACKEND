@@ -3,6 +3,7 @@ package com.cso.sikoling.abstraction.service.security.oauth2;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
 import io.jsonwebtoken.Claims;
@@ -41,7 +42,8 @@ public class TokenServiceBasic implements TokenService<Token> {
     }
     
     @Override
-    public Token generateToken(Key key, Map<String, Object> header, Map<String, Object> payload) {
+    public Token generateToken(Key key, Map<String, Object> header, Map<String, Object> payload,
+            String userName, Realm realm) {
         Token token;        
         String idToken = generateIdToken();
         
@@ -57,7 +59,15 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(secretKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, 
+                        jwt, 
+                        null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                );
             }
             case "02" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
@@ -70,7 +80,15 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(secretKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, 
+                        jwt, 
+                        null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             case "03" -> {   
                 SecretKey secretKey = KeyToolGenerator.convertStringKeyToHmacSecretKey(
@@ -82,7 +100,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(secretKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             case "04" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -94,7 +118,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             case "05" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -106,7 +136,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             case "06" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -118,7 +154,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             case "07" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -130,7 +172,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "08" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -142,7 +190,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "09" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -154,7 +208,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "10" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -166,7 +226,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "11" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -178,7 +244,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "12" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -190,7 +262,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "36" -> {   
                 PrivateKey privateKey = KeyToolGenerator.convertStringKeyToPrivateKey(
@@ -202,7 +280,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .claims(payload)
                         .signWith(privateKey)
                         .compact();
-                token = new Token(idToken, jwt, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat")); 
+                token = new Token(
+                        idToken, jwt, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    ); 
             }
             case "13" -> {   
                 AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
@@ -219,7 +303,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .encryptWith(secretKey, enc)
                         .compact();
                 
-                token = new Token(idToken, jwe, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, jwe, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             case "19" -> {  
                 PublicKey publicKey = KeyToolGenerator.convertStringKeyToPublicKey(
@@ -239,7 +329,13 @@ public class TokenServiceBasic implements TokenService<Token> {
                         .encryptWith(publicKey, alg, enc)
                         .compact();
                 
-                token = new Token(idToken, jwe, null, ((Date) payload.get("exp")).getTime(), (Date) payload.get("iat"));
+                token = new Token(
+                        idToken, jwe, null, 
+                        ((Date) payload.get("exp")).getTime(), 
+                        (Date) payload.get("iat"),
+                        userName,
+                        realm
+                    );
             }
             default -> throw new AssertionError();
         }   

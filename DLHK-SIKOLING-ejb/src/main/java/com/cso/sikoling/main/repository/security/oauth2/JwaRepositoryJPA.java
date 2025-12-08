@@ -165,6 +165,14 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
                                 cq.orderBy(cb.desc(root.get("nama")));
                             }
                         }
+                        case "jwa_type" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("jwa_type").get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("jwa_type").get("nama")));
+                            }
+                        }
                         default -> {
                         }
                     }			

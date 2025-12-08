@@ -4,6 +4,8 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -51,6 +53,14 @@ public class TokenData implements Serializable {
     @Column(name = "tanggal_generate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalGenerate;
+    
+    @Size(max = 2147483647)
+    @Column(name = "user_name")
+    private String userName;
+    
+    @JoinColumn(name = "realm", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private RealmData realm;
 
     public TokenData() {
     }
@@ -97,6 +107,22 @@ public class TokenData implements Serializable {
 
     public void setTanggalGenerate(Date tanggalGenerate) {
         this.tanggalGenerate = tanggalGenerate;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public RealmData getRealm() {
+        return realm;
+    }
+
+    public void setRealm(RealmData realm) {
+        this.realm = realm;
     }
 
     @Override

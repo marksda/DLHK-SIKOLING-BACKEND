@@ -11,14 +11,18 @@ public class Token implements Serializable {
     private final String refresh_token;
     private final Long expires_in;
     private final Date tanggal_generate;
+    private final String userName;
+    private final Realm realm;
 
     public Token(String id, String access_token, String refresh_token, 
-            Long expires_in, Date tanggal_generate) {
+            Long expires_in, Date tanggal_generate, String userName, Realm realm) {
         this.id = id;
         this.access_token = access_token;
         this.refresh_token = refresh_token;
         this.expires_in = expires_in;
         this.tanggal_generate = tanggal_generate;
+        this.userName = userName;
+        this.realm = realm;
     }
 
     public String getId() {
@@ -39,6 +43,14 @@ public class Token implements Serializable {
 
     public Date getTanggal_generate() {
         return tanggal_generate;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public Realm getRealm() {
+        return realm;
     }
 
     @Override

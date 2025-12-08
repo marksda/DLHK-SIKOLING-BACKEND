@@ -4,6 +4,7 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.github.f4b6a3.uuid.UuidCreator;
@@ -288,13 +289,19 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
         Token token = null;
         
         if(d != null) {
+            RealmData realmData = d.getRealm();
+            Realm realm = realmData != null ?
+                    new Realm(realmData.getId(), realmData.getNama()) : null;
+            
             token = new Token(
                     d.getId(), 
                     d.getAccessToken(), 
                     d.getRefreshToken(), 
                     d.getExpiresIn().longValue(),
-                    d.getTanggalGenerate()
-            );
+                    d.getTanggalGenerate(),
+                    d.getUserName(),
+                    realm
+                );
         }
         
         return token;
@@ -318,6 +325,12 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
             tokenData.setRefreshToken(t.getRefresh_token());
             tokenData.setExpiresIn(BigInteger.valueOf(t.getExpires_in()));
             tokenData.setTanggalGenerate(t.getTanggal_generate());
+            tokenData.setUserName(t.getUserName());
+            Realm realm = t.getRealm();
+            RealmData realmData = new RealmData();
+            realmData.setId(realm != null ? realm.getId() : null);
+            realmData.setNama(realm != null ? realm.getNama() : null);
+            tokenData.setRealm(realmData);
         }
         
         return tokenData;

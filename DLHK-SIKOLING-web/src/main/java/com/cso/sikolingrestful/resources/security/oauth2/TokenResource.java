@@ -3,6 +3,7 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -92,11 +93,12 @@ public class TokenResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/{idRealm}/{idJwa}/{idKey}")
+    @Path("/{idRealm}/{idJwa}/{idKey}/{userName}")
     public TokenDTO generateToken(
             @PathParam("idRealm") String idRealm, 
             @PathParam("idJwa") String idJwa, 
             @PathParam("idKey") String idKey,
+            @PathParam("userName") String userName,
             CredentialDTO credentialDTO) throws UnspecifiedException, SQLException {
         
         Token token;
@@ -133,7 +135,9 @@ public class TokenResource {
             jwsPayload.put("iat", today);
             
             
-            token = tokenService.generateToken(key, jwsHeader, jwsPayload);
+            token = tokenService.generateToken(
+                    key, jwsHeader, jwsPayload,
+                    userName,  key.getRealm());
             
             if(token != null) {
                 tokenService.save(token);
