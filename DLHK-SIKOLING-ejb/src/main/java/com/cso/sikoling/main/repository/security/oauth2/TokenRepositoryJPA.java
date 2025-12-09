@@ -124,7 +124,9 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
                     Filter filter = (Filter) iterFilter.next();
 
                     switch (filter.getField_name()) {
-                        case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                        case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));    
+                        case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "id_realm" -> daftarPredicate.add(cb.equal(root.get("realm").get("id"), filter.getValue()));
                         case "tanggal" -> {
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                             LocalDate targetDate = LocalDate.parse(filter.getValue(), formatter);
@@ -183,6 +185,22 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
                                 cq.orderBy(cb.desc(root.get("id")));
                             }
                         }
+                        case "realm" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("realm").get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("realm").get("nama")));
+                            }
+                        }
+                        case "user_name" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("userName")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("userName")));
+                            }
+                        }
                         case "tanggal_generate" -> {
                             if(sort.getValue().equals("asc")) {
                                 cq.orderBy(cb.asc(root.get("tanggal_generate")));
@@ -238,6 +256,8 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                case "user_name" -> daftarPredicate.add(cb.like(cb.lower(root.get("userName")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "id_realm" -> daftarPredicate.add(cb.equal(root.get("realm").get("id"), filter.getValue()));
                 case "tanggal" -> {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                     LocalDate targetDate = LocalDate.parse(filter.getValue(), formatter);
