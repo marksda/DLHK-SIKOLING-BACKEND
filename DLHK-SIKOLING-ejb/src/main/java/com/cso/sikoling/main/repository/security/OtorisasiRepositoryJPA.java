@@ -14,6 +14,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
 import com.cso.sikoling.abstraction.entity.person.Person;
 import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.repository.alamat.DesaData;
 import com.cso.sikoling.main.repository.alamat.KabupatenData;
@@ -21,6 +22,7 @@ import com.cso.sikoling.main.repository.alamat.KecamatanData;
 import com.cso.sikoling.main.repository.alamat.PropinsiData;
 import com.cso.sikoling.main.repository.person.JenisKelaminData;
 import com.cso.sikoling.main.repository.person.PersonData;
+import com.cso.sikoling.main.repository.security.oauth2.RealmData;
 import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -394,6 +396,10 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
                         hakAksesData.getKeterangan()
                     ) : null;
             
+            RealmData realmData = d.getRealm();
+            Realm realm = realmData != null ?
+                    new Realm(realmData.getId(), realmData.getNama()) : null;
+            
             otorisasi = new Otorisasi(
                     d.getId(), 
                     d.getIdUser(), 
@@ -401,7 +407,8 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
                     d.getUserName(), 
                     d.getTanggalRegistrasi(), 
                     hakAkses, 
-                    person
+                    person,
+                    realm
                 );
         }
 
@@ -424,6 +431,11 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
             autorisasiData.setHakAkses(hakAksesData);
             Person person = t.getPerson();
             autorisasiData.setPerson(new PersonData(person.getId()));
+            Realm realm = t.getRealm();
+            RealmData realmData = new RealmData();
+            realmData.setId(realm != null ? realm.getId() : null);
+            realmData.setNama(realm != null ? realm.getNama() : null);
+            autorisasiData.setRealm(realmData);
         }
 
         return autorisasiData;

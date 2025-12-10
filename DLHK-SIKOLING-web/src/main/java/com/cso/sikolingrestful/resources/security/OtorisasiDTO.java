@@ -3,7 +3,9 @@ package com.cso.sikolingrestful.resources.security;
 import java.io.Serializable;
 import java.util.Date;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikolingrestful.resources.person.PersonDTO;
+import com.cso.sikolingrestful.resources.security.oauth2.RealmDTO;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +21,7 @@ public class OtorisasiDTO implements Serializable {
     private String tanggal_registrasi;
     private HakAksesDTO hak_akses;
     private PersonDTO person;
+    private RealmDTO realm;
 
     public OtorisasiDTO() {
     }
@@ -36,6 +39,8 @@ public class OtorisasiDTO implements Serializable {
                     new HakAksesDTO(t.getHak_akses()) : null;
             this.person = t.getPerson() != null ?
                     new PersonDTO(t.getPerson()) : null;
+            this.realm = t.getRealm() != null ?
+                    new RealmDTO(t.getRealm()) : null;
         }
     }
 
@@ -94,9 +99,19 @@ public class OtorisasiDTO implements Serializable {
     public void setPerson(PersonDTO person) {
         this.person = person;
     }
+
+    public RealmDTO getRealm() {
+        return realm;
+    }
+
+    public void setRealm(RealmDTO realm) {
+        this.realm = realm;
+    }
     
     public Otorisasi toOtorisasi() {
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");        
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");     
+        Realm realmTemp = this.realm != null ? this.realm.toRealm() : null;
+        
         try {
             Date date = this.tanggal_registrasi != null ? df.parse(this.tanggal_registrasi) : null;
             return new Otorisasi(
@@ -106,7 +121,8 @@ public class OtorisasiDTO implements Serializable {
                 this.user_name, 
                 date, 
                 this.hak_akses != null ? this.hak_akses.toHakAkses() : null, 
-                this.person != null ? this.person.toPerson() : null
+                this.person != null ? this.person.toPerson() : null,
+                realmTemp
             );
         } catch (ParseException ex) {
             return new Otorisasi(
@@ -116,7 +132,8 @@ public class OtorisasiDTO implements Serializable {
                 this.user_name, 
                 null, 
                 this.hak_akses != null ? this.hak_akses.toHakAkses() : null, 
-                this.person != null ? this.person.toPerson() : null
+                this.person != null ? this.person.toPerson() : null,
+                realmTemp
             );
         }
         

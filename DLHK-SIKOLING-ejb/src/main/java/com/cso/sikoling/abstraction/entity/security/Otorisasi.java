@@ -1,6 +1,7 @@
 package com.cso.sikoling.abstraction.entity.security;
 
 import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -15,11 +16,12 @@ public class Otorisasi implements Serializable {
     private final Date tanggal_registrasi;
     private final HakAkses hak_akses;
     private final Person person;
+    private final Realm realm;
 
     public Otorisasi(
             String id, String id_user, Boolean is_verified, 
             String user_name, Date tanggal_registrasi,  HakAkses hak_akses, 
-            Person person) {
+            Person person, Realm realm) {
         this.id = id;
         this.id_user = id_user;
         this.is_verified = is_verified;
@@ -27,6 +29,7 @@ public class Otorisasi implements Serializable {
         this.tanggal_registrasi = tanggal_registrasi;
         this.hak_akses = hak_akses;
         this.person = person;
+        this.realm = realm;
     }
 
     public String getId() {
@@ -55,6 +58,10 @@ public class Otorisasi implements Serializable {
 
     public Person getPerson() {
         return person;
+    }
+
+    public Realm getRealm() {
+        return realm;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.cso.sikoling.main.repository.security;
 
 import com.cso.sikoling.main.repository.person.PersonData;
+import com.cso.sikoling.main.repository.security.oauth2.RealmData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -70,6 +71,10 @@ public class OtorisasiData implements Serializable {
     @JoinColumn(name = "id_person", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private PersonData person;
+    
+    @JoinColumn(name = "realm", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private RealmData realm;
 
     public OtorisasiData() {
     }
@@ -153,6 +158,14 @@ public class OtorisasiData implements Serializable {
 
     public void setPerson(PersonData person) {
         this.person = person;
+    }
+
+    public RealmData getRealm() {
+        return realm;
+    }
+
+    public void setRealm(RealmData realm) {
+        this.realm = realm;
     }
 
     @Override
