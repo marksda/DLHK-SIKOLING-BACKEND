@@ -251,11 +251,32 @@ public class JabatanRepositoryJPA implements Repository<Jabatan, QueryParamFilte
 		
         if(t != null) {
             jabatanData = new JabatanData();
-            jabatanData.setId(t.getId());
+            String id = t.getId();
+            jabatanData.setId(id != null ? id : getGenerateIdJabatan());
             jabatanData.setNama(t.getNama());
         }
 
         return jabatanData;
+    }
+    
+    private String getGenerateIdJabatan() {
+        String hasil;
+
+        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM JabatanData m");
+
+        try {
+                hasil = (String) q.getSingleResult();
+                Long idBaru = Long.parseLong(hasil)  + 1;
+                hasil = LPad(Long.toString(idBaru), 3, '0');
+                return hasil;
+        } catch (NumberFormatException e) {	
+                hasil = "001";			
+                return hasil;
+        }		
+    }
+    
+    private String LPad(String str, Integer length, char car) {
+        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
     }
 
 }

@@ -3,7 +3,6 @@ package com.cso.sikolingrestful.resources.security.oauth2;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
-import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;

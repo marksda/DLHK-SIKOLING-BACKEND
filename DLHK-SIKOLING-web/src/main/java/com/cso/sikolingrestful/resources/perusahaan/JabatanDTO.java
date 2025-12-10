@@ -37,19 +37,20 @@ public class JabatanDTO {
     }
     
     public Jabatan toJabatan() {
-        if( this.id == null) {
-            throw new IllegalArgumentException("format data json jabatan tidak sesuai");
-        }
-        else {
-            boolean isDigit = this.id.matches("[0-9]+");
-            
-            if(isDigit) {  
-                return new Jabatan(id, nama);
-            }
-            else {
-                throw new IllegalArgumentException("id jabatan harus bilangan panjang 3 digit");
-            }
-        }
+        return new Jabatan(this.id, this.nama);
+//        if( this.id == null) {
+//            throw new IllegalArgumentException("format data json jabatan tidak sesuai");
+//        }
+//        else {
+//            boolean isDigit = this.id.matches("[0-9]+");
+//            
+//            if(isDigit) {  
+//                return new Jabatan(id, nama);
+//            }
+//            else {
+//                throw new IllegalArgumentException("id jabatan harus bilangan panjang 3 digit");
+//            }
+//        }
     }
 
     @Override
