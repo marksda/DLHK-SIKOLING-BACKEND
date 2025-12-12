@@ -23,6 +23,7 @@ import com.cso.sikoling.main.repository.alamat.PropinsiData;
 import com.cso.sikoling.main.repository.person.JenisKelaminData;
 import com.cso.sikoling.main.repository.person.PersonData;
 import com.cso.sikoling.main.repository.security.oauth2.RealmData;
+import com.github.f4b6a3.uuid.UuidCreator;
 import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -420,7 +422,15 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
 		
         if(t != null) {
             autorisasiData = new OtorisasiData();
-            autorisasiData.setId(t.getId());
+            
+            if(t.getId() != null) {
+                autorisasiData.setId(t.getId());
+            }
+            else {
+                UUID uuid = UuidCreator.getTimeOrderedEpoch();
+                autorisasiData.setId(uuid.toString());
+            }
+            
             autorisasiData.setIdUser(t.getId_user());
             autorisasiData.setIsVerified(t.getIs_verified());
             autorisasiData.setUserName(t.getUser_name());
