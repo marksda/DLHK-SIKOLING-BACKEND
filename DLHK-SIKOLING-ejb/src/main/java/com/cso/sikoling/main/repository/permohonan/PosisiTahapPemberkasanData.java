@@ -26,8 +26,8 @@ public class PosisiTahapPemberkasanData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Pattern(regexp="[\\d]{1}")
-    @Size(min = 1, max = 1)
+    @Pattern(regexp="[\\d]{2}")
+    @Size(min = 2, max = 2)
     @Column(name = "id")
     private String id;
     

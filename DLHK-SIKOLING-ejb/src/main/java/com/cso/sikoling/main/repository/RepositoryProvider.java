@@ -10,6 +10,7 @@ import com.cso.sikoling.main.repository.dokumen.KbliRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.VersiKbliRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.KategoriPengurusPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.KategoriPermohonanRepositoryJPA;
+import com.cso.sikoling.main.repository.permohonan.PosisiTahapPemberkasanRepositoryJPA;
 import com.cso.sikoling.main.repository.person.JenisKelaminRepositoryJPA;
 import com.cso.sikoling.main.repository.person.PersonRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.JabatanRepositoryJPA;
@@ -101,6 +102,11 @@ public class RepositoryProvider {
     @Produces
     public HakAksesRepositoryJPA getHakAksesRepositoryJPA(EntityManager entityManager) {
         return new HakAksesRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public PosisiTahapPemberkasanRepositoryJPA getPosisiTahapPemberkasanRepositoryJPA(EntityManager entityManager) {
+        return new PosisiTahapPemberkasanRepositoryJPA(entityManager);
     }
     
     @Produces

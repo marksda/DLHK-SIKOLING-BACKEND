@@ -72,7 +72,8 @@ public class KategoriPermohonanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public KategoriPermohonanDTO save(KategoriPermohonanDTO kategoriPermohonanDTO) throws SQLException { 
         
-        try {            
+        try {  
+            kategoriPermohonanDTO.setId(null);
             return new KategoriPermohonanDTO(kategoriPermohonanService.save(kategoriPermohonanDTO.toKategoriPermohonan()));
         } 
         catch (NullPointerException e) {

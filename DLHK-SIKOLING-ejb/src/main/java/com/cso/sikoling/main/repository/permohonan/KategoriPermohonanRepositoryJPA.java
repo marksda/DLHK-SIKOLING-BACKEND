@@ -245,12 +245,33 @@ public class KategoriPermohonanRepositoryJPA implements Repository<KategoriPermo
 		
         if(t != null) {
             kategoriPermohonanData = new KategoriPermohonanData();
-            kategoriPermohonanData.setId(t.getId());
+            String id = t.getId();
+            kategoriPermohonanData.setId(id != null ? id : getGenerateId());
             kategoriPermohonanData.setNama(t.getNama());
             kategoriPermohonanData.setIdLama(t.getId_lama());
         }
 
         return kategoriPermohonanData;
+    }
+    
+    private String getGenerateId() {
+        String hasil;
+
+        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM KategoriPermohonanData m");
+
+        try {
+                hasil = (String) q.getSingleResult();
+                Long idBaru = Long.parseLong(hasil)  + 1;
+                hasil = LPad(Long.toString(idBaru), 2, '0');
+                return hasil;
+        } catch (NumberFormatException e) {	
+                hasil = "01";			
+                return hasil;
+        }		
+    }
+    
+    private String LPad(String str, Integer length, char car) {
+        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
     }
 
 }

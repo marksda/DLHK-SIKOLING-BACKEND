@@ -2,9 +2,9 @@ package com.cso.sikoling.main.repository.permohonan;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
-import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
+import com.cso.sikoling.abstraction.entity.permohonan.PosisiTahapPemberkasan;
 import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -22,51 +22,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class KategoriPengurusPermohonanRepositoryJPA implements Repository<KategoriPengurusPermohonan, QueryParamFilters, Filter> {
+public class PosisiTahapPemberkasanRepositoryJPA implements Repository<PosisiTahapPemberkasan, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public KategoriPengurusPermohonanRepositoryJPA(EntityManager entityManager) {
+    public PosisiTahapPemberkasanRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public KategoriPengurusPermohonan save(KategoriPengurusPermohonan t) throws SQLException {   
+    public PosisiTahapPemberkasan save(PosisiTahapPemberkasan t) throws SQLException {   
         try {
-            KategoriPengurusPermohonanData kategoriPengurusPermohonanData = convertKategoriPengurusPermohonanToKategoriPengurusPermohonanData(t);
-            entityManager.persist(kategoriPengurusPermohonanData);
+            PosisiTahapPemberkasanData posisiTahapPemberkasanData = convertPosisiTahapPemberkasanToPosisiTahapPemberkasanData(t);
+            entityManager.persist(posisiTahapPemberkasanData);
             entityManager.flush();             
-            return convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(kategoriPengurusPermohonanData);  
+            return convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(posisiTahapPemberkasanData);  
         } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategori permohonan harus bilangan dan panjang 2 digit");
+            throw new SQLException("id posisi tahap pemberkasan harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data kategori permohonan");
+            throw new SQLException("Duplikasi data posisi tahap pemberkasan");
         }        
     }
 
     @Override
-    public KategoriPengurusPermohonan update(KategoriPengurusPermohonan t) throws SQLException {
+    public PosisiTahapPemberkasan update(PosisiTahapPemberkasan t) throws SQLException {
         
         try {
-            KategoriPengurusPermohonanData kategoriPengurusPermohonanData = convertKategoriPengurusPermohonanToKategoriPengurusPermohonanData(t);  
-            kategoriPengurusPermohonanData = entityManager.merge(kategoriPengurusPermohonanData);
-            return convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(kategoriPengurusPermohonanData);   
+            PosisiTahapPemberkasanData posisiTahapPemberkasanData = convertPosisiTahapPemberkasanToPosisiTahapPemberkasanData(t);  
+            posisiTahapPemberkasanData = entityManager.merge(posisiTahapPemberkasanData);
+            return convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(posisiTahapPemberkasanData);   
         }         
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategori pengurus permohonan harus bilangan dan panjang 2 digit");
+            throw new SQLException("id posisi tahap pemberkasan harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data kategori permohonan");
+            throw new SQLException("Duplikasi data posisi tahap pemberkasan");
         }
         
     }
 
     @Override
-    public KategoriPengurusPermohonan updateId(String idLama, KategoriPengurusPermohonan t) throws SQLException {
+    public PosisiTahapPemberkasan updateId(String idLama, PosisiTahapPemberkasan t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("KategoriPengurusPermohonanData.updateId");
+        Query query = entityManager.createNamedQuery("PosisiTahapPemberkasanData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
@@ -75,14 +75,14 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
                 return update(t);
             }
             else {
-                throw new SQLException("Gagal mengupdate id kategori permohonan");
+                throw new SQLException("Gagal mengupdate id posisi tahap pemberkasan");
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategori pengurus permohonan harus bilangan dan panjang 2 digit");
+            throw new SQLException("id posisi tahap pemberkasan harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id kategori pengurus permohonan");
+            throw new SQLException("Duplikasi id posisi tahap pemberkasan");
         }
         
     }
@@ -91,18 +91,18 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
     public boolean delete(String id) throws SQLException {
         
         try {
-            KategoriPengurusPermohonanData kategoriPengurusPermohonanData = entityManager.find(KategoriPengurusPermohonanData.class, id);
-            if(kategoriPengurusPermohonanData != null) {
-                entityManager.remove(kategoriPengurusPermohonanData);	
+            PosisiTahapPemberkasanData posisiTahapPemberkasanData = entityManager.find(PosisiTahapPemberkasanData.class, id);
+            if(posisiTahapPemberkasanData != null) {
+                entityManager.remove(posisiTahapPemberkasanData);	
                 entityManager.flush();
                 return true;
             }
             else {
-                throw new SQLException("kategori pengurus permohonan dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException("posisi tahap pemberkasan dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id kategori pengurus permohonan harus bilangan dan panjang 2 digit");
+            throw new SQLException("id posisi tahap pemberkasan harus bilangan dan panjang 2 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -111,12 +111,12 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
     }
 
     @Override
-    public List<KategoriPengurusPermohonan> getDaftarData(QueryParamFilters q) {
+    public List<PosisiTahapPemberkasan> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<KategoriPengurusPermohonanData> cq = cb.createQuery(KategoriPengurusPermohonanData.class);
-            Root<KategoriPengurusPermohonanData> root = cq.from(KategoriPengurusPermohonanData.class);		
+            CriteriaQuery<PosisiTahapPemberkasanData> cq = cb.createQuery(PosisiTahapPemberkasanData.class);
+            Root<PosisiTahapPemberkasanData> root = cq.from(PosisiTahapPemberkasanData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -170,7 +170,7 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
             }
 
 
-            TypedQuery<KategoriPengurusPermohonanData> typedQuery;	
+            TypedQuery<PosisiTahapPemberkasanData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -184,14 +184,14 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
 
             return typedQuery.getResultList()
                             .stream()
-                            .map(d -> convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(d))
+                            .map(d -> convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(d))
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("KategoriPengurusPermohonanData.findAll", KategoriPengurusPermohonanData.class)
+            return entityManager.createNamedQuery("PosisiTahapPemberkasanData.findAll", PosisiTahapPemberkasanData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(d))
+                 .map(d -> convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(d))
                             .collect(Collectors.toList());
         }
         
@@ -202,21 +202,21 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<KategoriPengurusPermohonanData> root = cq.from(KategoriPengurusPermohonanData.class);		
-
-        // where clause
-        Iterator<Filter> iterFilter = f.iterator();
+        Root<PosisiTahapPemberkasanData> root = cq.from(PosisiTahapPemberkasanData.class);	
+        
         ArrayList<Predicate> daftarPredicate = new ArrayList<>();
+        if( f != null) {
+            Iterator<Filter> iterFilter = f.iterator();
+            while (iterFilter.hasNext()) {
+                Filter filter = (Filter) iterFilter.next();
 
-        while (iterFilter.hasNext()) {
-            Filter filter = (Filter) iterFilter.next();
-
-            switch (filter.getField_name()) {
-                case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
-                default -> {
-                }
-            }			
+                switch (filter.getField_name()) {
+                    case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                    case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                    default -> {
+                    }
+                }			
+            }
         }
 
         if(daftarPredicate.isEmpty()) {
@@ -230,33 +230,34 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
         
     }
     
-    private KategoriPengurusPermohonan convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(KategoriPengurusPermohonanData d) {
-        KategoriPengurusPermohonan kategoriPengurusPermohonan = null;
+    private PosisiTahapPemberkasan convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(PosisiTahapPemberkasanData d) {
+        PosisiTahapPemberkasan posisiTahapPemberkasan = null;
 		
         if(d != null) {
-            kategoriPengurusPermohonan = new KategoriPengurusPermohonan(d.getId(), d.getNama());
+            posisiTahapPemberkasan = new PosisiTahapPemberkasan(d.getId(), d.getNama(), d.getKeterangan());
         }
 
-        return kategoriPengurusPermohonan;	
+        return posisiTahapPemberkasan;	
     }
     
-    private KategoriPengurusPermohonanData convertKategoriPengurusPermohonanToKategoriPengurusPermohonanData(KategoriPengurusPermohonan t) {
-        KategoriPengurusPermohonanData kategoriPengurusPermohonanData = null;
+    private PosisiTahapPemberkasanData convertPosisiTahapPemberkasanToPosisiTahapPemberkasanData(PosisiTahapPemberkasan t) {
+        PosisiTahapPemberkasanData posisiTahapPemberkasanData = null;
 		
         if(t != null) {
-            kategoriPengurusPermohonanData = new KategoriPengurusPermohonanData();
+            posisiTahapPemberkasanData = new PosisiTahapPemberkasanData();
             String id = t.getId();
-            kategoriPengurusPermohonanData.setId(id != null ? id : getGenerateId());
-            kategoriPengurusPermohonanData.setNama(t.getNama());
+            posisiTahapPemberkasanData.setId(id != null ? id : getGenerateId());
+            posisiTahapPemberkasanData.setNama(t.getNama());
+            posisiTahapPemberkasanData.setKeterangan(t.getKeterangan());
         }
 
-        return kategoriPengurusPermohonanData;
+        return posisiTahapPemberkasanData;
     }
     
     private String getGenerateId() {
         String hasil;
 
-        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM KategoriPengurusPermohonanData m");
+        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM KategoriPermohonanData m");
 
         try {
                 hasil = (String) q.getSingleResult();
@@ -272,6 +273,5 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
     private String LPad(String str, Integer length, char car) {
         return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
     }
-
 
 }

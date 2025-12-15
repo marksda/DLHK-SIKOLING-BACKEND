@@ -252,14 +252,14 @@ public class JabatanRepositoryJPA implements Repository<Jabatan, QueryParamFilte
         if(t != null) {
             jabatanData = new JabatanData();
             String id = t.getId();
-            jabatanData.setId(id != null ? id : getGenerateIdJabatan());
+            jabatanData.setId(id != null ? id : getGenerateId());
             jabatanData.setNama(t.getNama());
         }
 
         return jabatanData;
     }
     
-    private String getGenerateIdJabatan() {
+    private String getGenerateId() {
         String hasil;
 
         Query q = entityManager.createQuery("SELECT MAX(m.id) FROM JabatanData m");

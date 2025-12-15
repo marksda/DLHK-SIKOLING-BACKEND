@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
+import com.cso.sikoling.abstraction.entity.permohonan.PosisiTahapPemberkasan;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
@@ -32,30 +32,30 @@ import java.util.ArrayList;
 
 @Stateless
 @LocalBean
-@Path("kategori_pengurus_permohonan")
-public class KategoriPengurusPermohonanResource {
+@Path("posisi_tahap_pemberkasan")
+public class PosisiTahapPemberkasanResource {
     
     @Inject
-    private Service<KategoriPengurusPermohonan> kategoriPengurusPermohonanService;
+    private Service<PosisiTahapPemberkasan> posisiTahapPemberkasanService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<KategoriPengurusPermohonanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<PosisiTahapPemberkasanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return kategoriPengurusPermohonanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                return posisiTahapPemberkasanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
                         .stream()
-                        .map(t -> new KategoriPengurusPermohonanDTO(t))
+                        .map(t -> new PosisiTahapPemberkasanDTO(t))
                         .collect(Collectors.toList());
             }
             else {
-                return kategoriPengurusPermohonanService.getDaftarData(null)
+                return posisiTahapPemberkasanService.getDaftarData(null)
                         .stream()
-                        .map(t -> new KategoriPengurusPermohonanDTO(t))
+                        .map(t -> new PosisiTahapPemberkasanDTO(t))
                         .collect(Collectors.toList());
             }             
         } 
@@ -70,14 +70,14 @@ public class KategoriPengurusPermohonanResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public KategoriPengurusPermohonanDTO save(KategoriPengurusPermohonanDTO kategoriPengurusPermohonanDTO) throws SQLException { 
+    public PosisiTahapPemberkasanDTO save(PosisiTahapPemberkasanDTO posisiTahapPemberkasanDTO) throws SQLException { 
         
-        try {          
-            kategoriPengurusPermohonanDTO.setId(null);
-            return new KategoriPengurusPermohonanDTO(kategoriPengurusPermohonanService.save(kategoriPengurusPermohonanDTO.toKategoriPengurusPermohonan()));
+        try {  
+            posisiTahapPemberkasanDTO.setId(null);
+            return new PosisiTahapPemberkasanDTO(posisiTahapPemberkasanService.save(posisiTahapPemberkasanDTO.toPosisiTahapPemberkasan()));
         } 
         catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json kategori pengurus permohonan harus disertakan di body post request");
+            throw new IllegalArgumentException("data json posisi tahap pemberkasan harus disertakan di body post request");
         }    
         
     }
@@ -88,18 +88,18 @@ public class KategoriPengurusPermohonanResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public KategoriPengurusPermohonanDTO update(@PathParam("idLama") String idLama, KategoriPengurusPermohonanDTO kategoriPengurusPermohonanDTO) throws SQLException {
+    public PosisiTahapPemberkasanDTO update(@PathParam("idLama") String idLama, PosisiTahapPemberkasanDTO posisiTahapPemberkasanDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(kategoriPengurusPermohonanDTO.getId());
+            boolean isIdSame = idLama.equals(posisiTahapPemberkasanDTO.getId());
             if(isIdSame) {
-                return new KategoriPengurusPermohonanDTO(kategoriPengurusPermohonanService.update(kategoriPengurusPermohonanDTO.toKategoriPengurusPermohonan()));
+                return new PosisiTahapPemberkasanDTO(posisiTahapPemberkasanService.update(posisiTahapPemberkasanDTO.toPosisiTahapPemberkasan()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru kategori permohonan harus sama");
+                throw new IllegalArgumentException("id lama dan baru posisi tahap permohonan harus sama");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json kategori pengurus permohonan harus disertakan di body put request");
+            throw new IllegalArgumentException("data json posisi tahap permohonan harus disertakan di body put request");
         }
         
     }
@@ -110,43 +110,43 @@ public class KategoriPengurusPermohonanResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public KategoriPengurusPermohonanDTO updateId(@PathParam("idLama") String idLama, KategoriPengurusPermohonanDTO kategoriPengurusPermohonanDTO) throws SQLException {
+    public PosisiTahapPemberkasanDTO updateId(@PathParam("idLama") String idLama, PosisiTahapPemberkasanDTO posisiTahapPemberkasanDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(kategoriPengurusPermohonanDTO.getId());
+            boolean isIdSame = idLama.equals(posisiTahapPemberkasanDTO.getId());
 
             if(!isIdSame) {
-                return new KategoriPengurusPermohonanDTO(kategoriPengurusPermohonanService.updateId(idLama, kategoriPengurusPermohonanDTO.toKategoriPengurusPermohonan()));
+                return new PosisiTahapPemberkasanDTO(posisiTahapPemberkasanService.updateId(idLama, posisiTahapPemberkasanDTO.toPosisiTahapPemberkasan()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru kategori permohonan harus beda");
+                throw new IllegalArgumentException("id lama dan baru posisi tahap permohonan harus beda");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json kategori pengurus permohonan harus disertakan di body put request");
+            throw new IllegalArgumentException("data json posisi tahap permohonan harus disertakan di body put request");
         }
         
     } 
     
-    @Path("/{idKategoriPengurusPermohonan}")
+    @Path("/{idPosisiTahapPermohonan}")
     @DELETE
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject delete(@PathParam("idKategoriPengurusPermohonan") String idKategoriPengurusPermohonan) throws SQLException {
+    public JsonObject delete(@PathParam("idPosisiTahapPermohonan") String idPosisiTahapPermohonan) throws SQLException {
         
-        boolean isDigit = idKategoriPengurusPermohonan.matches("[0-9]+");
+        boolean isDigit = idPosisiTahapPermohonan.matches("[0-9]+");
         
         if(isDigit) {		
             
             JsonObject model = Json.createObjectBuilder()
-                    .add("status", kategoriPengurusPermohonanService.delete(idKategoriPengurusPermohonan) == true ? "sukses" : "gagal")
+                    .add("status", posisiTahapPemberkasanService.delete(idPosisiTahapPermohonan) == true ? "sukses" : "gagal")
                     .build();            
             
             return model;
         }
         else {
-            throw new IllegalArgumentException("id kategori pengurus permohonan harus bilangan");
+            throw new IllegalArgumentException("id posisi tahap permohonan harus bilangan");
         }        
         
     }
@@ -164,7 +164,7 @@ public class KategoriPengurusPermohonanResource {
                 
                 JsonObject model = Json.createObjectBuilder()
                     .add("jumlah", 
-                        kategoriPengurusPermohonanService.getJumlahData(
+                        posisiTahapPemberkasanService.getJumlahData(
                             filters
                                 .stream()
                                 .map(t -> t.toFilter())
@@ -177,7 +177,7 @@ public class KategoriPengurusPermohonanResource {
             }
             else {
                 JsonObject model = Json.createObjectBuilder()
-                    .add("jumlah", kategoriPengurusPermohonanService.getJumlahData(null))
+                    .add("jumlah", posisiTahapPemberkasanService.getJumlahData(null))
                     .build();            
             
                 return model;
