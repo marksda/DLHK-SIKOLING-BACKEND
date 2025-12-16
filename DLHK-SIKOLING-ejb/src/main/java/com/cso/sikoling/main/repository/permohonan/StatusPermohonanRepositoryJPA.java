@@ -4,7 +4,7 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
-import com.cso.sikoling.abstraction.entity.permohonan.StatusFlowPermohonan;
+import com.cso.sikoling.abstraction.entity.permohonan.StatusPermohonan;
 import com.cso.sikoling.abstraction.repository.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -22,51 +22,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowPermohonan, QueryParamFilters, Filter> {
+public class StatusPermohonanRepositoryJPA implements Repository<StatusPermohonan, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public StatusFlowPermohonanRepositoryJPA(EntityManager entityManager) {
+    public StatusPermohonanRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public StatusFlowPermohonan save(StatusFlowPermohonan t) throws SQLException {   
+    public StatusPermohonan save(StatusPermohonan t) throws SQLException {   
         try {
-            StatusFlowPermohonanData statusFlowPermohonanData = convertStatusFlowPermohonanToStatusFlowPermohonanData(t);
-            entityManager.persist(statusFlowPermohonanData);
+            StatusPermohonanData statusPermohonanData = convertStatusPermohonanToStatusPermohonanData(t);
+            entityManager.persist(statusPermohonanData);
             entityManager.flush();             
-            return convertStatusFlowPermohonanDataToStatusFlowPermohonan(statusFlowPermohonanData);  
+            return convertStatusPermohonanDataToStatusPermohonan(statusPermohonanData);  
         } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id status flow permohonan harus bilangan 1 digit");
+            throw new SQLException("id status permohonan harus bilangan 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data status flow permohonan");
+            throw new SQLException("Duplikasi data status permohonan");
         }        
     }
 
     @Override
-    public StatusFlowPermohonan update(StatusFlowPermohonan t) throws SQLException {
+    public StatusPermohonan update(StatusPermohonan t) throws SQLException {
         
         try {
-            StatusFlowPermohonanData statusFlowPermohonanData = convertStatusFlowPermohonanToStatusFlowPermohonanData(t);  
-            statusFlowPermohonanData = entityManager.merge(statusFlowPermohonanData);
-            return convertStatusFlowPermohonanDataToStatusFlowPermohonan(statusFlowPermohonanData);   
+            StatusPermohonanData statusPermohonanData = convertStatusPermohonanToStatusPermohonanData(t);  
+            statusPermohonanData = entityManager.merge(statusPermohonanData);
+            return convertStatusPermohonanDataToStatusPermohonan(statusPermohonanData);   
         }         
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id status flow permohonan harus bilangan 1 digit");
+            throw new SQLException("id status permohonan harus bilangan 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data status flow permohonan");
+            throw new SQLException("Duplikasi data status permohonan");
         }
         
     }
 
     @Override
-    public StatusFlowPermohonan updateId(String idLama, StatusFlowPermohonan t) throws SQLException {
+    public StatusPermohonan updateId(String idLama, StatusPermohonan t) throws SQLException {
         
-        Query query = entityManager.createNamedQuery("StatusFlowPermohonanData.updateId");
+        Query query = entityManager.createNamedQuery("StatusPermohonanData.updateId");
         query.setParameter("idBaru", t.getId());
         query.setParameter("idLama", idLama);
         try {
@@ -75,14 +75,14 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
                 return update(t);
             }
             else {
-                throw new SQLException("Gagal mengupdate id status flow permohonan");
+                throw new SQLException("Gagal mengupdate id status permohonan");
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id status flow permohonan harus bilangan 1 digit");
+            throw new SQLException("id status permohonan harus bilangan 2 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Dulpikasi id status flow permohonan");
+            throw new SQLException("Dulpikasi id status permohonan");
         }
         
     }
@@ -91,18 +91,18 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
     public boolean delete(String id) throws SQLException {
         
         try {
-            StatusFlowPermohonanData statusFlowPermohonanData = entityManager.find(StatusFlowPermohonanData.class, id);
-            if(statusFlowPermohonanData != null) {
-                entityManager.remove(statusFlowPermohonanData);	
+            StatusPermohonanData statusPermohonanData = entityManager.find(StatusPermohonanData.class, id);
+            if(statusPermohonanData != null) {
+                entityManager.remove(statusPermohonanData);	
                 entityManager.flush();
                 return true;
             }
             else {
-                throw new SQLException("status flow permohonan dengan id:".concat(id).concat(" tidak ditemukan"));
+                throw new SQLException("status permohonan dengan id:".concat(id).concat(" tidak ditemukan"));
             }
         }
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id status flow permohonan harus bilangan 1 digit");
+            throw new SQLException("id status permohonan harus bilangan 2 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException(e.getLocalizedMessage());
@@ -111,12 +111,12 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
     }
 
     @Override
-    public List<StatusFlowPermohonan> getDaftarData(QueryParamFilters q) {
+    public List<StatusPermohonan> getDaftarData(QueryParamFilters q) {
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<StatusFlowPermohonanData> cq = cb.createQuery(StatusFlowPermohonanData.class);
-            Root<StatusFlowPermohonanData> root = cq.from(StatusFlowPermohonanData.class);		
+            CriteriaQuery<StatusPermohonanData> cq = cb.createQuery(StatusPermohonanData.class);
+            Root<StatusPermohonanData> root = cq.from(StatusPermohonanData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -127,7 +127,7 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                        case "keterangan" -> daftarPredicate.add(cb.like(cb.lower(root.get("keterangan")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         default -> {
                         }
                     }			
@@ -155,12 +155,12 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
                                 cq.orderBy(cb.desc(root.get("id")));
                             }
                         }
-                        case "keterangan" -> {
+                        case "nama" -> {
                             if(sort.getValue().equals("asc")) {
-                                cq.orderBy(cb.asc(root.get("keterangan")));
+                                cq.orderBy(cb.asc(root.get("nama")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("keterangan")));
+                                cq.orderBy(cb.desc(root.get("nama")));
                             }
                         }
                         default -> {
@@ -170,7 +170,7 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
             }
 
 
-            TypedQuery<StatusFlowPermohonanData> typedQuery;	
+            TypedQuery<StatusPermohonanData> typedQuery;	
 
             if( q.getIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -184,14 +184,14 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
 
             return typedQuery.getResultList()
                             .stream()
-                            .map(d -> convertStatusFlowPermohonanDataToStatusFlowPermohonan(d))
+                            .map(d -> convertStatusPermohonanDataToStatusPermohonan(d))
                             .collect(Collectors.toList());
         }
         else {
-            return entityManager.createNamedQuery("StatusFlowPermohonanData.findAll", StatusFlowPermohonanData.class)
+            return entityManager.createNamedQuery("StatusPermohonanData.findAll", StatusPermohonanData.class)
                  .getResultList()
                  .stream()
-                 .map(d -> convertStatusFlowPermohonanDataToStatusFlowPermohonan(d))
+                 .map(d -> convertStatusPermohonanDataToStatusPermohonan(d))
                             .collect(Collectors.toList());
         }
         
@@ -202,7 +202,7 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<StatusFlowPermohonanData> root = cq.from(StatusFlowPermohonanData.class);		
+        Root<StatusPermohonanData> root = cq.from(StatusPermohonanData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -213,7 +213,7 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "keterangan" -> daftarPredicate.add(cb.like(cb.lower(root.get("keterangan")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                 default -> {
                 }
             }			
@@ -230,24 +230,24 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
         
     }
     
-    private StatusFlowPermohonan convertStatusFlowPermohonanDataToStatusFlowPermohonan(StatusFlowPermohonanData d) {
-        StatusFlowPermohonan statusFlowPermohonan = null;
+    private StatusPermohonan convertStatusPermohonanDataToStatusPermohonan(StatusPermohonanData d) {
+        StatusPermohonan statusPermohonan = null;
 		
         if(d != null) {
-            statusFlowPermohonan = new StatusFlowPermohonan(d.getId(), d.getKeterangan());
+            statusPermohonan = new StatusPermohonan(d.getId(), d.getNama());
         }
 
-        return statusFlowPermohonan;	
+        return statusPermohonan;	
     }
     
-    private StatusFlowPermohonanData convertStatusFlowPermohonanToStatusFlowPermohonanData(StatusFlowPermohonan t) {
-        StatusFlowPermohonanData statusFlowPermohonanData = null;
+    private StatusPermohonanData convertStatusPermohonanToStatusPermohonanData(StatusPermohonan t) {
+        StatusPermohonanData statusFlowPermohonanData = null;
 		
         if(t != null) {
-            statusFlowPermohonanData = new StatusFlowPermohonanData();
+            statusFlowPermohonanData = new StatusPermohonanData();
             String id = t.getId();
             statusFlowPermohonanData.setId(id != null ? id : getGenerateId());
-            statusFlowPermohonanData.setKeterangan(t.getKeterangan());
+            statusFlowPermohonanData.setNama(t.getNama());
         }
 
         return statusFlowPermohonanData;
@@ -256,21 +256,21 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
     private String getGenerateId() {
         String hasil;
 
-        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM StatusFlowPermohonanData m");
+        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM StatusPermohonanData m");
 
         try {
                 hasil = (String) q.getSingleResult();
                 Long idBaru = Long.parseLong(hasil)  + 1;
-//                hasil = LPad(Long.toString(idBaru), 2, '0');                
-                return Long.toString(idBaru);
+                hasil = LPad(Long.toString(idBaru), 2, '0');                
+                return hasil;
         } catch (NumberFormatException e) {	
                 hasil = "0";			
                 return hasil;
         }		
     }
     
-//    private String LPad(String str, Integer length, char car) {
-//        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
-//    }
+    private String LPad(String str, Integer length, char car) {
+        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
+    }
 
 }

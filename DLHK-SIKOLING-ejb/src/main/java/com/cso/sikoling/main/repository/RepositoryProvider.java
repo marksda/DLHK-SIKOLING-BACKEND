@@ -12,6 +12,7 @@ import com.cso.sikoling.main.repository.permohonan.KategoriPengurusPermohonanRep
 import com.cso.sikoling.main.repository.permohonan.KategoriPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.PosisiTahapPemberkasanRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.StatusFlowPermohonanRepositoryJPA;
+import com.cso.sikoling.main.repository.permohonan.StatusPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.person.JenisKelaminRepositoryJPA;
 import com.cso.sikoling.main.repository.person.PersonRepositoryJPA;
 import com.cso.sikoling.main.repository.perusahaan.JabatanRepositoryJPA;
@@ -128,6 +129,11 @@ public class RepositoryProvider {
     @Produces
     public StatusFlowPermohonanRepositoryJPA getStatusFlowPermohonanRepositoryJPA(EntityManager entityManager) {
         return new StatusFlowPermohonanRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public StatusPermohonanRepositoryJPA getStatusPermohonanRepositoryJPA(EntityManager entityManager) {
+        return new StatusPermohonanRepositoryJPA(entityManager);
     }
     
     @Produces
