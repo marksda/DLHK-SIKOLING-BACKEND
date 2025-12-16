@@ -149,6 +149,7 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "person" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "jabatan" -> daftarPredicate.add(cb.like(cb.lower(root.get("jabatan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         default -> {
                         }
@@ -183,6 +184,14 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("person").get("nama")));
+                            }
+                        }
+                        case "jabatan" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("jabatan").get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("jabatan").get("nama")));
                             }
                         }
                         case "perusahaan" -> {
@@ -245,6 +254,7 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                 switch (filter.getField_name()) {
                     case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                     case "person" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                    case "jabatan" -> daftarPredicate.add(cb.like(cb.lower(root.get("jabatan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                     case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                     default -> {
                     }
