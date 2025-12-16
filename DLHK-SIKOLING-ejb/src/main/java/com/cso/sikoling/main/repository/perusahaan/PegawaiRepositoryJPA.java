@@ -148,7 +148,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "person" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         default -> {
                         }
                     }			
@@ -176,12 +177,20 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                                 cq.orderBy(cb.desc(root.get("id")));
                             }
                         }
-                        case "nama" -> {
+                        case "person" -> {
                             if(sort.getValue().equals("asc")) {
                                 cq.orderBy(cb.asc(root.get("person").get("nama")));
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("person").get("nama")));
+                            }
+                        }
+                        case "perusahaan" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("perusahaan").get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("perusahaan").get("nama")));
                             }
                         }
                         default -> {
@@ -235,7 +244,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
 
                 switch (filter.getField_name()) {
                     case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                    case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                    case "person" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                    case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                     default -> {
                     }
                 }			
