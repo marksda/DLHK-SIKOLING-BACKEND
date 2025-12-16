@@ -14,13 +14,13 @@ import java.io.Serializable;
 
 
 @Entity
-@Table(name = "tbl_status_flow_jenis_log")
+@Table(name = "master.tbl_status_flow_permohonan")
 @NamedQueries({
-    @NamedQuery(name = "StatusFlowJenisLogData.findAll", query = "SELECT s FROM StatusFlowJenisLogData s"),
-    @NamedQuery(name = "StatusFlowJenisLogData.findById", query = "SELECT s FROM StatusFlowJenisLogData s WHERE s.id = :id"),
-    @NamedQuery(name = "StatusFlowJenisLogData.findByKeterangan", query = "SELECT s FROM StatusFlowJenisLogData s WHERE s.keterangan = :keterangan"),
-    @NamedQuery(name = "StatusFlowJenisLogData.updateId", query = "UPDATE StatusFlowJenisLogData SET id = :idBaru WHERE id = :idLama")})
-public class StatusFlowJenisLogData implements Serializable {
+    @NamedQuery(name = "StatusFlowPermohonanData.findAll", query = "SELECT s FROM StatusFlowPermohonanData s"),
+    @NamedQuery(name = "StatusFlowPermohonanData.findById", query = "SELECT s FROM StatusFlowPermohonanData s WHERE s.id = :id"),
+    @NamedQuery(name = "StatusFlowPermohonanData.findByKeterangan", query = "SELECT s FROM StatusFlowPermohonanData s WHERE s.keterangan = :keterangan"),
+    @NamedQuery(name = "StatusFlowPermohonanData.updateId", query = "UPDATE StatusFlowPermohonanData SET id = :idBaru WHERE id = :idLama")})
+public class StatusFlowPermohonanData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,10 +35,10 @@ public class StatusFlowJenisLogData implements Serializable {
     @Column(name = "keterangan")
     private String keterangan;
 
-    public StatusFlowJenisLogData() {
+    public StatusFlowPermohonanData() {
     }
 
-    public StatusFlowJenisLogData(String id) {
+    public StatusFlowPermohonanData(String id) {
         this.id = id;
     }
 
@@ -68,10 +68,10 @@ public class StatusFlowJenisLogData implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StatusFlowJenisLogData)) {
+        if (!(object instanceof StatusFlowPermohonanData)) {
             return false;
         }
-        StatusFlowJenisLogData other = (StatusFlowJenisLogData) object;
+        StatusFlowPermohonanData other = (StatusFlowPermohonanData) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -80,7 +80,7 @@ public class StatusFlowJenisLogData implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cso.sikoling.main.repository.permohonan.StatusFlowJenisLogData[ id=" + id + " ]";
+        return "com.cso.sikoling.main.repository.permohonan.StatusFlowPermohonanData[ id=" + id + " ]";
     }
 
 }

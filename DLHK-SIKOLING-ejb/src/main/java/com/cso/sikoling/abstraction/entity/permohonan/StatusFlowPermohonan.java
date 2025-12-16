@@ -3,24 +3,18 @@ package com.cso.sikoling.abstraction.entity.permohonan;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PosisiTahapPemberkasan implements Serializable {
+public class StatusFlowPermohonan implements Serializable {
     
     private final String id;
-    private final String nama;
     private final String keterangan;
 
-    public PosisiTahapPemberkasan(String id, String nama, String keterangan) {
+    public StatusFlowPermohonan(String id, String keterangan) {
         this.id = id;
-        this.nama = nama;
         this.keterangan = keterangan;
     }
 
     public String getId() {
         return id;
-    }
-
-    public String getNama() {
-        return nama;
     }
 
     public String getKeterangan() {
@@ -48,7 +42,7 @@ public class PosisiTahapPemberkasan implements Serializable {
             return false;
         }
 
-        final PosisiTahapPemberkasan other = (PosisiTahapPemberkasan) obj;
+        final StatusFlowPermohonan other = (StatusFlowPermohonan) obj;
 
         if (!this.id.equals(other.getId())) {
             return false;
@@ -59,11 +53,9 @@ public class PosisiTahapPemberkasan implements Serializable {
 
     @Override
     public String toString() {
-        return "PosisiTahapPemberkasan {"
+        return "StatusFlowPermohonan {"
                 .concat("id=")
                 .concat(this.id)
-                .concat(", nama=")
-                .concat(this.nama)
                 .concat(", keterangan=")
                 .concat(this.keterangan)
                 .concat("}");

@@ -81,7 +81,7 @@ public class RegisterPermohonanData implements Serializable {
     
     @JoinColumn(name = "status_flow", referencedColumnName = "id")
     @ManyToOne
-    private StatusFlowJenisLogData statusFlow;
+    private StatusFlowPermohonanData statusFlow;
 
     public RegisterPermohonanData() {
     }
@@ -170,11 +170,11 @@ public class RegisterPermohonanData implements Serializable {
         this.posisiTahapPemberkasanPenerima = posisiTahapPemberkasanPenerima;
     }
 
-    public StatusFlowJenisLogData getStatusFlow() {
+    public StatusFlowPermohonanData getStatusFlow() {
         return statusFlow;
     }
 
-    public void setStatusFlow(StatusFlowJenisLogData statusFlow) {
+    public void setStatusFlow(StatusFlowPermohonanData statusFlow) {
         this.statusFlow = statusFlow;
     }
 

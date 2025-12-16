@@ -14,6 +14,7 @@ import com.cso.sikoling.abstraction.entity.dokumen.VersiKbli;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPermohonan;
 import com.cso.sikoling.abstraction.entity.permohonan.PosisiTahapPemberkasan;
+import com.cso.sikoling.abstraction.entity.permohonan.StatusFlowPermohonan;
 import com.cso.sikoling.abstraction.entity.person.Person;
 import com.cso.sikoling.abstraction.entity.perusahaan.Jabatan;
 import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
@@ -67,6 +68,7 @@ import com.cso.sikoling.abstraction.service.dokumen.KategoriKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.KbliServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.VersiKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.permohonan.PosisiTahapPemberkasanServiceBasic;
+import com.cso.sikoling.abstraction.service.permohonan.StatusFlowPermohonanServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.HashingPasswordTypeServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.JwaServiceBasic;
 import com.cso.sikoling.abstraction.service.security.oauth2.JwaTypeServiceBasic;
@@ -141,6 +143,12 @@ public class RestfulProvider {
     public Service<HakAkses> getHakAksesService(
             @Infrastructure Repository<HakAkses, QueryParamFilters, Filter> hakAksesRepository) {
         return new HakAksesServiceBasic(hakAksesRepository);
+    }
+    
+    @Produces
+    public Service<StatusFlowPermohonan> getStatusFlowPermohonanService(
+            @Infrastructure Repository<StatusFlowPermohonan, QueryParamFilters, Filter> statusFlowPermohonanRepository) {
+        return new StatusFlowPermohonanServiceBasic(statusFlowPermohonanRepository);
     }
     
     @Produces
