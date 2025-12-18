@@ -72,7 +72,8 @@ public class PegawaiResource {
     @Produces({MediaType.APPLICATION_JSON})
     public PegawaiDTO save(PegawaiDTO pegawaiDTO) throws SQLException { 
         
-        try {            
+        try { 
+            pegawaiDTO.setId(null);
             return new PegawaiDTO(pegawaiService.save(pegawaiDTO.toPegawai()));
         } 
         catch (NullPointerException e) {

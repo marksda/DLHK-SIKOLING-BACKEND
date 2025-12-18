@@ -60,17 +60,12 @@ public class PegawaiDTO {
     }
     
     public Pegawai toPegawai() {
-        if( this.id == null) {
-            throw new IllegalArgumentException("format data json pegawai tidak sesuai");
-        }
-        else {
-            return new Pegawai(
+        return new Pegawai(
                     this.id, 
                     this.perusahaan != null ? this.perusahaan.toPerusahaan() : null, 
                     this.person != null ? this.person.toPerson() : null, 
                     this.jabatan != null ? this.jabatan.toJabatan() : null
-            );
-        }
+                );
     }
 
     @Override

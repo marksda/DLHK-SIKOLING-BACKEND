@@ -466,7 +466,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
 		
         if(t != null) {
             pegawaiData = new PegawaiPerusahaanData();
-            pegawaiData.setId(t.getId());
+            String id = t.getId();
+            pegawaiData.setId(id != null ? id : t.getPerson().getId().concat(t.getPerusahaan().getId()));
             PersonData personData = t.getPerson() != null ? 
                     new PersonData(t.getPerson().getId()) : null;            
             pegawaiData.setPerson(personData);
