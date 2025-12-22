@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 @Stateless
 @LocalBean
-@Path("kbli")
+@Path("status_dokumen")
 public class StatusDokumenResource {
     
     @Inject
