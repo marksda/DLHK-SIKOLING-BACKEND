@@ -1,0 +1,188 @@
+package com.cso.sikoling.main.repository.dokumen;
+
+import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
+import com.cso.sikoling.main.repository.security.OtorisasiData;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
+
+
+@Entity
+@Table(name = "transaksi.tbl_register_dokumen")
+@NamedQueries({
+    @NamedQuery(name = "RegisterDokumenData.findAll", query = "SELECT r FROM RegisterDokumenData r"),
+    @NamedQuery(name = "RegisterDokumenData.findByPerusahaan", query = "SELECT r FROM RegisterDokumenData r WHERE r.perusahaan = :perusahaan"),
+    @NamedQuery(name = "RegisterDokumenData.findByDokumen", query = "SELECT r FROM RegisterDokumenData r WHERE r.dokumen = :dokumen"),
+    @NamedQuery(name = "RegisterDokumenData.findByTanggalRegistrasi", query = "SELECT r FROM RegisterDokumenData r WHERE r.tanggalRegistrasi = :tanggalRegistrasi"),
+    @NamedQuery(name = "RegisterDokumenData.findByUploader", query = "SELECT r FROM RegisterDokumenData r WHERE r.uploader = :uploader"),
+    @NamedQuery(name = "RegisterDokumenData.findByLokasiFile", query = "SELECT r FROM RegisterDokumenData r WHERE r.lokasiFile = :lokasiFile"),
+    @NamedQuery(name = "RegisterDokumenData.findById", query = "SELECT r FROM RegisterDokumenData r WHERE r.id = :id"),
+    @NamedQuery(name = "RegisterDokumenData.findByStatusDokumen", query = "SELECT r FROM RegisterDokumenData r WHERE r.statusDokumen = :statusDokumen"),
+    @NamedQuery(name = "RegisterDokumenData.findByIdLama", query = "SELECT r FROM RegisterDokumenData r WHERE r.idLama = :idLama"),
+    @NamedQuery(name = "RegisterDokumenData.findByIsValidated", query = "SELECT r FROM RegisterDokumenData r WHERE r.isValidated = :isValidated"),
+    @NamedQuery(name = "RegisterDokumenData.updateId", query = "UPDATE RegisterDokumenData SET id = :idBaru WHERE id = :idLama")})
+public class RegisterDokumenData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    @JoinColumn(name = "perusahaan", referencedColumnName = "id")
+    @ManyToOne
+    private PerusahaanData perusahaan;
+       
+    @JoinColumn(name = "dokumen", referencedColumnName = "id")
+    @ManyToOne
+    private DokumenData dokumen;
+    
+    @Column(name = "tanggal_registrasi")
+    @Temporal(TemporalType.DATE)
+    private Date tanggalRegistrasi;
+    
+    @JoinColumn(name = "uploader", referencedColumnName = "id")
+    @ManyToOne
+    private OtorisasiData uploader;
+    
+    @Size(max = 2147483647)
+    @Column(name = "lokasi_file")
+    private String lokasiFile;
+    
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 11)
+    @Column(name = "id")
+    private String id;
+    
+    @JoinColumn(name = "status_dokumen", referencedColumnName = "id")
+    @ManyToOne
+    private StatusDokumenData statusDokumen;
+    
+    @Size(max = 2147483647)
+    @Column(name = "id_lama")
+    private String idLama;
+    
+    @Column(name = "is_validated")
+    private Boolean isValidated;
+
+    public RegisterDokumenData() {
+    }
+
+    public RegisterDokumenData(String id) {
+        this.id = id;
+    }
+
+    public RegisterDokumenData(String id, PerusahaanData perusahaan, DokumenData dokumen) {
+        this.id = id;
+        this.perusahaan = perusahaan;
+        this.dokumen = dokumen;
+    }
+
+    public PerusahaanData getPerusahaan() {
+        return perusahaan;
+    }
+
+    public void setPerusahaan(PerusahaanData perusahaan) {
+        this.perusahaan = perusahaan;
+    }
+
+    public DokumenData getDokumen() {
+        return dokumen;
+    }
+
+    public void setDokumen(DokumenData dokumen) {
+        this.dokumen = dokumen;
+    }
+
+    public Date getTanggalRegistrasi() {
+        return tanggalRegistrasi;
+    }
+
+    public void setTanggalRegistrasi(Date tanggalRegistrasi) {
+        this.tanggalRegistrasi = tanggalRegistrasi;
+    }
+
+    public OtorisasiData getUploader() {
+        return uploader;
+    }
+
+    public void setUploader(OtorisasiData uploader) {
+        this.uploader = uploader;
+    }
+
+    public String getLokasiFile() {
+        return lokasiFile;
+    }
+
+    public void setLokasiFile(String lokasiFile) {
+        this.lokasiFile = lokasiFile;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public StatusDokumenData getStatusDokumen() {
+        return statusDokumen;
+    }
+
+    public void setStatusDokumen(StatusDokumenData statusDokumen) {
+        this.statusDokumen = statusDokumen;
+    }
+
+    public String getIdLama() {
+        return idLama;
+    }
+
+    public void setIdLama(String idLama) {
+        this.idLama = idLama;
+    }
+
+    public Boolean getIsValidated() {
+        return isValidated;
+    }
+
+    public void setIsValidated(Boolean isValidated) {
+        this.isValidated = isValidated;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof RegisterDokumenData)) {
+            return false;
+        }
+        RegisterDokumenData other = (RegisterDokumenData) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.cso.sikoling.main.repository.dokumen.RegisterDokumenData[ id=" + id + " ]";
+    }
+
+}

@@ -7,6 +7,7 @@ import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.DokumenRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.KategoriKbliRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.KbliRepositoryJPA;
+import com.cso.sikoling.main.repository.dokumen.StatusDokumenRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.VersiKbliRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.KategoriPengurusPermohonanRepositoryJPA;
 import com.cso.sikoling.main.repository.permohonan.KategoriPermohonanRepositoryJPA;
@@ -164,6 +165,11 @@ public class RepositoryProvider {
     @Produces
     public KategoriKbliRepositoryJPA getKategoriKbliRepositoryJPA(EntityManager entityManager) {
         return new KategoriKbliRepositoryJPA(entityManager);
+    }
+    
+    @Produces
+    public StatusDokumenRepositoryJPA getStatusDokumenRepositoryJPA(EntityManager entityManager) {
+        return new StatusDokumenRepositoryJPA(entityManager);
     }
     
     @Produces
