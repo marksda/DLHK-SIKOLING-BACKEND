@@ -1,0 +1,522 @@
+package com.cso.sikoling.main.repository.dokumen;
+
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.Paging;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.SortOrder;
+import com.cso.sikoling.abstraction.entity.alamat.Alamat;
+import com.cso.sikoling.abstraction.entity.alamat.Desa;
+import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
+import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
+import com.cso.sikoling.abstraction.entity.alamat.Kontak;
+import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
+import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.StatusDokumen;
+import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
+import com.cso.sikoling.abstraction.entity.person.Person;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriModelPerizinan;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriPelakuUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.KategoriSkalaUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.PelakuUsaha;
+import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
+import com.cso.sikoling.abstraction.entity.security.HakAkses;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
+import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
+import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.main.repository.alamat.DesaData;
+import com.cso.sikoling.main.repository.alamat.KabupatenData;
+import com.cso.sikoling.main.repository.alamat.KecamatanData;
+import com.cso.sikoling.main.repository.alamat.PropinsiData;
+import com.cso.sikoling.main.repository.person.JenisKelaminData;
+import com.cso.sikoling.main.repository.person.PersonData;
+import com.cso.sikoling.main.repository.perusahaan.DetailPelakuUsahaData;
+import com.cso.sikoling.main.repository.perusahaan.KategoriModelPerizinanData;
+import com.cso.sikoling.main.repository.perusahaan.KategoriPelakuUsahaData;
+import com.cso.sikoling.main.repository.perusahaan.KategoriSkalaUsahaData;
+import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
+import com.cso.sikoling.main.repository.security.HakAksesData;
+import com.cso.sikoling.main.repository.security.OtorisasiData;
+import com.cso.sikoling.main.repository.security.oauth2.RealmData;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.validation.ConstraintViolationException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen, QueryParamFilters, Filter> {
+    
+    private final EntityManager entityManager;
+
+    public RegisterDokumenRepositoryJPA(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+    
+    @Override
+    public RegisterDokumen save(RegisterDokumen t) throws SQLException {   
+        try {
+            RegisterDokumenData registerDokumenData = convertRegisterDokumenToRegisterDokumenData(t);
+            entityManager.persist(registerDokumenData);
+            entityManager.flush();             
+            return convertRegisterDokumenDataToRegisterDokumen(registerDokumenData);  
+        } 
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id register dokumen harus bilangan 11 digit");
+        }
+        catch (PersistenceException e) {
+            throw new SQLException("Duplikasi data register dokumen");
+        }        
+    }
+
+    @Override
+    public RegisterDokumen update(RegisterDokumen t) throws SQLException {
+        
+        try {
+            RegisterDokumenData statusDokumenData = convertRegisterDokumenToRegisterDokumenData(t);  
+            statusDokumenData = entityManager.merge(statusDokumenData);
+            return convertRegisterDokumenDataToRegisterDokumen(statusDokumenData);   
+        }         
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id status dokumen harus bilangan 11 digit");
+        }
+        catch (PersistenceException e) {
+            throw new SQLException("Duplikasi data status dokumen");
+        }
+        
+    }
+
+    @Override
+    public RegisterDokumen updateId(String idLama, RegisterDokumen t) throws SQLException {
+        
+        Query query = entityManager.createNamedQuery("RegisterDokumenData.updateId");
+        query.setParameter("idBaru", t.getId());
+        query.setParameter("idLama", idLama);
+        try {
+            int updateCount = query.executeUpdate();
+            if(updateCount > 0) {
+                return update(t);
+            }
+            else {
+                throw new SQLException("Gagal mengupdate id status dokumen");
+            }
+        }
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id register dokumen harus bilangan 11 digit");
+        }
+        catch (PersistenceException e) {
+            throw new SQLException("Dulpikasi id register dokumen");
+        }
+        
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException {
+        
+        try {
+            RegisterDokumenData statusDokumenData = entityManager.find(RegisterDokumenData.class, id);
+            if(statusDokumenData != null) {
+                entityManager.remove(statusDokumenData);	
+                entityManager.flush();
+                return true;
+            }
+            else {
+                throw new SQLException("register dokumen dengan id:".concat(id).concat(" tidak ditemukan"));
+            }
+        }
+        catch(ConstraintViolationException cstVltException) {
+            throw new SQLException("id register dokumen harus bilangan 11 digit");
+        }
+        catch (PersistenceException e) {
+            throw new SQLException(e.getLocalizedMessage());
+        }
+        
+    }
+
+    @Override
+    public List<RegisterDokumen> getDaftarData(QueryParamFilters q) {
+        
+        if(q != null) {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<RegisterDokumenData> cq = cb.createQuery(RegisterDokumenData.class);
+            Root<RegisterDokumenData> root = cq.from(RegisterDokumenData.class);		
+
+            // where clause
+            if(q.getFields_filter() != null) {
+                Iterator<Filter> iterFilter = q.getFields_filter().iterator();
+                ArrayList<Predicate> daftarPredicate = new ArrayList<>();
+                while (iterFilter.hasNext()) {
+                    Filter filter = (Filter) iterFilter.next();
+
+                    switch (filter.getField_name()) {
+                        case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        default -> {
+                        }
+                    }			
+                }
+
+                if(daftarPredicate.isEmpty()) {
+                    cq.select(root);
+                }
+                else {
+                    cq.select(root).where(cb.and(daftarPredicate.toArray(new Predicate[0])));
+                }
+            }        
+
+            // sort clause
+            if(q.getFields_sorter() != null) {
+                Iterator<SortOrder> iterSort = q.getFields_sorter().iterator();
+                while (iterSort.hasNext()) {
+                    SortOrder sort = (SortOrder) iterSort.next();
+                    switch (sort.getField_name()) {
+                        case "id" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("id")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("id")));
+                            }
+                        }
+                        case "nama" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("nama")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("nama")));
+                            }
+                        }
+                        default -> {
+                        }
+                    }			
+                }
+            }
+
+
+            TypedQuery<RegisterDokumenData> typedQuery;	
+
+            if( q.getIs_paging()) { 
+                Paging paging = q.getPaging();
+                typedQuery = entityManager.createQuery(cq)
+                                .setMaxResults(paging.getPage_size())
+                                .setFirstResult((paging.getPage_number()-1)*paging.getPage_size());
+            }
+            else {
+                typedQuery = entityManager.createQuery(cq);
+            }
+
+            return typedQuery.getResultList()
+                            .stream()
+                            .map(d -> convertRegisterDokumenDataToRegisterDokumen(d))
+                            .collect(Collectors.toList());
+        }
+        else {
+            return entityManager.createNamedQuery("RegisterDokumenData.findAll", RegisterDokumenData.class)
+                 .getResultList()
+                 .stream()
+                 .map(d -> convertRegisterDokumenDataToRegisterDokumen(d))
+                            .collect(Collectors.toList());
+        }
+        
+    }
+
+    @Override
+    public Long getJumlahData(List<Filter> f) {
+        
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<RegisterDokumenData> root = cq.from(RegisterDokumenData.class);		
+
+        // where clause
+        Iterator<Filter> iterFilter = f.iterator();
+        ArrayList<Predicate> daftarPredicate = new ArrayList<>();
+
+        while (iterFilter.hasNext()) {
+            Filter filter = (Filter) iterFilter.next();
+
+            switch (filter.getField_name()) {
+                case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                default -> {
+                }
+            }			
+        }
+
+        if(daftarPredicate.isEmpty()) {
+            cq.select(cb.count(root));
+        }
+        else {
+            cq.select(cb.count(root)).where(cb.and(daftarPredicate.toArray(new Predicate[0])));
+        }
+
+        return entityManager.createQuery(cq).getSingleResult();
+        
+    }
+    
+    private RegisterDokumen convertRegisterDokumenDataToRegisterDokumen(RegisterDokumenData d) {
+        RegisterDokumen registerDokumen = null;
+		
+        if(d != null) {
+            PerusahaanData perusahaanData = d.getPerusahaan();
+            KategoriModelPerizinanData kategoriModelPerizinanData = perusahaanData.getModelPerizinan();
+            KategoriModelPerizinan kategoriModelPerizinan = kategoriModelPerizinanData != null ?
+                    new KategoriModelPerizinan(
+                        kategoriModelPerizinanData.getId(), 
+                        kategoriModelPerizinanData.getNama(), 
+                        kategoriModelPerizinanData.getSingkatan()
+                    ) : null;
+            KategoriSkalaUsahaData kategoriSkalaUsahaData = perusahaanData.getSkalaUsaha();
+            KategoriSkalaUsaha kategoriSkalaUsaha = kategoriSkalaUsahaData != null ?
+                    convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(kategoriSkalaUsahaData)
+                    : null;            
+            DetailPelakuUsahaData pelakuUsahaData = perusahaanData.getPelakuUsaha();
+            KategoriPelakuUsahaData kategoriPelakuUsahaData = pelakuUsahaData != null ?
+                    pelakuUsahaData.getKategoriPelakuUsaha() : null;            
+            KategoriPelakuUsaha kategoriPelakuUsaha = kategoriPelakuUsahaData != null ?
+                    new KategoriPelakuUsaha(
+                        kategoriPelakuUsahaData.getId(), 
+                        kategoriPelakuUsahaData.getNama(), 
+                        kategoriSkalaUsaha
+                    ) : null;            
+            PelakuUsaha pelakuUsaha = pelakuUsahaData != null ?
+                    new PelakuUsaha(
+                        pelakuUsahaData.getId(), 
+                        pelakuUsahaData.getNama(), 
+                        pelakuUsahaData.getSingkatan(), 
+                        kategoriPelakuUsaha
+                    ) : null;
+            PropinsiData propinsiData = perusahaanData.getPropinsi();
+            Propinsi propinsi = propinsiData != null ?
+                    new Propinsi(
+                        propinsiData.getId(), 
+                        propinsiData.getNama()
+                    ) : null;
+            KabupatenData kabupatenData = perusahaanData.getKabupaten();
+            Kabupaten kabupaten = kabupatenData != null ?
+                    new Kabupaten(
+                        kabupatenData.getId(), 
+                        kabupatenData.getNama(), 
+                        propinsi != null ? propinsi.getId() : null
+                    ) : null;            
+            KecamatanData kecamatanData = perusahaanData.getKecamatan();
+            Kecamatan kecamatan = kecamatanData != null ?
+                    new Kecamatan(
+                        kecamatanData.getId(), 
+                        kecamatanData.getNama(), 
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null
+                    ) : null;
+            DesaData desaData = perusahaanData.getDesa();
+            Desa desa = desaData != null ?
+                    new Desa(
+                        desaData.getId(), 
+                        desaData.getNama(), 
+                        propinsi != null ? propinsi.getId() : null,
+                        kabupaten != null ? kabupaten.getId() : null,
+                        kecamatan != null ? kecamatan.getId() : null
+                    ) : null;
+            Alamat alamat = new Alamat(
+                propinsi, 
+                kabupaten, 
+                kecamatan, 
+                desa, 
+                perusahaanData.getDetailAlamat()
+            );
+            Kontak kontak = new Kontak(
+                perusahaanData.getTelepone(), 
+                perusahaanData.getFax(), 
+                perusahaanData.getEmail()
+            );
+            Perusahaan perusahaan = perusahaanData != null ?
+                    new Perusahaan(
+                        perusahaanData.getId(), 
+                        perusahaanData.getNpwp(), 
+                        perusahaanData.getNama(), 
+                        kategoriModelPerizinan, 
+                        pelakuUsaha, 
+                        alamat, 
+                        kontak, 
+                        perusahaanData.getTanggalRegistrasi()
+                    ) : null;
+            DokumenData dokumenData = d.getDokumen();
+            Dokumen dokumen = dokumenData != null ?
+                    new Dokumen(
+                            dokumenData.getId(), 
+                            dokumenData.getNama(), 
+                            dokumenData.getSingkatan(), 
+                            dokumenData.getIdLama()
+                    ): null;
+            OtorisasiData otorisasiData = d.getUploader();
+            HakAksesData hakAksesData = otorisasiData.getHakAkses();
+            HakAkses hakAkses = hakAksesData != null ?
+                    new HakAkses(
+                            hakAksesData.getId(), 
+                            hakAksesData.getNama(), 
+                            hakAksesData.getKeterangan()
+                    ) : null;
+            PersonData personData = otorisasiData.getPerson();
+            JenisKelaminData jenisKelaminData = personData.getSex();
+            JenisKelamin jenisKelamin = jenisKelaminData != null ?
+                    new JenisKelamin(
+                            jenisKelaminData.getId(), 
+                            jenisKelaminData.getNama()
+                    ) : null;
+            PropinsiData propinsiDataPerson = personData.getPropinsi();
+            Propinsi propinsiPerson = propinsiDataPerson != null ?
+                    new Propinsi(
+                        propinsiDataPerson.getId(), 
+                        propinsiDataPerson.getNama()
+                    ) : null;
+            KabupatenData kabupatenDataPerson = personData.getKabupaten();
+            Kabupaten kabupatenPerson = kabupatenDataPerson != null ?
+                    new Kabupaten(
+                        kabupatenDataPerson.getId(), 
+                        kabupatenDataPerson.getNama(), 
+                        propinsiPerson != null ? propinsiPerson.getId() : null
+                    ) : null;            
+            KecamatanData kecamatanDataPerson = personData.getKecamatan();
+            Kecamatan kecamatanPerson = kecamatanDataPerson != null ?
+                    new Kecamatan(
+                        kecamatanDataPerson.getId(), 
+                        kecamatanDataPerson.getNama(), 
+                        propinsiPerson != null ? propinsiPerson.getId() : null,
+                        kabupatenPerson != null ? kabupatenPerson.getId() : null
+                    ) : null;
+            DesaData desaDataPerson = personData.getDesa();
+            Desa desaPerson = desaDataPerson != null ?
+                    new Desa(
+                        desaDataPerson.getId(), 
+                        desaDataPerson.getNama(), 
+                        propinsiPerson != null ? propinsiPerson.getId() : null,
+                        kabupatenPerson != null ? kabupatenPerson.getId() : null,
+                        kecamatanPerson != null ? kecamatanPerson.getId() : null
+                    ) : null;
+            Alamat alamatPerson = new Alamat(
+                propinsiPerson, 
+                kabupatenPerson, 
+                kecamatanPerson, 
+                desaPerson, 
+                personData.getDetailAlamat()
+            );
+            Kontak kontakPerson = new Kontak(
+                personData.getTelepone(), 
+                null,
+                personData.getEmail()
+            );
+            Person person = new Person(
+                        personData.getId(), 
+                        personData.getNama(), 
+                        jenisKelamin, 
+                        alamatPerson, 
+                        personData.getScanKtp(), 
+                        kontakPerson, 
+                        personData.getIsValidated(), 
+                        personData.getTanggalRegistrasi()
+                    );
+            RealmData realmData = otorisasiData.getRealm();
+            Realm realm = realmData != null ?
+                    new Realm(realmData.getId(), realmData.getNama()) : null;            
+            Otorisasi uploader = new Otorisasi(
+                            otorisasiData.getId(), 
+                            otorisasiData.getIdUser(), 
+                            otorisasiData.getIsVerified(), 
+                            otorisasiData.getUserName(), 
+                            otorisasiData.getTanggalRegistrasi(), 
+                            hakAkses, 
+                            person, 
+                            realm
+                    );
+            StatusDokumenData statusDokumenData = d.getStatusDokumen();
+            StatusDokumen statusDokumen = statusDokumenData != null ?
+                    new StatusDokumen(
+                            statusDokumenData.getId(), 
+                            statusDokumenData.getNama()
+                    ) : null;
+            registerDokumen = new RegisterDokumen(
+                    d.getId(), 
+                    perusahaan, 
+                    dokumen, 
+                    d.getTanggalRegistrasi(), 
+                    uploader, 
+                    d.getLokasiFile(), 
+                    statusDokumen, 
+                    d.getIdLama(), 
+                    d.getIsValidated()
+            );
+        }
+
+        return registerDokumen;	
+    }
+    
+    private RegisterDokumenData convertRegisterDokumenToRegisterDokumenData(RegisterDokumen t) {
+        RegisterDokumenData registerDokumenData = null;
+		
+        if(t != null) {
+            registerDokumenData = new RegisterDokumenData();            
+            String idRegisterDokumen = t.getId();
+            registerDokumenData.setId(idRegisterDokumen != null ? t.getId() : generateId());
+            PerusahaanData perusahaanData = new PerusahaanData(t.getPerusahaan().getId());
+            registerDokumenData.setPerusahaan(perusahaanData);
+            DokumenData dokumenData = new DokumenData(t.getDokumen().getId());
+            registerDokumenData.setDokumen(dokumenData);
+            registerDokumenData.setTanggalRegistrasi(t.getTanggalRegistrasi());
+            OtorisasiData otorisasiData = new OtorisasiData(t.getUploader().getId());
+            registerDokumenData.setUploader(otorisasiData);
+            registerDokumenData.setLokasiFile(t.getLokasiFile());
+            StatusDokumenData statusDokumenData = new StatusDokumenData(t.getStatusDokumen().getId());
+            registerDokumenData.setStatusDokumen(statusDokumenData);
+            registerDokumenData.setIdLama(t.getIdLama());
+            registerDokumenData.setIsValidated(t.getIsValidated());
+        }
+
+        return registerDokumenData;
+    }
+    
+    private String generateId() {
+        int tahun = LocalDate.now().getYear();
+        String hasil;
+
+        Query q = entityManager.createQuery("SELECT MAX(rd.id) "
+                        + "FROM RegisterDokumenData rd "
+                        + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun");
+
+        q.setParameter("tahun", tahun);
+
+        try {
+                hasil = (String) q.getSingleResult();
+                hasil = hasil.substring(0, 7);
+                Long idBaru = Long.parseLong(hasil)  + 1;
+                hasil = LPad(Long.toString(idBaru), 7, '0');
+                return hasil.concat(Integer.toString(tahun));
+        } catch (NumberFormatException e) {	
+                hasil = "0000001";			
+                return hasil.concat(Integer.toString(tahun));
+        }		
+    }
+    
+    private String LPad(String str, Integer length, char car) {
+        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
+    }
+    
+    private KategoriSkalaUsaha convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(KategoriSkalaUsahaData d) {
+        KategoriSkalaUsaha kategoriSkalaUsaha = null;
+		
+        if(d != null) {
+            kategoriSkalaUsaha = new KategoriSkalaUsaha(
+                    d.getId(), d.getNama(), d.getSingkatan(), d.getKeterangan());
+        }
+
+        return kategoriSkalaUsaha;	
+    }
+
+}

@@ -10,6 +10,7 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.KategoriKbli;
 import com.cso.sikoling.abstraction.entity.dokumen.Kbli;
+import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.StatusDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.VersiKbli;
 import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan;
@@ -68,6 +69,7 @@ import com.cso.sikoling.abstraction.service.UserService;
 import com.cso.sikoling.abstraction.service.TokenService;
 import com.cso.sikoling.abstraction.service.dokumen.KategoriKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.KbliServiceBasic;
+import com.cso.sikoling.abstraction.service.dokumen.RegisterDokumenServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.StatusDokumenServiceBasic;
 import com.cso.sikoling.abstraction.service.dokumen.VersiKbliServiceBasic;
 import com.cso.sikoling.abstraction.service.permohonan.PosisiTahapPemberkasanServiceBasic;
@@ -231,6 +233,12 @@ public class RestfulProvider {
     public Service<StatusDokumen> getStatusDokumenService(
             @Infrastructure Repository<StatusDokumen, QueryParamFilters, Filter> statusDokumenRepository) {
         return new StatusDokumenServiceBasic(statusDokumenRepository);
+    }
+    
+    @Produces
+    public Service<RegisterDokumen> getRegisterDokumenService(
+            @Infrastructure Repository<RegisterDokumen, QueryParamFilters, Filter> registerDokumenRepository) {
+        return new RegisterDokumenServiceBasic(registerDokumenRepository);
     }
     
     @Produces

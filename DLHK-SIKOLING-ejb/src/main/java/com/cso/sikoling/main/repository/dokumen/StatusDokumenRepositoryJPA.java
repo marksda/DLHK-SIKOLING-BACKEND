@@ -33,10 +33,10 @@ public class StatusDokumenRepositoryJPA implements Repository<StatusDokumen, Que
     @Override
     public StatusDokumen save(StatusDokumen t) throws SQLException {   
         try {
-            StatusDokumenData versiKbliData = convertStatusDokumenToStatusDokumenData(t);
-            entityManager.persist(versiKbliData);
+            StatusDokumenData statusDokumenData = convertStatusDokumenToStatusDokumenData(t);
+            entityManager.persist(statusDokumenData);
             entityManager.flush();             
-            return convertStatusDokumenDataToStatusDokumen(versiKbliData);  
+            return convertStatusDokumenDataToStatusDokumen(statusDokumenData);  
         } 
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id status dokumen harus bilangan 1 digit");
@@ -50,9 +50,9 @@ public class StatusDokumenRepositoryJPA implements Repository<StatusDokumen, Que
     public StatusDokumen update(StatusDokumen t) throws SQLException {
         
         try {
-            StatusDokumenData versiKbliData = convertStatusDokumenToStatusDokumenData(t);  
-            versiKbliData = entityManager.merge(versiKbliData);
-            return convertStatusDokumenDataToStatusDokumen(versiKbliData);   
+            StatusDokumenData statusDokumenData = convertStatusDokumenToStatusDokumenData(t);  
+            statusDokumenData = entityManager.merge(statusDokumenData);
+            return convertStatusDokumenDataToStatusDokumen(statusDokumenData);   
         }         
         catch(ConstraintViolationException cstVltException) {
             throw new SQLException("id status dokumen harus bilangan 1 digit");
