@@ -245,11 +245,28 @@ public class StatusDokumenRepositoryJPA implements Repository<StatusDokumen, Que
 		
         if(t != null) {
             statusDokumenData = new StatusDokumenData();
-            statusDokumenData.setId(t.getId());
+            String idStatusDokumen = t.getId();
+            statusDokumenData.setId(idStatusDokumen != null ? t.getId() : getGenerateId());
             statusDokumenData.setNama(t.getNama());
         }
 
         return statusDokumenData;
+    }
+    
+    private String getGenerateId() {
+        String hasil;
+
+        Query q = entityManager.createQuery("SELECT MAX(m.id) FROM StatusDokumenData m");
+
+        try {
+                hasil = (String) q.getSingleResult();
+                Long idBaru = Long.parseLong(hasil)  + 1;
+                hasil = Long.toString(idBaru);
+                return hasil;
+        } catch (NumberFormatException e) {	
+                hasil = "0";			
+                return hasil;
+        }		
     }
 
 }

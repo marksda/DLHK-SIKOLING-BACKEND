@@ -72,7 +72,8 @@ public class StatusDokumenResource {
     @Produces({MediaType.APPLICATION_JSON})
     public StatusDokumenDTO save(StatusDokumenDTO statusDokumenDTO) throws SQLException { 
         
-        try {            
+        try {       
+            statusDokumenDTO.setId(null);
             return new StatusDokumenDTO(statusDokumenService.save(statusDokumenDTO.toStatusDokumen()));
         } 
         catch (NullPointerException e) {

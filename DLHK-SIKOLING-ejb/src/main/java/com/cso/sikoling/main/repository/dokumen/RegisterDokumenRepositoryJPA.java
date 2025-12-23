@@ -160,7 +160,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("dokumen").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         default -> {
                         }
                     }			
@@ -190,10 +190,10 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         }
                         case "nama" -> {
                             if(sort.getValue().equals("asc")) {
-                                cq.orderBy(cb.asc(root.get("nama")));
+                                cq.orderBy(cb.asc(root.get("dokumen").get("nama")));
                             }
                             else {
-                                cq.orderBy(cb.desc(root.get("nama")));
+                                cq.orderBy(cb.desc(root.get("dokumen").get("nama")));
                             }
                         }
                         default -> {
@@ -246,7 +246,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
 
             switch (filter.getField_name()) {
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
-                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "nama" -> daftarPredicate.add(cb.like(cb.lower(root.get("dokumen").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                 default -> {
                 }
             }			
@@ -268,18 +268,21 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
 		
         if(d != null) {
             PerusahaanData perusahaanData = d.getPerusahaan();
-            KategoriModelPerizinanData kategoriModelPerizinanData = perusahaanData.getModelPerizinan();
+            KategoriModelPerizinanData kategoriModelPerizinanData = perusahaanData != null ?
+                    perusahaanData.getModelPerizinan() : null;
             KategoriModelPerizinan kategoriModelPerizinan = kategoriModelPerizinanData != null ?
                     new KategoriModelPerizinan(
                         kategoriModelPerizinanData.getId(), 
                         kategoriModelPerizinanData.getNama(), 
                         kategoriModelPerizinanData.getSingkatan()
                     ) : null;
-            KategoriSkalaUsahaData kategoriSkalaUsahaData = perusahaanData.getSkalaUsaha();
+            KategoriSkalaUsahaData kategoriSkalaUsahaData = perusahaanData != null ?
+                    perusahaanData.getSkalaUsaha() : null;
             KategoriSkalaUsaha kategoriSkalaUsaha = kategoriSkalaUsahaData != null ?
                     convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(kategoriSkalaUsahaData)
                     : null;            
-            DetailPelakuUsahaData pelakuUsahaData = perusahaanData.getPelakuUsaha();
+            DetailPelakuUsahaData pelakuUsahaData = perusahaanData != null ?
+                    perusahaanData.getPelakuUsaha() : null;
             KategoriPelakuUsahaData kategoriPelakuUsahaData = pelakuUsahaData != null ?
                     pelakuUsahaData.getKategoriPelakuUsaha() : null;            
             KategoriPelakuUsaha kategoriPelakuUsaha = kategoriPelakuUsahaData != null ?
@@ -295,20 +298,23 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         pelakuUsahaData.getSingkatan(), 
                         kategoriPelakuUsaha
                     ) : null;
-            PropinsiData propinsiData = perusahaanData.getPropinsi();
+            PropinsiData propinsiData = perusahaanData != null ?
+                    perusahaanData.getPropinsi() : null;
             Propinsi propinsi = propinsiData != null ?
                     new Propinsi(
                         propinsiData.getId(), 
                         propinsiData.getNama()
                     ) : null;
-            KabupatenData kabupatenData = perusahaanData.getKabupaten();
+            KabupatenData kabupatenData = perusahaanData != null ?
+                    perusahaanData.getKabupaten() : null;
             Kabupaten kabupaten = kabupatenData != null ?
                     new Kabupaten(
                         kabupatenData.getId(), 
                         kabupatenData.getNama(), 
                         propinsi != null ? propinsi.getId() : null
                     ) : null;            
-            KecamatanData kecamatanData = perusahaanData.getKecamatan();
+            KecamatanData kecamatanData = perusahaanData != null ?
+                    perusahaanData.getKecamatan() : null;
             Kecamatan kecamatan = kecamatanData != null ?
                     new Kecamatan(
                         kecamatanData.getId(), 
@@ -316,7 +322,8 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         propinsi != null ? propinsi.getId() : null,
                         kabupaten != null ? kabupaten.getId() : null
                     ) : null;
-            DesaData desaData = perusahaanData.getDesa();
+            DesaData desaData = perusahaanData != null ?
+                    perusahaanData.getDesa() : null;
             Desa desa = desaData != null ?
                     new Desa(
                         desaData.getId(), 
@@ -330,12 +337,12 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                 kabupaten, 
                 kecamatan, 
                 desa, 
-                perusahaanData.getDetailAlamat()
+                perusahaanData != null ? perusahaanData.getDetailAlamat() : null
             );
             Kontak kontak = new Kontak(
-                perusahaanData.getTelepone(), 
-                perusahaanData.getFax(), 
-                perusahaanData.getEmail()
+                perusahaanData != null ? perusahaanData.getTelepone() : null, 
+                perusahaanData != null ? perusahaanData.getFax() : null, 
+                perusahaanData != null ? perusahaanData.getEmail() : null
             );
             Perusahaan perusahaan = perusahaanData != null ?
                     new Perusahaan(
@@ -357,34 +364,40 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                             dokumenData.getIdLama()
                     ): null;
             OtorisasiData otorisasiData = d.getUploader();
-            HakAksesData hakAksesData = otorisasiData.getHakAkses();
+            HakAksesData hakAksesData = otorisasiData != null ?
+                    otorisasiData.getHakAkses() : null;
             HakAkses hakAkses = hakAksesData != null ?
                     new HakAkses(
                             hakAksesData.getId(), 
                             hakAksesData.getNama(), 
                             hakAksesData.getKeterangan()
                     ) : null;
-            PersonData personData = otorisasiData.getPerson();
-            JenisKelaminData jenisKelaminData = personData.getSex();
+            PersonData personData = otorisasiData != null ?
+                    otorisasiData.getPerson() : null;
+            JenisKelaminData jenisKelaminData = personData != null ?
+                    personData.getSex() : null;
             JenisKelamin jenisKelamin = jenisKelaminData != null ?
                     new JenisKelamin(
                             jenisKelaminData.getId(), 
                             jenisKelaminData.getNama()
                     ) : null;
-            PropinsiData propinsiDataPerson = personData.getPropinsi();
+            PropinsiData propinsiDataPerson = personData != null ?
+                    personData.getPropinsi() : null;
             Propinsi propinsiPerson = propinsiDataPerson != null ?
                     new Propinsi(
                         propinsiDataPerson.getId(), 
                         propinsiDataPerson.getNama()
                     ) : null;
-            KabupatenData kabupatenDataPerson = personData.getKabupaten();
+            KabupatenData kabupatenDataPerson = personData != null ? 
+                    personData.getKabupaten() : null;
             Kabupaten kabupatenPerson = kabupatenDataPerson != null ?
                     new Kabupaten(
                         kabupatenDataPerson.getId(), 
                         kabupatenDataPerson.getNama(), 
                         propinsiPerson != null ? propinsiPerson.getId() : null
                     ) : null;            
-            KecamatanData kecamatanDataPerson = personData.getKecamatan();
+            KecamatanData kecamatanDataPerson = personData != null ?
+                    personData.getKecamatan() : null;
             Kecamatan kecamatanPerson = kecamatanDataPerson != null ?
                     new Kecamatan(
                         kecamatanDataPerson.getId(), 
@@ -392,7 +405,8 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         propinsiPerson != null ? propinsiPerson.getId() : null,
                         kabupatenPerson != null ? kabupatenPerson.getId() : null
                     ) : null;
-            DesaData desaDataPerson = personData.getDesa();
+            DesaData desaDataPerson = personData != null ?
+                    personData.getDesa() : null;
             Desa desaPerson = desaDataPerson != null ?
                     new Desa(
                         desaDataPerson.getId(), 
@@ -406,36 +420,38 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                 kabupatenPerson, 
                 kecamatanPerson, 
                 desaPerson, 
-                personData.getDetailAlamat()
+                 personData != null ? personData.getDetailAlamat() : null
             );
             Kontak kontakPerson = new Kontak(
-                personData.getTelepone(), 
+                personData != null ? personData.getTelepone() : null, 
                 null,
-                personData.getEmail()
+                 personData != null ? personData.getEmail() : null
             );
             Person person = new Person(
-                        personData.getId(), 
-                        personData.getNama(), 
-                        jenisKelamin, 
-                        alamatPerson, 
-                        personData.getScanKtp(), 
-                        kontakPerson, 
-                        personData.getIsValidated(), 
-                        personData.getTanggalRegistrasi()
-                    );
-            RealmData realmData = otorisasiData.getRealm();
+                personData != null ? personData.getId() : null, 
+                personData != null ? personData.getNama() : null, 
+                jenisKelamin, 
+                alamatPerson, 
+                personData != null ? personData.getScanKtp() : null, 
+                kontakPerson, 
+                personData != null ? personData.getIsValidated() : null, 
+                personData != null ? personData.getTanggalRegistrasi() : null
+            );
+            RealmData realmData = otorisasiData != null ?
+                    otorisasiData.getRealm() : null;
             Realm realm = realmData != null ?
                     new Realm(realmData.getId(), realmData.getNama()) : null;            
             Otorisasi uploader = new Otorisasi(
-                            otorisasiData.getId(), 
-                            otorisasiData.getIdUser(), 
-                            otorisasiData.getIsVerified(), 
-                            otorisasiData.getUserName(), 
-                            otorisasiData.getTanggalRegistrasi(), 
-                            hakAkses, 
-                            person, 
-                            realm
-                    );
+                    otorisasiData != null ? otorisasiData.getId() : null, 
+                    otorisasiData != null ? otorisasiData.getIdUser() : null, 
+                    otorisasiData != null ? otorisasiData.getIsVerified() : null, 
+                    otorisasiData != null ? otorisasiData.getUserName() : null, 
+                    otorisasiData != null ? 
+                            otorisasiData.getTanggalRegistrasi() : null, 
+                    hakAkses, 
+                    person, 
+                    realm
+                );
             StatusDokumenData statusDokumenData = d.getStatusDokumen();
             StatusDokumen statusDokumen = statusDokumenData != null ?
                     new StatusDokumen(
