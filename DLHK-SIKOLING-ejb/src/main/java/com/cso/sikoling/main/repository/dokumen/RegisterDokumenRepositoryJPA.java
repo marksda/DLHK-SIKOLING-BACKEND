@@ -184,6 +184,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                                 )
                             );
                         }
+                        case "validasi" -> daftarPredicate.add(cb.equal(root.get("isValidated"), filter.getValue()));
                         default -> {
                         }
                     }			
@@ -233,6 +234,14 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                             }
                             else {
                                 cq.orderBy(cb.desc(root.get("perusahaan").get("nama")));
+                            }
+                        }
+                        case "validasi" -> {
+                            if(sort.getValue().equals("asc")) {
+                                cq.orderBy(cb.asc(root.get("isValidated")));
+                            }
+                            else {
+                                cq.orderBy(cb.desc(root.get("isValidated")));
                             }
                         }
                         case "tanggal_registrasi" -> {
@@ -312,6 +321,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         )
                     );
                 }
+                case "validasi" -> daftarPredicate.add(cb.equal(root.get("isValidated"), filter.getValue()));
                 default -> {
                 }
             }			
