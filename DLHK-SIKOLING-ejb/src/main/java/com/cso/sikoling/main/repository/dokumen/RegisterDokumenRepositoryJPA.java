@@ -167,7 +167,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                         case "dokumen" -> daftarPredicate.add(cb.equal(root.get("dokumen").get("id"), filter.getValue()));
                         case "status_dokumen" -> daftarPredicate.add(cb.equal(root.get("statusDokumen").get("id"), filter.getValue()));
-                        case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                        case "id_perusahaan" -> daftarPredicate.add(cb.equal(root.get("perusahaan").get("id"), filter.getValue()));
                         case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                         case "rentang_tanggal" -> {
                             Jsonb jsonb = JsonbBuilder.create();
@@ -304,7 +304,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                 case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
                 case "dokumen" -> daftarPredicate.add(cb.equal(root.get("dokumen").get("id"), filter.getValue()));
                 case "status_dokumen" -> daftarPredicate.add(cb.equal(root.get("statusDokumen").get("id"), filter.getValue()));
-                case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
+                case "id_perusahaan" -> daftarPredicate.add(cb.equal(root.get("perusahaan").get("id"), filter.getValue()));
                 case "tanggal" -> daftarPredicate.add(cb.equal(root.get("tanggalRegistrasi"), filter.getValue()));
                 case "rentang_tanggal" -> {
                     Jsonb jsonb = JsonbBuilder.create();
