@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.resources.integrator;
 
+import com.cso.sikolingrestful.annotation.WopiResponseHeader;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.json.Json;
@@ -24,8 +25,8 @@ public class WopiResource {
     @Path("/files/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
+    @WopiResponseHeader
     public JsonObject getCheckFileInfo() {
-        
         JsonObject model = Json.createObjectBuilder()
                     .add("BaseFileName", "test.txt")
                     .add("Size", 11)
