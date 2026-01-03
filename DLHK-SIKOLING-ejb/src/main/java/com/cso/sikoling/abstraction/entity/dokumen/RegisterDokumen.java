@@ -14,20 +14,20 @@ public class RegisterDokumen implements Serializable {
     private final Dokumen dokumen;
     private final Date tanggalRegistrasi;
     private final Otorisasi uploader;
-    private final String lokasiFile;
+    private final String namaFile;
     private final StatusDokumen statusDokumen;
     private final String idLama;
     private final Boolean isValidated;
 
     public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
-            Date tanggalRegistrasi, Otorisasi uploader, String lokasiFile, 
+            Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
             StatusDokumen statusDokumen, String idLama, Boolean isValidated) {
         this.id = id;
         this.perusahaan = perusahaan;
         this.dokumen = dokumen;
         this.tanggalRegistrasi = tanggalRegistrasi;
         this.uploader = uploader;
-        this.lokasiFile = lokasiFile;
+        this.namaFile = namaFile;
         this.statusDokumen = statusDokumen;
         this.idLama = idLama;
         this.isValidated = isValidated;
@@ -53,8 +53,8 @@ public class RegisterDokumen implements Serializable {
         return uploader;
     }
 
-    public String getLokasiFile() {
-        return lokasiFile;
+    public String getNamaFile() {
+        return namaFile;
     }
 
     public StatusDokumen getStatusDokumen() {

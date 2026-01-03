@@ -27,7 +27,7 @@ import java.util.Date;
     @NamedQuery(name = "RegisterDokumenData.findByDokumen", query = "SELECT r FROM RegisterDokumenData r WHERE r.dokumen = :dokumen"),
     @NamedQuery(name = "RegisterDokumenData.findByTanggalRegistrasi", query = "SELECT r FROM RegisterDokumenData r WHERE r.tanggalRegistrasi = :tanggalRegistrasi"),
     @NamedQuery(name = "RegisterDokumenData.findByUploader", query = "SELECT r FROM RegisterDokumenData r WHERE r.uploader = :uploader"),
-    @NamedQuery(name = "RegisterDokumenData.findByLokasiFile", query = "SELECT r FROM RegisterDokumenData r WHERE r.lokasiFile = :lokasiFile"),
+    @NamedQuery(name = "RegisterDokumenData.findByNamaFile", query = "SELECT r FROM RegisterDokumenData r WHERE r.namaFile = :namaFile"),
     @NamedQuery(name = "RegisterDokumenData.findById", query = "SELECT r FROM RegisterDokumenData r WHERE r.id = :id"),
     @NamedQuery(name = "RegisterDokumenData.findByStatusDokumen", query = "SELECT r FROM RegisterDokumenData r WHERE r.statusDokumen = :statusDokumen"),
     @NamedQuery(name = "RegisterDokumenData.findByIdLama", query = "SELECT r FROM RegisterDokumenData r WHERE r.idLama = :idLama"),
@@ -54,8 +54,8 @@ public class RegisterDokumenData implements Serializable {
     private OtorisasiData uploader;
     
     @Size(max = 2147483647)
-    @Column(name = "lokasi_file")
-    private String lokasiFile;
+    @Column(name = "nama_file")
+    private String namaFile;
     
     @Id
     @Basic(optional = false)
@@ -120,12 +120,12 @@ public class RegisterDokumenData implements Serializable {
         this.uploader = uploader;
     }
 
-    public String getLokasiFile() {
-        return lokasiFile;
+    public String getNamaFile() {
+        return namaFile;
     }
 
-    public void setLokasiFile(String lokasiFile) {
-        this.lokasiFile = lokasiFile;
+    public void setNamaFile(String namaFile) {
+        this.namaFile = namaFile;
     }
 
     public String getId() {

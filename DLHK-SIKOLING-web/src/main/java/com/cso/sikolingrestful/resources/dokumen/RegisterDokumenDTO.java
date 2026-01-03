@@ -16,7 +16,7 @@ public class RegisterDokumenDTO {
     private DokumenDTO dokumen;
     private String tanggal_registrasi;
     private OtorisasiDTO uploader;
-    private String lokasi_file;
+    private String nama_file;
     private StatusDokumenDTO status_dokumen;
     private String id_lama;
     private Boolean is_validated;
@@ -37,7 +37,7 @@ public class RegisterDokumenDTO {
                     df.format(tmpTglReg) : null;
             this.uploader = t.getUploader() != null ?
                     new OtorisasiDTO(t.getUploader()) : null;
-            this.lokasi_file = t.getLokasiFile();
+            this.nama_file = t.getNamaFile();
             this.status_dokumen = t.getStatusDokumen() != null ?
                     new StatusDokumenDTO(t.getStatusDokumen()) : null;
             this.id_lama = t.getIdLama();
@@ -85,12 +85,12 @@ public class RegisterDokumenDTO {
         this.uploader = uploader;
     }
 
-    public String getLokasi_file() {
-        return lokasi_file;
+    public String getNama_file() {
+        return nama_file;
     }
 
-    public void setLokasi_file(String lokasi_file) {
-        this.lokasi_file = lokasi_file;
+    public void setNama_file(String nama_file) {
+        this.nama_file = nama_file;
     }
 
     public StatusDokumenDTO getStatus_dokumen() {
@@ -127,7 +127,7 @@ public class RegisterDokumenDTO {
                 this.dokumen != null ? this.dokumen.toDokumen() : null, 
                 date, 
                 this.uploader != null ? this.uploader.toOtorisasi() : null, 
-                this.lokasi_file, 
+                this.nama_file, 
                 this.status_dokumen != null ? this.status_dokumen.toStatusDokumen() : null, 
                 this.id_lama, 
                 this.is_validated
@@ -139,7 +139,7 @@ public class RegisterDokumenDTO {
                 this.dokumen != null ? this.dokumen.toDokumen() : null, 
                 null, 
                 this.uploader != null ? this.uploader.toOtorisasi() : null, 
-                this.lokasi_file, 
+                this.nama_file, 
                 this.status_dokumen != null ? this.status_dokumen.toStatusDokumen() : null, 
                 this.id_lama, 
                 this.is_validated

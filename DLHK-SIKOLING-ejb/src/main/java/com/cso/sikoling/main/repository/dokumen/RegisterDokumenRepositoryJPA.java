@@ -539,7 +539,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                     dokumen, 
                     d.getTanggalRegistrasi(), 
                     uploader, 
-                    d.getLokasiFile(), 
+                    d.getNamaFile(), 
                     statusDokumen, 
                     d.getIdLama(), 
                     d.getIsValidated()
@@ -563,7 +563,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
             registerDokumenData.setTanggalRegistrasi(t.getTanggalRegistrasi());
             OtorisasiData otorisasiData = new OtorisasiData(t.getUploader().getId());
             registerDokumenData.setUploader(otorisasiData);
-            registerDokumenData.setLokasiFile(t.getLokasiFile());
+            registerDokumenData.setNamaFile(t.getNamaFile());
             StatusDokumenData statusDokumenData = new StatusDokumenData(t.getStatusDokumen().getId());
             registerDokumenData.setStatusDokumen(statusDokumenData);
             registerDokumenData.setIdLama(t.getIdLama());
