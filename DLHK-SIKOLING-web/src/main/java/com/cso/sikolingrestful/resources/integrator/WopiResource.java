@@ -25,7 +25,7 @@ public class WopiResource {
         JsonObject model = Json.createObjectBuilder()
                     .add("BaseFileName", "test.txt")
                     .add("Size", 11)
-                    .add("UserId", "user id")
+                    .add("UserId", file_id)
                     .add("UserCanWrite", true)
                     .build();            
             

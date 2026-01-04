@@ -127,9 +127,9 @@ public class UserResource {
         
         if(user != null) {            
             List<Filter> filterKey = new ArrayList<>();
-            Filter filter = new Filter("realm", appProperties.getProperty("ID_REALM"));
+            Filter filter = new Filter("id_realm", appProperties.getProperty("ID_REALM"));
             filterKey.add(filter);
-            filter = new Filter("jwa", appProperties.getProperty("ID_JWA"));
+            filter = new Filter("id_jwa", appProperties.getProperty("ID_JWA"));
             filterKey.add(filter);
             filter = new Filter("id", appProperties.getProperty("ID_KEY"));
             filterKey.add(filter);
@@ -150,7 +150,7 @@ public class UserResource {
             Date nextYear = cal.getTime();
         
             jwsPayload.put("iss", "dlhk sidoarjo");
-            jwsPayload.put("sub", key.getRealm());
+            jwsPayload.put("sub", key.getRealm().getId());
             jwsPayload.put("aud", user.getId());
             jwsPayload.put("exp", nextYear);
             jwsPayload.put("iat", today);
