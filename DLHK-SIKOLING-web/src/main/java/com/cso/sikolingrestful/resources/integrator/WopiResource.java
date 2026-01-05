@@ -21,7 +21,10 @@ public class WopiResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @WopiResponseHeader
-    public JsonObject wopiCheckFileInfo(@PathParam("file_id") String file_id) {
+    public JsonObject wopiCheckFileInfo(
+//            @Context HttpHeaders httpHeaders, 
+            @PathParam("file_id") String file_id) {        
+//        MultivaluedMap<String, String> dataHeader = httpHeaders.getRequestHeaders();
         JsonObject model = Json.createObjectBuilder()
                     .add("BaseFileName", "test.txt")
                     .add("Size", 11)
