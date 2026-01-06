@@ -40,7 +40,7 @@ public class WopiResource {
     @Produces({MediaType.TEXT_PLAIN})
     @WopiResponseHeader
     public String wopiGetFile(@PathParam("file_id") String file_id) {
-        return "Hello wopi!!";
+        return "Hello wopi!! " + file_id;
     }
     
     @Path("/files/{file_id}/contents")
