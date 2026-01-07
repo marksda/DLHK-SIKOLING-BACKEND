@@ -13,7 +13,7 @@ import java.io.IOException;
 @Stateless
 @LocalBean
 @WopiResponseHeader
-public class WopiFilter implements ContainerResponseFilter {
+public class WopiHeaderResponse implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext, 

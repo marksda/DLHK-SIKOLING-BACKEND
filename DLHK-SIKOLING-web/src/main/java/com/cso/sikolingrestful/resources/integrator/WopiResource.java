@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.resources.integrator;
 
+import com.cso.sikolingrestful.annotation.WopiRequiredAuthorization;
 import com.cso.sikolingrestful.annotation.WopiResponseHeader;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -10,6 +11,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 @Stateless
@@ -23,7 +25,8 @@ public class WopiResource {
     @WopiResponseHeader
     public JsonObject wopiCheckFileInfo(
 //            @Context HttpHeaders httpHeaders, 
-            @PathParam("file_id") String file_id) {        
+            @PathParam("file_id") String file_id,
+            @QueryParam("access_token") String accessToken) {        
 //        MultivaluedMap<String, String> dataHeader = httpHeaders.getRequestHeaders();
         JsonObject model = Json.createObjectBuilder()
                     .add("BaseFileName", "test.txt")
@@ -38,9 +41,12 @@ public class WopiResource {
     @Path("/files/{file_id}/contents")
     @GET
     @Produces({MediaType.TEXT_PLAIN})
+    @WopiRequiredAuthorization
     @WopiResponseHeader
-    public String wopiGetFile(@PathParam("file_id") String file_id) {
-        return "Hello wopi!! " + file_id;
+    public String wopiGetFile(
+            @PathParam("file_id") String file_id,
+            @QueryParam("access_token") String accessToken) {
+        return "Hello wopi!!, Id file: " + file_id + ", Access token: " + accessToken;
     }
     
     @Path("/files/{file_id}/contents")
