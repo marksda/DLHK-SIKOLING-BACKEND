@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import com.cso.sikoling.abstraction.service.TokenService;
-import com.cso.sikoling.main.repository.security.HakAksesData;
-import com.cso.sikoling.main.repository.security.OtorisasiData;
 import com.cso.sikolingrestful.annotation.WopiRequiredAuthorization;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.UriInfo;
@@ -71,6 +69,7 @@ public class WopiAuthorization implements ContainerRequestFilter {
             
             try {
                 checkPermissions(otorisasi, registerDokumen, crc);
+//                crc.setProperty("otorisasi", otorisasi);
                 crc.setProperty("registerDokumen", registerDokumen);
             } catch (Exception e) {
                 throw new NotAuthorizedException(e.toString());

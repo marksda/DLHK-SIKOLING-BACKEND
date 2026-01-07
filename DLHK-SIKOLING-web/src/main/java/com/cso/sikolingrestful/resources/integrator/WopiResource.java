@@ -1,10 +1,13 @@
 package com.cso.sikolingrestful.resources.integrator;
 
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
+import com.cso.sikoling.abstraction.service.LocalStorageService;
 import com.cso.sikolingrestful.annotation.WopiRequiredAuthorization;
 import com.cso.sikolingrestful.annotation.WopiResponseHeader;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.ws.rs.GET;
@@ -16,43 +19,80 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Stateless
 @LocalBean
 @Path("wopi")
 public class WopiResource {    
     
+    @Inject
+    private LocalStorageService localStorageService;
+    
     @Path("/files/{file_id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
+    @WopiRequiredAuthorization
     @WopiResponseHeader
     public JsonObject wopiCheckFileInfo(
-//            @Context HttpHeaders httpHeaders, 
-            @PathParam("file_id") String file_id,
-            @QueryParam("access_token") String accessToken) {        
-//        MultivaluedMap<String, String> dataHeader = httpHeaders.getRequestHeaders();
-        JsonObject model = Json.createObjectBuilder()
-                    .add("BaseFileName", "test.txt")
-                    .add("Size", 11)
-                    .add("UserId", file_id)
-                    .add("UserCanWrite", true)
-                    .build();            
-            
-        return model;
+            @Context ContainerRequestContext crc, 
+            @PathParam("file_id") String file_id) throws UnspecifiedException {        
+        try {
+            RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
+            String subPathLocation = File.separator
+                            .concat(registerDokumen.getDokumen().getId());
+            File tempFile = localStorageService
+                    .download(registerDokumen.getNamaFile(), subPathLocation);
+            String fileSize = String.valueOf(tempFile.length());
+            JsonObject model = Json.createObjectBuilder()
+                        .add("BaseFileName", registerDokumen.getNamaFile())
+                        .add("Size", fileSize)
+                        .add("UserId", file_id)
+                        .add("UserCanWrite", true)
+                        .build();            
+
+            return model;
+        } catch (IOException ex) {
+            throw new  UnspecifiedException(500, "id tidak dikenali sistem");
+        }
     }
     
     @Path("/files/{file_id}/contents")
     @GET
-    @Produces({MediaType.TEXT_PLAIN})
     @WopiRequiredAuthorization
     @WopiResponseHeader
-    public String wopiGetFile(
+    public Response wopiGetFile(
             @PathParam("file_id") String file_id,
             @QueryParam("access_token") String accessToken,
-            @Context ContainerRequestContext crc) {
+            @Context ContainerRequestContext crc) throws UnspecifiedException {
         RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
                 
-        return "Nama dokumen: " + registerDokumen.getNamaFile() + ", Id file: " + file_id + ", Access token: " + accessToken;
+        try {
+            if(registerDokumen != null) {
+                String subPathLocation = File.separator
+                        .concat(registerDokumen.getDokumen().getId());
+                File tempFile = localStorageService
+                        .download(registerDokumen.getNamaFile(), subPathLocation);
+                String fileType = Files.probeContentType(tempFile.toPath());
+                String fileSize = String.valueOf(tempFile.length());
+                
+                return Response.status( Response.Status.OK )
+                                .header("Content-Length", fileSize)
+                                .header("Content-Type", fileType)
+                                .entity(tempFile)
+                                .build();
+            }
+            else {
+                throw new UnspecifiedException(500, "id tidak dikenali sistem");
+            }
+        } catch (IOException ex) {
+            throw new  UnspecifiedException(500, "id tidak dikenali sistem");
+        }
+        
+        
     }
     
     @Path("/files/{file_id}/contents")
