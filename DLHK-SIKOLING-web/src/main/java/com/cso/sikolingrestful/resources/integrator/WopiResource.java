@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.resources.integrator;
 
+import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikolingrestful.annotation.WopiRequiredAuthorization;
 import com.cso.sikolingrestful.annotation.WopiResponseHeader;
 import jakarta.ejb.LocalBean;
@@ -12,6 +13,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 
 @Stateless
@@ -45,8 +48,11 @@ public class WopiResource {
     @WopiResponseHeader
     public String wopiGetFile(
             @PathParam("file_id") String file_id,
-            @QueryParam("access_token") String accessToken) {
-        return "Hello wopi!!, Id file: " + file_id + ", Access token: " + accessToken;
+            @QueryParam("access_token") String accessToken,
+            @Context ContainerRequestContext crc) {
+        RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
+                
+        return "Nama dokumen: " + registerDokumen.getNamaFile() + ", Id file: " + file_id + ", Access token: " + accessToken;
     }
     
     @Path("/files/{file_id}/contents")

@@ -2,6 +2,7 @@ package com.cso.sikolingrestful.provider;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
+import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.Service;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import com.cso.sikoling.abstraction.service.TokenService;
+import com.cso.sikoling.main.repository.security.HakAksesData;
+import com.cso.sikoling.main.repository.security.OtorisasiData;
 import com.cso.sikolingrestful.annotation.WopiRequiredAuthorization;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.UriInfo;
@@ -35,8 +38,8 @@ public class WopiAuthorization implements ContainerRequestFilter {
     @Inject
     private Service<Otorisasi> otorisasiService;
     
-//    @Context
-//    private ResourceInfo resourceInfo;
+    @Inject
+    private Service<RegisterDokumen> registerDokumenService;
 
     @Override
     public void filter(ContainerRequestContext crc) throws IOException {
@@ -46,19 +49,25 @@ public class WopiAuthorization implements ContainerRequestFilter {
                                         .orElseThrow(() -> new NotAuthorizedException("Wopi authorization not found"));
         Claims claims = Optional.ofNullable(tokenService.validateAccessToken(accessToken))
                                 .orElseThrow(() -> new NotAuthorizedException("Wopi authorization tidak valid"));
-        
-        try {
+        MultivaluedMap<String, String> pathParams = uriInfo.getPathParameters();
+        String fileId = Optional.ofNullable(pathParams.getFirst("file_id"))
+                            .orElseThrow(() -> new NotAuthorizedException("Wopi file tidak ditemukan"));
+        try {            
             List<Filter> fields_filter = new ArrayList<>();
-            Filter filter = new Filter("id_user", claims.getAudience().stream().findFirst().orElseThrow());
+            String idUser = claims.getAudience().stream().findFirst().orElseThrow();
+            Filter filter = new Filter("id_user", idUser);
             fields_filter.add(filter);
             QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
-        
-            String idHakAkses = otorisasiService.getDaftarData(qFilter).getFirst().getHak_akses().getId();
-//            Method resourceMethod = resourceInfo.getResourceMethod();
-//            List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
-//                                        .orElseThrow(() -> new NotAuthorizedException("Role not found"));
+            Otorisasi otorisasi = otorisasiService.getDaftarData(qFilter).getFirst();
+            
+            fields_filter.remove(filter);
+            filter = new Filter("id", fileId);
+            fields_filter.add(filter);
+            RegisterDokumen registerDokumen = registerDokumenService.getDaftarData(qFilter).getFirst();
+            
             try {
-                checkPermissions(idHakAkses);
+                checkPermissions(otorisasi, registerDokumen);
+                crc.setProperty("registerDokumen", registerDokumen);
             } catch (Exception e) {
                 throw new NotAuthorizedException(e.toString());
             }            
@@ -68,35 +77,15 @@ public class WopiAuthorization implements ContainerRequestFilter {
         
     }
     
-//    private List<Role> extractRoles(AnnotatedElement annotatedElement) {
-//        if (annotatedElement == null) {
-//            return null;
-//        } else {
-//            RequiredRole requiredRole = annotatedElement.getAnnotation(RequiredRole.class);
-//            if (requiredRole == null) {
-//                return null;
-//            } else {
-//                Role[] allowedRoles = requiredRole.value();
-//                return Arrays.asList(allowedRoles);
-//            }
-//        }
-//    }
-    
-    private void checkPermissions(String idHakAkses) throws Exception {
-//        Iterator<Role> iterator = allowedRoles.iterator();   
-        boolean allowRole = false; 
-        
-//        while(iterator.hasNext()) {    		
-//            Role role = iterator.next();
-//            if(role.label().equalsIgnoreCase(idHakAkses)) {
-//                allowRole = true;
-//                break;
-//            }    		
-//    	}
-        
-        if(!allowRole) {
-            throw new Exception("unauthorized Role");
-    	}
+    private void checkPermissions(Otorisasi otorisasi, RegisterDokumen registerDokumen) throws Exception {        
+        switch (otorisasi.getHak_akses().getId()) {
+            case "01" -> {
+            }
+            case "09" -> {
+                
+            }
+            default -> throw new Exception("unauthorized Role");
+        }
     }
 
 }
