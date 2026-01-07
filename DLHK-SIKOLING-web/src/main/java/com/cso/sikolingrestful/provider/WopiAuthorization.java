@@ -90,6 +90,8 @@ public class WopiAuthorization implements ContainerRequestFilter {
                     List<Filter> fields_filter = new ArrayList<>();
                     Filter filter = new Filter("id_person", otorisasi.getPerson().getId());
                     fields_filter.add(filter);
+                    filter = new Filter("id_perusahaan", registerDokumen.getPerusahaan().getId());
+                    fields_filter.add(filter);
                     QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
                     Pegawai pegawai = pegawaiService.getDaftarData(qFilter).getFirst();
                     crc.setProperty("pegawai", pegawai);

@@ -457,7 +457,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
                     d.getId(), 
                     perusahaan, 
                     person, 
-                    jabatan
+                    jabatan,
+                    d.getStatusAktif()
             );    
             
         }
@@ -481,6 +482,7 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
             JabatanData jabatanData = t.getJabatan() != null ? 
                     new JabatanData(t.getJabatan().getId()) : null;
             pegawaiData.setJabatan(jabatanData);
+            pegawaiData.setStatusAktif(t.getStatusAktif());
         }
 
         return pegawaiData;

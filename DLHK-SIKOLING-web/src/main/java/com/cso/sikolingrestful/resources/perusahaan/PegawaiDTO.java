@@ -11,6 +11,7 @@ public class PegawaiDTO {
     private PerusahaanDTO perusahaan;
     private PersonDTO person;
     private JabatanDTO jabatan;
+    private Boolean status_aktif;
 
     public PegawaiDTO() {
     }
@@ -24,6 +25,7 @@ public class PegawaiDTO {
                     new PersonDTO(t.getPerson()) : null;
             this.jabatan = t.getJabatan() != null ?
                     new JabatanDTO(t.getJabatan()) : null;
+            this.status_aktif = t.getStatusAktif();
         }
     }
 
@@ -58,13 +60,22 @@ public class PegawaiDTO {
     public void setJabatan(JabatanDTO jabatan) {
         this.jabatan = jabatan;
     }
+
+    public Boolean getStatus_aktif() {
+        return status_aktif;
+    }
+
+    public void setStatus_aktif(Boolean status_aktif) {
+        this.status_aktif = status_aktif;
+    }
     
     public Pegawai toPegawai() {
         return new Pegawai(
                     this.id, 
                     this.perusahaan != null ? this.perusahaan.toPerusahaan() : null, 
                     this.person != null ? this.person.toPerson() : null, 
-                    this.jabatan != null ? this.jabatan.toJabatan() : null
+                    this.jabatan != null ? this.jabatan.toJabatan() : null,
+                    this.status_aktif
                 );
     }
 

@@ -46,6 +46,9 @@ public class PegawaiPerusahaanData implements Serializable {
     @JoinColumn(name = "jabatan", referencedColumnName = "id")
     @ManyToOne
     private JabatanData jabatan;
+    
+    @Column(name = "status_aktif")
+    private Boolean statusAktif;
 
     public PegawaiPerusahaanData() {
     }
@@ -90,6 +93,14 @@ public class PegawaiPerusahaanData implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getStatusAktif() {
+        return statusAktif;
+    }
+
+    public void setStatusAktif(Boolean statusAktif) {
+        this.statusAktif = statusAktif;
     }
 
     @Override

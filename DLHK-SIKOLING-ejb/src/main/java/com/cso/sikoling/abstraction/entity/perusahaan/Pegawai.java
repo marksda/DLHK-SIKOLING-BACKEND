@@ -10,12 +10,14 @@ public class Pegawai implements Serializable {
     private final Perusahaan perusahaan;
     private final Person person;
     private final Jabatan jabatan;
+    private final Boolean statusAktif;
 
-    public Pegawai(String id, Perusahaan perusahaan, Person person, Jabatan jabatan) {
+    public Pegawai(String id, Perusahaan perusahaan, Person person, Jabatan jabatan, Boolean statusAktif) {
         this.id = id;
         this.perusahaan = perusahaan;
         this.person = person;
         this.jabatan = jabatan;
+        this.statusAktif = statusAktif;
     }
 
     public Person getPerson() {
@@ -32,6 +34,10 @@ public class Pegawai implements Serializable {
 
     public Jabatan getJabatan() {
         return jabatan;
+    }
+
+    public Boolean getStatusAktif() {
+        return statusAktif;
     }
 
     @Override
