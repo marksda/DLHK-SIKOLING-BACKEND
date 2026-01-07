@@ -3,6 +3,7 @@ package com.cso.sikolingrestful.provider;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
+import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.service.Service;
@@ -40,6 +41,9 @@ public class WopiAuthorization implements ContainerRequestFilter {
     
     @Inject
     private Service<RegisterDokumen> registerDokumenService;
+    
+    @Inject
+    private Service<Pegawai> pegawaiService;
 
     @Override
     public void filter(ContainerRequestContext crc) throws IOException {
@@ -66,7 +70,7 @@ public class WopiAuthorization implements ContainerRequestFilter {
             RegisterDokumen registerDokumen = registerDokumenService.getDaftarData(qFilter).getFirst();
             
             try {
-                checkPermissions(otorisasi, registerDokumen);
+                checkPermissions(otorisasi, registerDokumen, crc);
                 crc.setProperty("registerDokumen", registerDokumen);
             } catch (Exception e) {
                 throw new NotAuthorizedException(e.toString());
@@ -77,12 +81,21 @@ public class WopiAuthorization implements ContainerRequestFilter {
         
     }
     
-    private void checkPermissions(Otorisasi otorisasi, RegisterDokumen registerDokumen) throws Exception {        
+    private void checkPermissions(Otorisasi otorisasi, RegisterDokumen registerDokumen, ContainerRequestContext crc) throws Exception {        
         switch (otorisasi.getHak_akses().getId()) {
             case "01" -> {
             }
             case "09" -> {
-                
+                try {  
+                    List<Filter> fields_filter = new ArrayList<>();
+                    Filter filter = new Filter("id_person", otorisasi.getPerson().getId());
+                    fields_filter.add(filter);
+                    QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
+                    Pegawai pegawai = pegawaiService.getDaftarData(qFilter).getFirst();
+                    crc.setProperty("pegawai", pegawai);
+                } catch (NoSuchElementException e) {
+                    throw new NotAuthorizedException(e.toString());
+                }
             }
             default -> throw new Exception("unauthorized Role");
         }

@@ -148,6 +148,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
 
                     switch (filter.getField_name()) {
                         case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                        case "id_person" -> daftarPredicate.add(cb.equal(root.get("person").get("id"), filter.getValue()));
+                        case "id_perusahaan" -> daftarPredicate.add(cb.equal(root.get("perusahaan").get("id"), filter.getValue()));
                         case "person" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         case "jabatan" -> daftarPredicate.add(cb.like(cb.lower(root.get("jabatan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                         case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
@@ -253,6 +255,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
 
                 switch (filter.getField_name()) {
                     case "id" -> daftarPredicate.add(cb.equal(root.get("id"), filter.getValue()));
+                    case "id_person" -> daftarPredicate.add(cb.equal(root.get("person").get("id"), filter.getValue()));
+                    case "id_perusahaan" -> daftarPredicate.add(cb.equal(root.get("perusahaan").get("id"), filter.getValue()));
                     case "person" -> daftarPredicate.add(cb.like(cb.lower(root.get("person").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                     case "jabatan" -> daftarPredicate.add(cb.like(cb.lower(root.get("jabatan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
                     case "perusahaan" -> daftarPredicate.add(cb.like(cb.lower(root.get("perusahaan").get("nama")), "%"+filter.getValue().toLowerCase()+"%"));
