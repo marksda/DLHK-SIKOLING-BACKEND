@@ -88,15 +88,16 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
     public RegisterDokumen update(RegisterDokumen t) throws SQLException {
         
         try {
-            RegisterDokumenData statusDokumenData = convertRegisterDokumenToRegisterDokumenData(t);  
-            statusDokumenData = entityManager.merge(statusDokumenData);
-            return convertRegisterDokumenDataToRegisterDokumen(statusDokumenData);   
+            RegisterDokumenData registerDokumenData = 
+                    convertRegisterDokumenToRegisterDokumenData(t);  
+            registerDokumenData = entityManager.merge(registerDokumenData);
+            return convertRegisterDokumenDataToRegisterDokumen(registerDokumenData);   
         }         
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id status dokumen harus bilangan 11 digit");
+            throw new SQLException("id regiter dokumen harus bilangan 11 digit");
         }
         catch (PersistenceException e) {
-            throw new SQLException("Duplikasi data status dokumen");
+            throw new SQLException("Duplikasi data register dokumen");
         }
         
     }
@@ -129,9 +130,9 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
     public boolean delete(String id) throws SQLException {
         
         try {
-            RegisterDokumenData statusDokumenData = entityManager.find(RegisterDokumenData.class, id);
-            if(statusDokumenData != null) {
-                entityManager.remove(statusDokumenData);	
+            RegisterDokumenData registerDokumenData = entityManager.find(RegisterDokumenData.class, id);
+            if(registerDokumenData != null) {
+                entityManager.remove(registerDokumenData);	
                 entityManager.flush();
                 return true;
             }

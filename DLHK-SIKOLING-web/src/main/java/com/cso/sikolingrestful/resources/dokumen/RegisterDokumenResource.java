@@ -1,6 +1,8 @@
 package com.cso.sikolingrestful.resources.dokumen;
 
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
+import com.cso.sikoling.abstraction.service.LocalStorageService;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -23,13 +25,18 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.dokumen.StatusDokumen;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.resources.FilterDTO;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @Stateless
 @LocalBean
@@ -38,6 +45,12 @@ public class RegisterDokumenResource {
     
     @Inject
     private Service<RegisterDokumen> registerDokumenService;
+    
+    @Inject
+    private Service<RegisterDokumenSementara> registerDokumenSementaraService;
+    
+    @Inject
+    private LocalStorageService localStorageService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -184,6 +197,45 @@ public class RegisterDokumenResource {
         }
         catch (JsonbException e) {
             throw new JsonbException("format query data json tidak sesuai");
+        }
+    }
+    
+    @Path("/file/sementara")
+    @POST
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    @Produces({MediaType.APPLICATION_JSON})
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
+    public RegisterDokumenSementaraDTO saveFileSementara(
+            @FormDataParam("metaDataFile") String metaDataFile,
+            @FormDataParam("fileDokumen") File fileDokumen ) throws SQLException {
+        try {
+            Jsonb jsonb = JsonbBuilder.create();
+            RegisterDokumenSementaraDTO registerDokumenSementaraDTO = jsonb.fromJson(
+                                    metaDataFile, RegisterDokumenSementaraDTO.class);
+            InputStream uploadedInputStream = new FileInputStream(fileDokumen);
+            String subPathLocation = File.separator
+                    .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
+            
+            try {
+                RegisterDokumenSementara rdSementara = registerDokumenSementaraService.save(
+                        registerDokumenSementaraDTO.toRegisterDokumenSementara()
+                );
+                localStorageService.upload(
+                        registerDokumenSementaraDTO.getNama_file(), 
+                        uploadedInputStream, 
+                        subPathLocation
+                    ); 
+                
+                return new RegisterDokumenSementaraDTO(rdSementara);
+            } 
+            catch (NullPointerException | FileNotFoundException  e) {
+                throw new IllegalArgumentException("data json person harus disertakan di body post request");
+            } catch (IOException ex) {
+                throw new IllegalArgumentException("file scan ktp tidak bisa disimpan");
+            } 
+        } catch (JsonbException | FileNotFoundException e) {
+            throw new JsonbException("file error");
         }
     }
     
