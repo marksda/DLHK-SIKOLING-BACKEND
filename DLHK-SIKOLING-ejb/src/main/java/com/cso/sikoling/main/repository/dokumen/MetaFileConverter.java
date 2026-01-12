@@ -5,19 +5,30 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import java.sql.SQLException;
+import org.postgresql.util.PGobject;
 
 @Converter(autoApply = true)
-public class MetaFileConverter implements AttributeConverter<MetaFile, String> {
+public class MetaFileConverter implements AttributeConverter<MetaFile, PGobject> {
     private final Jsonb jsonb = JsonbBuilder.create();
 
     @Override
-    public String convertToDatabaseColumn(MetaFile metaFile) {
-        return jsonb.toJson(metaFile);
+    public PGobject convertToDatabaseColumn(MetaFile metaFile) {
+        if (metaFile == null) return null;
+        try {
+            PGobject out = new PGobject();
+            out.setType("jsonb");
+            out.setValue(jsonb.toJson(metaFile));
+            return out;
+        } catch (SQLException ex) {
+            throw new IllegalArgumentException("Cannot convert " + metaFile + " to JSON", ex);
+        }
     }
 
     @Override
-    public MetaFile convertToEntityAttribute(String dbData) {
-        return jsonb.fromJson(dbData, MetaFile.class);
+    public MetaFile convertToEntityAttribute(PGobject dbData) {
+        if (dbData == null) return null;
+        return jsonb.fromJson(dbData.getValue(), MetaFile.class);
     }
 
 }

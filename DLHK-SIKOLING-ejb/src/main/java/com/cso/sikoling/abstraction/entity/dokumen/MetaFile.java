@@ -249,11 +249,11 @@ public class MetaFile implements Serializable {
         return Objects.equals(this.ownerId, other.ownerId);
     }
     
-    @Override
-    public String toString() {
-        return "MetaFile{ ownerId="
-                .concat(this.ownerId)
-                .concat("}");
-    }
+//    @Override
+//    public String toString() {
+//        return "MetaFile{ ownerId="
+//                .concat(this.ownerId)
+//                .concat("}");
+//    }
 
 }
