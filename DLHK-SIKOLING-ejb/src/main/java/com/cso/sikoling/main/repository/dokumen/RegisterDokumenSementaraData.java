@@ -2,7 +2,6 @@ package com.cso.sikoling.main.repository.dokumen;
 
 import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
-import jakarta.enterprise.inject.Typed;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
