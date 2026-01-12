@@ -9,15 +9,19 @@ public class RegisterDokumenSementara implements Serializable {
     
     private final String id;
     private final String idJenisDokumen;
+    private final String idPerusahaan;
     private final String namaFile;
-     private final Date tanggal;
+    private final Date tanggal;
+    private final MetaFile metaFile;
 
     public RegisterDokumenSementara(String id, String idJenisDokumen, 
-            String namaFile, Date tanggal) {
+            String idPerusahaan, String namaFile, Date tanggal, MetaFile metaFile) {
         this.id = id;
         this.idJenisDokumen = idJenisDokumen;
+        this.idPerusahaan = idPerusahaan;
         this.namaFile = namaFile;
         this.tanggal = tanggal;
+        this.metaFile = metaFile;
     }
 
     public String getId() {
@@ -32,8 +36,16 @@ public class RegisterDokumenSementara implements Serializable {
         return idJenisDokumen;
     }
 
+    public String getIdPerusahaan() {
+        return idPerusahaan;
+    }
+
     public Date getTanggal() {
         return tanggal;
+    }
+
+    public MetaFile getMetaFile() {
+        return metaFile;
     }
 
     @Override

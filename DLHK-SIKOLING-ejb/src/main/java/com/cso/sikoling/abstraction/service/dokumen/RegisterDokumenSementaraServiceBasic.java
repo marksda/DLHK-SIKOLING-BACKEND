@@ -27,8 +27,10 @@ public class RegisterDokumenSementaraServiceBasic implements Service<RegisterDok
             RegisterDokumenSementara tTemp = new RegisterDokumenSementara(
                     t.getId(), 
                     t.getIdJenisDokumen(), 
+                    t.getIdPerusahaan(),
                     t.getNamaFile(), 
-                    today
+                    today,
+                    t.getMetaFile()
             );
             return repository.save(tTemp);
         }

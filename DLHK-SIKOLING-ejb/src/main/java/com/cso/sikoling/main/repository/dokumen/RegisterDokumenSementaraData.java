@@ -1,7 +1,10 @@
 package com.cso.sikoling.main.repository.dokumen;
 
+import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
+import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -46,6 +49,14 @@ public class RegisterDokumenSementaraData implements Serializable {
     @JoinColumn(name = "dokumen", referencedColumnName = "id")
     @ManyToOne
     private DokumenData dokumen;
+    
+    @JoinColumn(name = "perusahaan", referencedColumnName = "id")
+    @ManyToOne
+    private PerusahaanData perusahaan;
+    
+    @Convert(converter = MetaFileConverter.class)
+    @Column(columnDefinition = "jsonb", name = "meta_file")
+    private MetaFile metaFile;
 
     public RegisterDokumenSementaraData() {
     }
@@ -84,6 +95,22 @@ public class RegisterDokumenSementaraData implements Serializable {
 
     public void setDokumen(DokumenData dokumen) {
         this.dokumen = dokumen;
+    }
+
+    public PerusahaanData getPerusahaan() {
+        return perusahaan;
+    }
+
+    public void setPerusahaan(PerusahaanData perusahaan) {
+        this.perusahaan = perusahaan;
+    }
+
+    public MetaFile getMetaFile() {
+        return metaFile;
+    }
+
+    public void setMetaFile(MetaFile metaFile) {
+        this.metaFile = metaFile;
     }
 
     @Override

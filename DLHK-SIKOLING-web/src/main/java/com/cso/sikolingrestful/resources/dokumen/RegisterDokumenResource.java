@@ -2,6 +2,7 @@ package com.cso.sikolingrestful.resources.dokumen;
 
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.service.LocalStorageService;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
@@ -30,6 +31,8 @@ import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.resources.FilterDTO;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -207,15 +210,27 @@ public class RegisterDokumenResource {
     @RequiredAuthorization
     @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     public RegisterDokumenSementaraDTO saveFileSementara(
+            @Context ContainerRequestContext crc,
             @FormDataParam("metaDataFile") String metaDataFile,
             @FormDataParam("fileDokumen") File fileDokumen ) throws SQLException {
         try {
+            Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
             Jsonb jsonb = JsonbBuilder.create();
             RegisterDokumenSementaraDTO registerDokumenSementaraDTO = jsonb.fromJson(
                                     metaDataFile, RegisterDokumenSementaraDTO.class);
+            
             InputStream uploadedInputStream = new FileInputStream(fileDokumen);
             String subPathLocation = File.separator
                     .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
+            
+            MetaFileDTO metaFileDTO = new MetaFileDTO(
+                                            registerDokumenSementaraDTO.getNama_file(), 
+                                            registerDokumenSementaraDTO.getId_perusahaan(), 
+                                            fileDokumen.length(), 
+                                            otorisasi.getPerson().getId(), 
+                                            otorisasi.getPerson().getNama()
+                                        );
+            registerDokumenSementaraDTO.setMetaFile(metaFileDTO);
             
             try {
                 RegisterDokumenSementara rdSementara = registerDokumenSementaraService.save(

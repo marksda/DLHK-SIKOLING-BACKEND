@@ -11,8 +11,10 @@ public class RegisterDokumenSementaraDTO {
 
     private String id;
     private String id_jenis_dokumen;
+    private String id_perusahaan;
     private String nama_file;
     private String tanggal;
+    private MetaFileDTO metaFile;
 
     public RegisterDokumenSementaraDTO() {
     }
@@ -21,10 +23,13 @@ public class RegisterDokumenSementaraDTO {
         if(t != null) {
             this.id = t.getId();
             this.id_jenis_dokumen = t.getIdJenisDokumen();
+            this.id_perusahaan = t.getIdPerusahaan();
             this.nama_file = t.getNamaFile();
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Date tmpTglReg = t.getTanggal();
             this.tanggal = tmpTglReg != null ? df.format(tmpTglReg) : null;
+            this.metaFile = t.getMetaFile() != null ?
+                    new MetaFileDTO(t.getMetaFile()) : null;
         }
     }
 
@@ -59,6 +64,22 @@ public class RegisterDokumenSementaraDTO {
     public void setTanggal(String tanggal) {
         this.tanggal = tanggal;
     }
+
+    public MetaFileDTO getMetaFile() {
+        return metaFile;
+    }
+
+    public void setMetaFile(MetaFileDTO metaFile) {
+        this.metaFile = metaFile;
+    }
+
+    public String getId_perusahaan() {
+        return id_perusahaan;
+    }
+
+    public void setId_perusahaan(String id_perusahaan) {
+        this.id_perusahaan = id_perusahaan;
+    }
     
     public RegisterDokumenSementara toRegisterDokumenSementara() {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -68,16 +89,22 @@ public class RegisterDokumenSementaraDTO {
             return new RegisterDokumenSementara(
                     this.id, 
                     this.id_jenis_dokumen, 
+                    this.id_perusahaan,
                     this.nama_file, 
-                    date
+                    date, 
+                    this.metaFile != null ? 
+                            this.metaFile.toMetaFile() : null
                 );
         }
         catch (ParseException ex) {
             return new RegisterDokumenSementara(
                     this.id, 
                     this.id_jenis_dokumen, 
+                    this.id_perusahaan,
                     this.nama_file, 
-                    null
+                    null,
+                    this.metaFile != null ? 
+                            this.metaFile.toMetaFile() : null
                 );
         }
     }

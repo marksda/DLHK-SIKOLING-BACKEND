@@ -4,9 +4,10 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
 import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -325,18 +326,15 @@ public class RegisterDokumenSementaraRepositoryJPA implements
 		
         if(d != null) {
             DokumenData dokumenData = d.getDokumen();
-            Dokumen dokumen = dokumenData != null ?
-                    new Dokumen(
-                            dokumenData.getId(), 
-                            dokumenData.getNama(), 
-                            dokumenData.getSingkatan(), 
-                            dokumenData.getIdLama()
-                    ): null; 
+            PerusahaanData perusahaanData = d.getPerusahaan();            
+            MetaFile metaFile = d.getMetaFile();
             registerDokumenSementara = new RegisterDokumenSementara(
                     d.getId(), 
-                    dokumen != null ? dokumen.getId() : null,
+                    dokumenData != null ? dokumenData.getId() : null,
+                    perusahaanData != null ? perusahaanData.getId() : null,
                     d.getNamaFile(),
-                    d.getTanggal()
+                    d.getTanggal(),
+                    metaFile
             );
         }
 
@@ -350,8 +348,10 @@ public class RegisterDokumenSementaraRepositoryJPA implements
             registerDokumenSementaraData = new RegisterDokumenSementaraData();     
             registerDokumenSementaraData.setId(t.getId());
             registerDokumenSementaraData.setDokumen(new DokumenData(t.getIdJenisDokumen()));
+            registerDokumenSementaraData.setPerusahaan(new PerusahaanData(t.getIdPerusahaan()));
             registerDokumenSementaraData.setNamaFile(t.getNamaFile());
-            registerDokumenSementaraData.setTanggal(t.getTanggal());            
+            registerDokumenSementaraData.setTanggal(t.getTanggal()); 
+            registerDokumenSementaraData.setMetaFile(t.getMetaFile());
         }
 
         return registerDokumenSementaraData;

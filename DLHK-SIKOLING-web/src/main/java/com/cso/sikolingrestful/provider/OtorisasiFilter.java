@@ -59,13 +59,13 @@ public class OtorisasiFilter implements ContainerRequestFilter {
             Filter filter = new Filter("id_user", claims.getAudience().stream().findFirst().orElseThrow());
             fields_filter.add(filter);
             QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
-        
-            String idHakAkses = otorisasiService.getDaftarData(qFilter).getFirst().getHak_akses().getId();
+            Otorisasi otorisasi = otorisasiService.getDaftarData(qFilter).getFirst();
             Method resourceMethod = resourceInfo.getResourceMethod();
             List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
                                         .orElseThrow(() -> new NotAuthorizedException("Role not found"));
             try {
-                checkPermissions(methodRoles, idHakAkses);
+                checkPermissions(methodRoles, otorisasi);
+                 crc.setProperty("otoritas", otorisasi);
             } catch (Exception e) {
                 throw new NotAuthorizedException(e.toString());
             }            
@@ -89,20 +89,13 @@ public class OtorisasiFilter implements ContainerRequestFilter {
         }
     }
     
-    private void checkPermissions(List<Role> allowedRoles, String idHakAkses) throws Exception {
-        Iterator<Role> iterator = allowedRoles.iterator();          
-//        Set<String> audience = claims.getAudience();
-        boolean allowRole = false;        
-//        Iterator iteratorAudience = audience.iterator();
-//        String roleId = null;
-//        
-//        if(iteratorAudience.hasNext()) {
-//            roleId = (String) iteratorAudience.next();
-//        }
+    private void checkPermissions(List<Role> allowedRoles, Otorisasi otorisasi) throws Exception {
+        Iterator<Role> iterator = allowedRoles.iterator();  
+        boolean allowRole = false; 
         
         while(iterator.hasNext()) {    		
             Role role = iterator.next();
-            if(role.label().equalsIgnoreCase(idHakAkses)) {
+            if(role.label().equalsIgnoreCase(otorisasi.getHak_akses().getId())) {
                 allowRole = true;
                 break;
             }    		
