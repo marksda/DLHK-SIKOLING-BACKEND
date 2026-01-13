@@ -1,6 +1,9 @@
 package com.cso.sikolingrestful.resources.integrator;
 
+import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
+import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.service.LocalStorageService;
 import com.cso.sikolingrestful.annotation.WopiRequiredAuthorization;
 import com.cso.sikolingrestful.annotation.WopiResponseHeader;
@@ -39,25 +42,51 @@ public class WopiResource {
     @WopiResponseHeader
     public JsonObject wopiCheckFileInfo(
             @Context ContainerRequestContext crc, 
-            @PathParam("file_id") String file_id) throws UnspecifiedException {        
-        try {
+            @PathParam("file_id") String file_id) throws UnspecifiedException {   
+        String [] hasilSplit = file_id.split("_*_");
+        MetaFile metaFile;
+
+        if(hasilSplit.length > 1) {
+            RegisterDokumenSementara registerDokumenSementara =
+                    (RegisterDokumenSementara) crc.getProperty("registerDokumen");
+            metaFile = registerDokumenSementara.getMetaFile();
+        }
+        else {
             RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
-            String subPathLocation = File.separator
-                            .concat(registerDokumen.getDokumen().getId());
-            File tempFile = localStorageService
-                    .download(registerDokumen.getNamaFile(), subPathLocation);
-            String fileSize = String.valueOf(tempFile.length());
-            JsonObject model = Json.createObjectBuilder()
-                        .add("BaseFileName", registerDokumen.getNamaFile())
-                        .add("Size", fileSize)
-                        .add("UserId", file_id)
-                        .add("UserCanWrite", true)
+            metaFile = registerDokumen.getMetaFile();
+            File tempFile;
+                    
+            if(metaFile == null) {
+                String subPathLocation = File.separator
+                        .concat(registerDokumen.getDokumen().getId());
+                try {
+                    tempFile = localStorageService
+                            .download(registerDokumen.getNamaFile(), subPathLocation);
+                } catch (IOException ex) {
+                    tempFile = null;
+                }
+                
+                Otorisasi otorisasi = (Otorisasi) crc.getProperty("otorisasi");
+                
+                metaFile = new MetaFile(
+                        registerDokumen.getNamaFile(), 
+                        registerDokumen.getPerusahaan().getId(), 
+                        tempFile != null ? tempFile.length(): 0, 
+                        otorisasi.getId_user(), 
+                        otorisasi.getPerson().getNama()
+                );
+            }
+        }
+
+        JsonObject model = Json.createObjectBuilder()
+                        .add("BaseFileName", metaFile.getBaseFileName())
+                        .add("Size", metaFile.getSize())
+                        .add("UserId", metaFile.getUserId())
+                        .add("UserFriendlyName", metaFile.getUserFriendlyName())
+                        .add("UserCanWrite", metaFile.isUserCanWrite())
                         .build();            
 
-            return model;
-        } catch (IOException ex) {
-            throw new  UnspecifiedException(500, "id tidak dikenali sistem");
-        }
+        return model;
     }
     
     @Path("/files/{file_id}/contents")
@@ -68,30 +97,42 @@ public class WopiResource {
             @PathParam("file_id") String file_id,
             @QueryParam("access_token") String accessToken,
             @Context ContainerRequestContext crc) throws UnspecifiedException {
-        RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
-                
+        String [] hasilSplit = file_id.split("_*_");
+        String subPathLocation;
+        File tempFile;
+        String fileType;
+        String fileSize;
+        
         try {
-            if(registerDokumen != null) {
-                String subPathLocation = File.separator
-                        .concat(registerDokumen.getDokumen().getId());
-                File tempFile = localStorageService
-                        .download(registerDokumen.getNamaFile(), subPathLocation);
-                String fileType = Files.probeContentType(tempFile.toPath());
-                String fileSize = String.valueOf(tempFile.length());
-                
-                return Response.status( Response.Status.OK )
-                                .header("Content-Length", fileSize)
-                                .header("Content-Type", fileType)
-                                .entity(tempFile)
-                                .build();
+            if(hasilSplit.length > 1) {
+                RegisterDokumenSementara registerDokumenSementara =
+                        (RegisterDokumenSementara) crc.getProperty("registerDokumen");
+                subPathLocation = File.separator
+                        .concat(registerDokumenSementara.getIdJenisDokumen());
+                tempFile = localStorageService
+                        .download(registerDokumenSementara.getNamaFile(), subPathLocation);
+                fileType = Files.probeContentType(tempFile.toPath());
+                fileSize = String.valueOf(tempFile.length());
             }
             else {
-                throw new UnspecifiedException(500, "id tidak dikenali sistem");
+                RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
+                subPathLocation = File.separator
+                        .concat(registerDokumen.getDokumen().getId());
+                tempFile = localStorageService
+                        .download(registerDokumen.getNamaFile(), subPathLocation);
+                fileType = Files.probeContentType(tempFile.toPath());
+                fileSize = String.valueOf(tempFile.length());
             }
+                
+            return Response.status( Response.Status.OK )
+                            .header("Content-Length", fileSize)
+                            .header("Content-Type", fileType)
+                            .entity(tempFile)
+                            .build();
+            
         } catch (IOException ex) {
-            throw new  UnspecifiedException(500, "id tidak dikenali sistem");
+            throw new  UnspecifiedException(500, "Gagal meload file dokumen");
         }
-        
         
     }
     

@@ -1,9 +1,11 @@
 package com.cso.sikoling.main.repository.dokumen;
 
+import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
 import com.cso.sikoling.main.repository.security.OtorisasiData;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -74,6 +76,10 @@ public class RegisterDokumenData implements Serializable {
     
     @Column(name = "is_validated")
     private Boolean isValidated;
+    
+    @Convert(converter = MetaFileConverter.class)
+    @Column(columnDefinition = "jsonb", name = "meta_file")
+    private MetaFile metaFile;
 
     public RegisterDokumenData() {
     }
@@ -158,6 +164,14 @@ public class RegisterDokumenData implements Serializable {
 
     public void setIsValidated(Boolean isValidated) {
         this.isValidated = isValidated;
+    }
+
+    public MetaFile getMetaFile() {
+        return metaFile;
+    }
+
+    public void setMetaFile(MetaFile metaFile) {
+        this.metaFile = metaFile;
     }
 
     @Override

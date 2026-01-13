@@ -6,36 +6,40 @@ import java.util.Objects;
 
 public class MetaFile implements Serializable {
     
-    private final String baseFileName;
-    private final boolean disablePrint;
-    private final String ownerId;
-    private final String postMessageOrigin;    
-    private final long size;
-    private final boolean supportsRename;
-    private final String templateSource; 
-    private final boolean userCanRename;
-    private final boolean userCanNotWriteRelative;
-    private final String userId;
-    private final String userFriendlyName;
-    private final boolean isAdminUser;
-    private final boolean isAnonymousUser;
-    private final boolean enableInsertRemoteImage;
-    private final boolean enableRemoteLinkPicker;
-    private final boolean enableInsertRemoteFile;
-    private final boolean enableRemoteAIContent;
-    private final boolean disableInsertLocalImage;
-    private final boolean hidePrintOption;
-    private final boolean hideSaveOption;
-    private final boolean hideExportOption;
-    private final boolean disableExport;
-    private final boolean disableCopy;
-    private final boolean disableInactiveMessages;
-    private final boolean userCanOnlyComment;
-    private final boolean userCanOnlyManageRedlines;
-    private final boolean downloadAsPostMessage;
-    private final boolean saveAsPostmessage;
-    private final boolean enableOwnerTermination;   
+    private String baseFileName;
+    private boolean disablePrint;
+    private String ownerId;
+    private String postMessageOrigin;    
+    private long size;
+    private boolean supportsRename;
+    private String templateSource; 
+    private boolean userCanRename;
+    private boolean userCanWrite;
+    private boolean userCanNotWriteRelative;
+    private String userId;
+    private String userFriendlyName;
+    private boolean isAdminUser;
+    private boolean isAnonymousUser;
+    private boolean enableInsertRemoteImage;
+    private boolean enableRemoteLinkPicker;
+    private boolean enableInsertRemoteFile;
+    private boolean enableRemoteAIContent;
+    private boolean disableInsertLocalImage;
+    private boolean hidePrintOption;
+    private boolean hideSaveOption;
+    private boolean hideExportOption;
+    private boolean disableExport;
+    private boolean disableCopy;
+    private boolean disableInactiveMessages;
+    private boolean userCanOnlyComment;
+    private boolean userCanOnlyManageRedlines;
+    private boolean downloadAsPostMessage;
+    private boolean saveAsPostmessage;
+    private boolean enableOwnerTermination;   
 
+    public MetaFile() {
+    }
+    
     public MetaFile(String baseFileName, String ownerId, long size, 
                                     String userId, String userFriendlyName) {
         this.baseFileName = baseFileName;
@@ -46,6 +50,7 @@ public class MetaFile implements Serializable {
         this.supportsRename = false;
         this.templateSource = null;
         this.userCanRename = false;
+        this.userCanWrite = false;
         this.userCanNotWriteRelative = true;
         this.userId = userId;
         this.userFriendlyName = userFriendlyName;
@@ -79,7 +84,7 @@ public class MetaFile implements Serializable {
             boolean hideSaveOption, boolean hideExportOption, boolean disableExport, 
             boolean disableCopy, boolean disableInactiveMessages, boolean userCanOnlyComment, 
             boolean userCanOnlyManageRedlines, boolean downloadAsPostMessage, 
-            boolean saveAsPostmessage, boolean enableOwnerTermination) {
+            boolean saveAsPostmessage, boolean enableOwnerTermination, boolean userCanWrite) {
         this.baseFileName = baseFileName;
         this.disablePrint = disablePrint;
         this.ownerId = ownerId;
@@ -88,6 +93,7 @@ public class MetaFile implements Serializable {
         this.supportsRename = supportsRename;
         this.templateSource = templateSource;
         this.userCanRename = userCanRename;
+        this.userCanWrite = userCanWrite;
         this.userCanNotWriteRelative = userCanNotWriteRelative;
         this.userId = userId;
         this.userFriendlyName = userFriendlyName;
@@ -225,6 +231,130 @@ public class MetaFile implements Serializable {
 
     public boolean isEnableOwnerTermination() {
         return enableOwnerTermination;
+    }
+
+    public boolean isUserCanWrite() {
+        return userCanWrite;
+    }
+
+    public void setBaseFileName(String baseFileName) {
+        this.baseFileName = baseFileName;
+    }
+
+    public void setDisablePrint(boolean disablePrint) {
+        this.disablePrint = disablePrint;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public void setPostMessageOrigin(String postMessageOrigin) {
+        this.postMessageOrigin = postMessageOrigin;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public void setSupportsRename(boolean supportsRename) {
+        this.supportsRename = supportsRename;
+    }
+
+    public void setTemplateSource(String templateSource) {
+        this.templateSource = templateSource;
+    }
+
+    public void setUserCanRename(boolean userCanRename) {
+        this.userCanRename = userCanRename;
+    }
+
+    public void setUserCanWrite(boolean userCanWrite) {
+        this.userCanWrite = userCanWrite;
+    }
+
+    public void setUserCanNotWriteRelative(boolean userCanNotWriteRelative) {
+        this.userCanNotWriteRelative = userCanNotWriteRelative;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setUserFriendlyName(String userFriendlyName) {
+        this.userFriendlyName = userFriendlyName;
+    }
+
+    public void setIsAdminUser(boolean isAdminUser) {
+        this.isAdminUser = isAdminUser;
+    }
+
+    public void setIsAnonymousUser(boolean isAnonymousUser) {
+        this.isAnonymousUser = isAnonymousUser;
+    }
+
+    public void setEnableInsertRemoteImage(boolean enableInsertRemoteImage) {
+        this.enableInsertRemoteImage = enableInsertRemoteImage;
+    }
+
+    public void setEnableRemoteLinkPicker(boolean enableRemoteLinkPicker) {
+        this.enableRemoteLinkPicker = enableRemoteLinkPicker;
+    }
+
+    public void setEnableInsertRemoteFile(boolean enableInsertRemoteFile) {
+        this.enableInsertRemoteFile = enableInsertRemoteFile;
+    }
+
+    public void setEnableRemoteAIContent(boolean enableRemoteAIContent) {
+        this.enableRemoteAIContent = enableRemoteAIContent;
+    }
+
+    public void setDisableInsertLocalImage(boolean disableInsertLocalImage) {
+        this.disableInsertLocalImage = disableInsertLocalImage;
+    }
+
+    public void setHidePrintOption(boolean hidePrintOption) {
+        this.hidePrintOption = hidePrintOption;
+    }
+
+    public void setHideSaveOption(boolean hideSaveOption) {
+        this.hideSaveOption = hideSaveOption;
+    }
+
+    public void setHideExportOption(boolean hideExportOption) {
+        this.hideExportOption = hideExportOption;
+    }
+
+    public void setDisableExport(boolean disableExport) {
+        this.disableExport = disableExport;
+    }
+
+    public void setDisableCopy(boolean disableCopy) {
+        this.disableCopy = disableCopy;
+    }
+
+    public void setDisableInactiveMessages(boolean disableInactiveMessages) {
+        this.disableInactiveMessages = disableInactiveMessages;
+    }
+
+    public void setUserCanOnlyComment(boolean userCanOnlyComment) {
+        this.userCanOnlyComment = userCanOnlyComment;
+    }
+
+    public void setUserCanOnlyManageRedlines(boolean userCanOnlyManageRedlines) {
+        this.userCanOnlyManageRedlines = userCanOnlyManageRedlines;
+    }
+
+    public void setDownloadAsPostMessage(boolean downloadAsPostMessage) {
+        this.downloadAsPostMessage = downloadAsPostMessage;
+    }
+
+    public void setSaveAsPostmessage(boolean saveAsPostmessage) {
+        this.saveAsPostmessage = saveAsPostmessage;
+    }
+
+    public void setEnableOwnerTermination(boolean enableOwnerTermination) {
+        this.enableOwnerTermination = enableOwnerTermination;
     }
 
     @Override

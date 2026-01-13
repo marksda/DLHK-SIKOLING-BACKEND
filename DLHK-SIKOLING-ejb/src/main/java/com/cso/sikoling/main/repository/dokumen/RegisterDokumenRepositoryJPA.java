@@ -543,7 +543,8 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                     d.getNamaFile(), 
                     statusDokumen, 
                     d.getIdLama(), 
-                    d.getIsValidated()
+                    d.getIsValidated(),
+                    d.getMetaFile()
             );
         }
 
@@ -569,6 +570,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
             registerDokumenData.setStatusDokumen(statusDokumenData);
             registerDokumenData.setIdLama(t.getIdLama());
             registerDokumenData.setIsValidated(t.getIsValidated());
+            registerDokumenData.setMetaFile(t.getMetaFile());
         }
 
         return registerDokumenData;

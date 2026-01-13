@@ -12,6 +12,7 @@ public class MetaFileDTO {
     private boolean supportsRename;
     private String templateSource; 
     private boolean userCanRename;
+    private boolean userCanWrite;
     private boolean userCanNotWriteRelative;
     private String userId;
     private String userFriendlyName;
@@ -47,6 +48,7 @@ public class MetaFileDTO {
         this.supportsRename = false;
         this.templateSource = null;
         this.userCanRename = false;
+        this.userCanWrite = false;
         this.userCanNotWriteRelative = true;
         this.userId = userId;
         this.userFriendlyName = userFriendlyName;
@@ -79,6 +81,7 @@ public class MetaFileDTO {
         this.supportsRename = t.isSupportsRename();
         this.templateSource = t.getTemplateSource();
         this.userCanRename = t.isUserCanRename();
+        this.userCanWrite = t.isUserCanWrite();
         this.userCanNotWriteRelative = t.isUserCanNotWriteRelative();
         this.userId = t.getUserId();
         this.userFriendlyName = t.getUserFriendlyName();
@@ -333,6 +336,14 @@ public class MetaFileDTO {
     public void setEnableOwnerTermination(boolean enableOwnerTermination) {
         this.enableOwnerTermination = enableOwnerTermination;
     }
+
+    public boolean isUserCanWrite() {
+        return userCanWrite;
+    }
+
+    public void setUserCanWrite(boolean userCanWrite) {
+        this.userCanWrite = userCanWrite;
+    }
     
     public MetaFile toMetaFile() {
         return new MetaFile(
@@ -345,7 +356,7 @@ public class MetaFileDTO {
                 this.hidePrintOption, this.hideSaveOption, this.hideExportOption, this.disableExport, 
                 this.disableCopy, this.disableInactiveMessages, this.userCanOnlyComment, 
                 this.userCanOnlyManageRedlines, this.downloadAsPostMessage, this.saveAsPostmessage, 
-                this.enableOwnerTermination
+                this.enableOwnerTermination, this.userCanWrite
             );
     
         }
