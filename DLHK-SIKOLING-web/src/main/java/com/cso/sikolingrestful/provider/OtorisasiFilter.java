@@ -65,7 +65,7 @@ public class OtorisasiFilter implements ContainerRequestFilter {
                                         .orElseThrow(() -> new NotAuthorizedException("Role not found"));
             try {
                 checkPermissions(methodRoles, otorisasi);
-                 crc.setProperty("otoritas", otorisasi);
+                crc.setProperty("otoritas", otorisasi);
             } catch (Exception e) {
                 throw new NotAuthorizedException(e.toString());
             }            

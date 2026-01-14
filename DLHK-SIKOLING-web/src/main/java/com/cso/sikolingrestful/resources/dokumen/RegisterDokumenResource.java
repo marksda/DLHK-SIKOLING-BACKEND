@@ -211,43 +211,48 @@ public class RegisterDokumenResource {
     @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     public RegisterDokumenSementaraDTO saveFileSementara(
             @Context ContainerRequestContext crc,
-            @FormDataParam("metaDataFile") String metaDataFile,
+            @FormDataParam("registerDokumenSementara") String registerDokumenSementara,
             @FormDataParam("fileDokumen") File fileDokumen ) throws SQLException {
         try {
             Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
             Jsonb jsonb = JsonbBuilder.create();
             RegisterDokumenSementaraDTO registerDokumenSementaraDTO = jsonb.fromJson(
-                                    metaDataFile, RegisterDokumenSementaraDTO.class);
-            
+                                    registerDokumenSementara, RegisterDokumenSementaraDTO.class);   
+                        
             InputStream uploadedInputStream = new FileInputStream(fileDokumen);
             String subPathLocation = File.separator
                     .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
             
-            MetaFileDTO metaFileDTO = new MetaFileDTO(
-                                            registerDokumenSementaraDTO.getNama_file(), 
-                                            registerDokumenSementaraDTO.getId_perusahaan(), 
-                                            fileDokumen.length(), 
-                                            otorisasi.getPerson().getId(), 
-                                            otorisasi.getPerson().getNama()
-                                        );
-            registerDokumenSementaraDTO.setMetaFile(metaFileDTO);
-            
             try {
-                RegisterDokumenSementara rdSementara = registerDokumenSementaraService.save(
-                        registerDokumenSementaraDTO.toRegisterDokumenSementara()
-                );
+                JsonObject metaFile = Json.createObjectBuilder()
+                        .add("BaseFileName", registerDokumenSementaraDTO.getNama_file())
+                        .add("UserId", otorisasi.getId_user())
+                        .add("UserFriendlyName", otorisasi.getPerson().getNama())
+                        .add("UserCanWrite", true)
+                        .build();
+                RegisterDokumenSementara dokSementara =
+                        new RegisterDokumenSementara(
+                                registerDokumenSementaraDTO.getId(), 
+                                registerDokumenSementaraDTO.getId_jenis_dokumen(), 
+                                registerDokumenSementaraDTO.getId_perusahaan(), 
+                                registerDokumenSementaraDTO.getNama_file(), 
+                                null, 
+                                metaFile
+                        );
+                        
+                dokSementara = registerDokumenSementaraService.save(dokSementara);
                 localStorageService.upload(
                         registerDokumenSementaraDTO.getNama_file(), 
                         uploadedInputStream, 
                         subPathLocation
                     ); 
                 
-                return new RegisterDokumenSementaraDTO(rdSementara);
+                return new RegisterDokumenSementaraDTO(dokSementara);
             } 
-            catch (NullPointerException | FileNotFoundException  e) {
-                throw new IllegalArgumentException("data json person harus disertakan di body post request");
+            catch (NullPointerException e) {
+                throw new IllegalArgumentException("data json dokumen sementara harus disertakan di body post request");
             } catch (IOException ex) {
-                throw new IllegalArgumentException("file scan ktp tidak bisa disimpan");
+                throw new IllegalArgumentException("file dokumen sementara tidak bisa disimpan");
             } 
         } catch (JsonbException | FileNotFoundException e) {
             throw new JsonbException("file error");

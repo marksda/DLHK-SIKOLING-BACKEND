@@ -7,6 +7,7 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
+import jakarta.json.JsonObject;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,22 +22,18 @@ public class RegisterDokumenSementaraServiceBasic implements Service<RegisterDok
 
     @Override
     public RegisterDokumenSementara save(RegisterDokumenSementara t) throws SQLException {
-        if(t.getTanggal() == null) {
-            Calendar cal = Calendar.getInstance();
-            Date today = cal.getTime();
-            RegisterDokumenSementara tTemp = new RegisterDokumenSementara(
-                    t.getId(), 
-                    t.getIdJenisDokumen(), 
-                    t.getIdPerusahaan(),
-                    t.getNamaFile(), 
-                    today,
-                    t.getMetaFile()
-            );
-            return repository.save(tTemp);
-        }
-        else {
-            return repository.save(t);
-        }
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();                
+        RegisterDokumenSementara tTemp = new RegisterDokumenSementara(
+                t.getId(), 
+                t.getIdJenisDokumen(), 
+                t.getIdPerusahaan(),
+                t.getNamaFile(), 
+                today,
+                t.getMetaFile()
+        );
+        
+        return repository.save(tTemp);
     }
 
     @Override

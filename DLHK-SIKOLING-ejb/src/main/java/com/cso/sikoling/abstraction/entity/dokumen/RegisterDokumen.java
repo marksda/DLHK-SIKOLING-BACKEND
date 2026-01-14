@@ -2,6 +2,7 @@ package com.cso.sikoling.abstraction.entity.dokumen;
 
 import com.cso.sikoling.abstraction.entity.perusahaan.Perusahaan;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
+import jakarta.json.JsonObject;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -18,7 +19,7 @@ public class RegisterDokumen implements Serializable {
     private final StatusDokumen statusDokumen;
     private final String idLama;
     private final Boolean isValidated;
-    private final MetaFile metaFile;
+    private final JsonObject metaFile;
 
     public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
             Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
@@ -37,7 +38,7 @@ public class RegisterDokumen implements Serializable {
     
     public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
             Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
-            StatusDokumen statusDokumen, String idLama, Boolean isValidated, MetaFile metaFile) {
+            StatusDokumen statusDokumen, String idLama, Boolean isValidated, JsonObject metaFile) {
         this.id = id;
         this.perusahaan = perusahaan;
         this.dokumen = dokumen;
@@ -86,7 +87,7 @@ public class RegisterDokumen implements Serializable {
         return isValidated;
     }
 
-    public MetaFile getMetaFile() {
+    public JsonObject getMetaFile() {
         return metaFile;
     }
 

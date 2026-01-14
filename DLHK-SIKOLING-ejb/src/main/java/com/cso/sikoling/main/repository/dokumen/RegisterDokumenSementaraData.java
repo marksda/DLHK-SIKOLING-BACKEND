@@ -1,7 +1,8 @@
 package com.cso.sikoling.main.repository.dokumen;
 
-import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
+import com.cso.sikoling.main.util.JsonbAttributeConverter;
+import jakarta.json.JsonObject;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -54,9 +55,9 @@ public class RegisterDokumenSementaraData implements Serializable {
     @ManyToOne
     private PerusahaanData perusahaan;
     
-    @Convert(converter = MetaFileConverter.class)
+    @Convert(converter = JsonbAttributeConverter.class)
     @Column(columnDefinition = "jsonb", name = "meta_file")
-    private MetaFile metaFile;
+    private JsonObject metaFile;
 
     public RegisterDokumenSementaraData() {
     }
@@ -105,11 +106,11 @@ public class RegisterDokumenSementaraData implements Serializable {
         this.perusahaan = perusahaan;
     }
 
-    public MetaFile getMetaFile() {
+    public JsonObject getMetaFile() {
         return metaFile;
     }
 
-    public void setMetaFile(MetaFile metaFile) {
+    public void setMetaFile(JsonObject metaFile) {
         this.metaFile = metaFile;
     }
 

@@ -1,5 +1,6 @@
 package com.cso.sikoling.abstraction.entity.dokumen;
 
+import jakarta.json.JsonObject;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -12,10 +13,10 @@ public class RegisterDokumenSementara implements Serializable {
     private final String idPerusahaan;
     private final String namaFile;
     private final Date tanggal;
-    private final MetaFile metaFile;
+    private final JsonObject metaFile;
 
     public RegisterDokumenSementara(String id, String idJenisDokumen, 
-            String idPerusahaan, String namaFile, Date tanggal, MetaFile metaFile) {
+            String idPerusahaan, String namaFile, Date tanggal, JsonObject metaFile) {
         this.id = id;
         this.idJenisDokumen = idJenisDokumen;
         this.idPerusahaan = idPerusahaan;
@@ -44,7 +45,7 @@ public class RegisterDokumenSementara implements Serializable {
         return tanggal;
     }
 
-    public MetaFile getMetaFile() {
+    public JsonObject getMetaFile() {
         return metaFile;
     }
 

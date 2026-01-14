@@ -1,6 +1,5 @@
 package com.cso.sikolingrestful.resources.integrator;
 
-import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
@@ -44,49 +43,44 @@ public class WopiResource {
             @Context ContainerRequestContext crc, 
             @PathParam("file_id") String file_id) throws UnspecifiedException {   
         String [] hasilSplit = file_id.split("_*_");
-        MetaFile metaFile;
+        JsonObject confCollaboraFileInfo;
 
         if(hasilSplit.length > 1) {
             RegisterDokumenSementara registerDokumenSementara =
-                    (RegisterDokumenSementara) crc.getProperty("registerDokumen");
-            metaFile = registerDokumenSementara.getMetaFile();
+                (RegisterDokumenSementara) crc.getProperty("registerDokumen");
+            confCollaboraFileInfo = registerDokumenSementara.getMetaFile();
         }
         else {
-            RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
-            metaFile = registerDokumen.getMetaFile();
+            RegisterDokumen registerDokumen =
+                (RegisterDokumen) crc.getProperty("registerDokumen");
+            confCollaboraFileInfo = registerDokumen.getMetaFile();
             File tempFile;
                     
-            if(metaFile == null) {
+            if(confCollaboraFileInfo == null) {
                 String subPathLocation = File.separator
                         .concat(registerDokumen.getDokumen().getId());
                 try {
                     tempFile = localStorageService
                             .download(registerDokumen.getNamaFile(), subPathLocation);
+                    Otorisasi otorisasi = (Otorisasi) crc.getProperty("otorisasi");
+                
+                    confCollaboraFileInfo = Json.createObjectBuilder()
+                        .add("BaseFileName", registerDokumen.getNamaFile())
+                        .add("Size", tempFile.length())
+                        .add("UserId", otorisasi.getId_user())
+                        .add("UserFriendlyName", otorisasi.getPerson().getNama())
+                        .add("UserCanWrite", !registerDokumen.getIsValidated())
+                        .build(); 
                 } catch (IOException ex) {
-                    tempFile = null;
+                    throw new  UnspecifiedException(500, "Gagal meload file dokumen");
                 }
-                
-                Otorisasi otorisasi = (Otorisasi) crc.getProperty("otorisasi");
-                
-                metaFile = new MetaFile(
-                        registerDokumen.getNamaFile(), 
-                        registerDokumen.getPerusahaan().getId(), 
-                        tempFile != null ? tempFile.length(): 0, 
-                        otorisasi.getId_user(), 
-                        otorisasi.getPerson().getNama()
-                );
+            }
+            else {
+                confCollaboraFileInfo = registerDokumen.getMetaFile();
             }
         }
-
-        JsonObject model = Json.createObjectBuilder()
-                        .add("BaseFileName", metaFile.getBaseFileName())
-                        .add("Size", metaFile.getSize())
-                        .add("UserId", metaFile.getUserId())
-                        .add("UserFriendlyName", metaFile.getUserFriendlyName())
-                        .add("UserCanWrite", metaFile.isUserCanWrite())
-                        .build();            
-
-        return model;
+        
+        return confCollaboraFileInfo;
     }
     
     @Path("/files/{file_id}/contents")

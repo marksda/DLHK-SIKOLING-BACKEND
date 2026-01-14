@@ -14,7 +14,6 @@ public class RegisterDokumenSementaraDTO {
     private String id_perusahaan;
     private String nama_file;
     private String tanggal;
-    private MetaFileDTO metaFile;
 
     public RegisterDokumenSementaraDTO() {
     }
@@ -28,8 +27,6 @@ public class RegisterDokumenSementaraDTO {
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Date tmpTglReg = t.getTanggal();
             this.tanggal = tmpTglReg != null ? df.format(tmpTglReg) : null;
-            this.metaFile = t.getMetaFile() != null ?
-                    new MetaFileDTO(t.getMetaFile()) : null;
         }
     }
 
@@ -65,14 +62,6 @@ public class RegisterDokumenSementaraDTO {
         this.tanggal = tanggal;
     }
 
-    public MetaFileDTO getMetaFile() {
-        return metaFile;
-    }
-
-    public void setMetaFile(MetaFileDTO metaFile) {
-        this.metaFile = metaFile;
-    }
-
     public String getId_perusahaan() {
         return id_perusahaan;
     }
@@ -91,9 +80,8 @@ public class RegisterDokumenSementaraDTO {
                     this.id_jenis_dokumen, 
                     this.id_perusahaan,
                     this.nama_file, 
-                    date, 
-                    this.metaFile != null ? 
-                            this.metaFile.toMetaFile() : null
+                    date,
+                    null
                 );
         }
         catch (ParseException ex) {
@@ -103,8 +91,7 @@ public class RegisterDokumenSementaraDTO {
                     this.id_perusahaan,
                     this.nama_file, 
                     null,
-                    this.metaFile != null ? 
-                            this.metaFile.toMetaFile() : null
+                    null
                 );
         }
     }

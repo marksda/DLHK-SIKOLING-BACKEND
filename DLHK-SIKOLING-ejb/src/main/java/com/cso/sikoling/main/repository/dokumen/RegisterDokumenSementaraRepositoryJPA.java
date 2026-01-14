@@ -327,7 +327,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
         if(d != null) {
             DokumenData dokumenData = d.getDokumen();
             PerusahaanData perusahaanData = d.getPerusahaan();            
-            MetaFile metaFile = d.getMetaFile();
+            JsonObject metaFile = d.getMetaFile();
             registerDokumenSementara = new RegisterDokumenSementara(
                     d.getId(), 
                     dokumenData != null ? dokumenData.getId() : null,
