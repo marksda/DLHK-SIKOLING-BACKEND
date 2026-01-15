@@ -37,6 +37,7 @@ import com.cso.sikoling.abstraction.entity.security.oauth2.Key;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.entity.security.oauth2.Token;
 import com.cso.sikoling.abstraction.repository.LocalStorageRepository;
+import com.cso.sikoling.abstraction.repository.RegisterDokumenRepository;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.abstraction.service.alamat.PropinsiServiceBasic;
 import com.cso.sikoling.main.Infrastructure;
@@ -245,7 +246,7 @@ public class RestfulProvider {
     
     @Produces
     public Service<RegisterDokumenSementara> getRegisterDokumenSementaraService(
-            @Infrastructure Repository<RegisterDokumenSementara, QueryParamFilters, Filter> registerDokumenSementaraRepository) {
+            @Infrastructure RegisterDokumenRepository<RegisterDokumenSementara, QueryParamFilters, Filter> registerDokumenSementaraRepository) {
         return new RegisterDokumenSementaraServiceBasic(registerDokumenSementaraRepository);
     }
     

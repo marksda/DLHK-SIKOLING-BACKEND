@@ -9,4 +9,10 @@ public final class GeneratorID {
         UUID uuid = UuidCreator.getTimeOrderedEpoch();
         return uuid.toString();
     }
+    
+    public static String LPad(String str, Integer length, char car) {
+        return (String.format("%" + length + "s", "")
+                .replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length()
+            );
+    }
 }

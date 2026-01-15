@@ -3,7 +3,7 @@ package com.cso.sikoling.main.repository.dokumen;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
-import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.abstraction.repository.RegisterDokumenRepository;
 import com.cso.sikoling.main.Infrastructure;
 import jakarta.ejb.Local;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Stateless
 @Local
 @Infrastructure
-public class RegisterDokumenSementaraRepositoryEJB implements Repository<RegisterDokumenSementara, QueryParamFilters, Filter> {
+public class RegisterDokumenSementaraRepositoryEJB implements RegisterDokumenRepository<RegisterDokumenSementara, QueryParamFilters, Filter> {
     
     @Inject
     private RegisterDokumenSementaraRepositoryJPA repositoryJPA;
@@ -48,6 +48,11 @@ public class RegisterDokumenSementaraRepositoryEJB implements Repository<Registe
     @Override
     public Long getJumlahData(List<Filter> f) {
         return repositoryJPA.getJumlahData(f);
+    }
+
+    @Override
+    public String generateId() {
+        return repositoryJPA.generateId();
     }
     
 }

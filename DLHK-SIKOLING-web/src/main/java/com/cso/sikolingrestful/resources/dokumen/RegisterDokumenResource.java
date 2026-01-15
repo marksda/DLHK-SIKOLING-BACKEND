@@ -242,7 +242,7 @@ public class RegisterDokumenResource {
                         
                 dokSementara = registerDokumenSementaraService.save(dokSementara);
                 localStorageService.upload(
-                        registerDokumenSementaraDTO.getNama_file(), 
+                        dokSementara.getNamaFile(), 
                         uploadedInputStream, 
                         subPathLocation
                     ); 

@@ -3,35 +3,44 @@ package com.cso.sikoling.abstraction.service.dokumen;
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
-import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.abstraction.repository.RegisterDokumenRepository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.Json;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class RegisterDokumenSementaraServiceBasic implements Service<RegisterDokumenSementara> {
     
-    private final Repository<RegisterDokumenSementara, QueryParamFilters, Filter> repository;
+    private final RegisterDokumenRepository<RegisterDokumenSementara, QueryParamFilters, Filter> repository;
 
-    public RegisterDokumenSementaraServiceBasic(Repository repository) {
+    public RegisterDokumenSementaraServiceBasic(RegisterDokumenRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public RegisterDokumenSementara save(RegisterDokumenSementara t) throws SQLException {
         Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();                
+        Date today = cal.getTime();      
+        String id = repository.generateId();
+        JsonObject metaFile = t.getMetaFile();
+        String[] hasilSplit = metaFile.getString("BaseFileName").split("\\.");
+        String namaFile = id.concat(".").concat(hasilSplit[hasilSplit.length-1]);
+        JsonString jsonString = Json.createValue(namaFile);
+        metaFile.replace("BaseFileName", jsonString);
+        
         RegisterDokumenSementara tTemp = new RegisterDokumenSementara(
-                t.getId(), 
+                id, 
                 t.getIdJenisDokumen(), 
                 t.getIdPerusahaan(),
-                t.getNamaFile(), 
+                namaFile, 
                 today,
-                t.getMetaFile()
-        );
+                metaFile
+            );
         
         return repository.save(tTemp);
     }

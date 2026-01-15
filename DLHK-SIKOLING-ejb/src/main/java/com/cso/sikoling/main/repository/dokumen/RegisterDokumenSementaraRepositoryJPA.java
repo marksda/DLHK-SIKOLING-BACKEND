@@ -4,10 +4,11 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
-import com.cso.sikoling.abstraction.entity.dokumen.MetaFile;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
+import com.cso.sikoling.abstraction.repository.RegisterDokumenRepository;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
+import com.cso.sikoling.main.util.GeneratorID;
 import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 
 
 public class RegisterDokumenSementaraRepositoryJPA implements 
-        Repository<RegisterDokumenSementara, QueryParamFilters, Filter> {
+        RegisterDokumenRepository<RegisterDokumenSementara, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
@@ -345,8 +346,9 @@ public class RegisterDokumenSementaraRepositoryJPA implements
         RegisterDokumenSementaraData registerDokumenSementaraData = null;
 		
         if(t != null) {
-            registerDokumenSementaraData = new RegisterDokumenSementaraData();     
-            registerDokumenSementaraData.setId(t.getId());
+            registerDokumenSementaraData = new RegisterDokumenSementaraData();  
+            String id = t.getId();
+            registerDokumenSementaraData.setId(id != null ? id : generateId());
             registerDokumenSementaraData.setDokumen(new DokumenData(t.getIdJenisDokumen()));
             registerDokumenSementaraData.setPerusahaan(new PerusahaanData(t.getIdPerusahaan()));
             registerDokumenSementaraData.setNamaFile(t.getNamaFile());
@@ -355,6 +357,29 @@ public class RegisterDokumenSementaraRepositoryJPA implements
         }
 
         return registerDokumenSementaraData;
+    }
+    
+    @Override
+    public String generateId() {
+        int tahun = LocalDate.now().getYear();
+        String hasil;
+
+        Query q = entityManager.createQuery("SELECT MAX(rd.id) "
+                        + "FROM RegisterDokumenData rd "
+                        + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun");
+
+        q.setParameter("tahun", tahun);
+
+        try {
+            hasil = (String) q.getSingleResult();
+            hasil = hasil.substring(0, 7);
+            Long idBaru = Long.parseLong(hasil)  + 1;
+            hasil = GeneratorID.LPad(Long.toString(idBaru), 7, '0');
+            return hasil.concat(Integer.toString(tahun));
+        } catch (NumberFormatException e) {	
+                hasil = "0000001";			
+                return hasil.concat(Integer.toString(tahun));
+        }		
     }
 
 }
