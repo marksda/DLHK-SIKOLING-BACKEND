@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonString;
 import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,11 +27,12 @@ public class RegisterDokumenSementaraServiceBasic implements Service<RegisterDok
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();      
         String id = repository.generateId();
-        JsonObject metaFile = t.getMetaFile();
-        String[] hasilSplit = metaFile.getString("BaseFileName").split("\\.");
+        JsonObject metaFileOri = t.getMetaFile();
+        JsonObjectBuilder builder = Json.createObjectBuilder(metaFileOri);
+        String[] hasilSplit = metaFileOri.getString("BaseFileName").split("\\.");
         String namaFile = id.concat(".").concat(hasilSplit[hasilSplit.length-1]);
-        JsonString jsonString = Json.createValue(namaFile);
-        metaFile.replace("BaseFileName", jsonString);
+        builder.add("BaseFileName", namaFile);
+        JsonObject metaFile = builder.build();
         
         RegisterDokumenSementara tTemp = new RegisterDokumenSementara(
                 id, 

@@ -6,13 +6,13 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
 import com.cso.sikoling.abstraction.repository.RegisterDokumenRepository;
-import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
 import com.cso.sikoling.main.util.GeneratorID;
 import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -50,7 +50,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
             return convertRegisterDokumenSementaraDataToRegisterDokumenSementara(registerDokumenSementaraData);  
         } 
         catch(ConstraintViolationException cstVltException) {
-            throw new SQLException("id register dokumen sementara harus bilangan 10 digit");
+            throw new SQLException("id register dokumen sementara harus bilangan 11 digit");
         }
         catch (PersistenceException e) {
             throw new SQLException("Duplikasi data register dokumen sementara");
@@ -347,8 +347,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
 		
         if(t != null) {
             registerDokumenSementaraData = new RegisterDokumenSementaraData();  
-            String id = t.getId();
-            registerDokumenSementaraData.setId(id != null ? id : generateId());
+            registerDokumenSementaraData.setId(t.getId());
             registerDokumenSementaraData.setDokumen(new DokumenData(t.getIdJenisDokumen()));
             registerDokumenSementaraData.setPerusahaan(new PerusahaanData(t.getIdPerusahaan()));
             registerDokumenSementaraData.setNamaFile(t.getNamaFile());
@@ -368,18 +367,29 @@ public class RegisterDokumenSementaraRepositoryJPA implements
                         + "FROM RegisterDokumenData rd "
                         + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun");
 
-        q.setParameter("tahun", tahun);
-
-        try {
-            hasil = (String) q.getSingleResult();
+        q.setParameter("tahun", tahun);        
+        hasil = (String) q.getSingleResult();
+        if(hasil != null) {
             hasil = hasil.substring(0, 7);
             Long idBaru = Long.parseLong(hasil)  + 1;
             hasil = GeneratorID.LPad(Long.toString(idBaru), 7, '0');
             return hasil.concat(Integer.toString(tahun));
-        } catch (NumberFormatException e) {	
-                hasil = "0000001";			
-                return hasil.concat(Integer.toString(tahun));
-        }		
+        }
+        else {
+            hasil = "0000001";
+            return hasil.concat(Integer.toString(tahun));
+        }
+
+//        try {
+//            hasil = (String) q.getSingleResult();
+//            hasil = hasil.substring(0, 7);
+//            Long idBaru = Long.parseLong(hasil)  + 1;
+//            hasil = GeneratorID.LPad(Long.toString(idBaru), 7, '0');
+//            return hasil.concat(Integer.toString(tahun));
+//        } catch (NoResultException e) {	
+//                hasil = "0000001";			
+//                return hasil.concat(Integer.toString(tahun));
+//        }		
     }
 
 }
