@@ -20,6 +20,7 @@ public class RegisterDokumen implements Serializable {
     private final String idLama;
     private final Boolean isValidated;
     private final JsonObject metaFile;
+    private final JsonObject metaInfo;
 
     public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
             Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
@@ -34,11 +35,13 @@ public class RegisterDokumen implements Serializable {
         this.idLama = idLama;
         this.isValidated = isValidated;
         this.metaFile = null;
+        this.metaInfo = null;
     }        
     
     public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
             Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
-            StatusDokumen statusDokumen, String idLama, Boolean isValidated, JsonObject metaFile) {
+            StatusDokumen statusDokumen, String idLama, Boolean isValidated, 
+            JsonObject metaFile, JsonObject metaInfo) {
         this.id = id;
         this.perusahaan = perusahaan;
         this.dokumen = dokumen;
@@ -49,6 +52,7 @@ public class RegisterDokumen implements Serializable {
         this.idLama = idLama;
         this.isValidated = isValidated;
         this.metaFile = metaFile;
+        this.metaInfo = metaInfo;
     }    
 
     public String getId() {
@@ -89,6 +93,10 @@ public class RegisterDokumen implements Serializable {
 
     public JsonObject getMetaFile() {
         return metaFile;
+    }
+
+    public JsonObject getMetaInfo() {
+        return metaInfo;
     }
 
     @Override

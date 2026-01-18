@@ -7,6 +7,8 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
+import jakarta.json.JsonValue;
+import java.util.Date;
 
 
 public class RegisterDokumenServiceBasic implements Service<RegisterDokumen> {
@@ -19,7 +21,25 @@ public class RegisterDokumenServiceBasic implements Service<RegisterDokumen> {
 
     @Override
     public RegisterDokumen save(RegisterDokumen t) throws SQLException {
-        return repository.save(t);
+        if(t.getTanggalRegistrasi() == null) {
+            RegisterDokumen regDok = new RegisterDokumen(
+                    t.getId(), 
+                    t.getPerusahaan(),
+                    t.getDokumen(), 
+                    new Date(), 
+                    t.getUploader(), 
+                    t.getNamaFile(), 
+                    t.getStatusDokumen(), 
+                    t.getIdLama(), 
+                    t.getIsValidated(), 
+                    t.getMetaFile(),
+                    t.getMetaInfo()
+                );
+            return repository.save(regDok);
+        }
+        else {
+            return repository.save(t);
+        }        
     }
 
     @Override

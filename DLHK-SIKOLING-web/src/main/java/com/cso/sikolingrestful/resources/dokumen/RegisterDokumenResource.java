@@ -1,5 +1,7 @@
 package com.cso.sikolingrestful.resources.dokumen;
 
+import com.cso.sikoling.abstraction.entity.Filter;
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
@@ -31,6 +33,8 @@ import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.resources.FilterDTO;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import java.io.File;
@@ -84,18 +88,100 @@ public class RegisterDokumenResource {
     
     @POST
     @RequiredAuthorization
-    @RequiredRole({Role.ADMINISTRATOR})
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public RegisterDokumenDTO save(RegisterDokumenDTO registerDokumenDTO) throws SQLException { 
+    public RegisterDokumenDTO save(@Context ContainerRequestContext crc,
+                RegisterDokumenDTO registerDokumenDTO) throws SQLException {  
+        Filter filter;
+        List<Filter> fields_filter = new ArrayList<>();
+        QueryParamFilters qFilter;
+        RegisterDokumenSementara regDokSementara;
+        Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
+        JsonObject metaFile;
+        JsonObjectBuilder builder;
         
-        try {            
-            return new RegisterDokumenDTO(registerDokumenService.save(registerDokumenDTO.toRegisterDokumen()));
-        } 
-        catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json register dokumen harus disertakan di body post request");
-        }    
+        switch (otorisasi.getHak_akses().getId()) {
+            case "01" -> {
+                filter = new Filter("id", registerDokumenDTO.getId());
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(
+                                        false, null, 
+                                        fields_filter, null
+                                    );
+                regDokSementara = registerDokumenSementaraService
+                                        .getDaftarData(qFilter)
+                                        .getFirst();
+                if(regDokSementara != null) {
+                    builder = Json.createObjectBuilder(regDokSementara.getMetaFile());
+                    if(registerDokumenDTO.getIs_validated()) {
+                        builder.add("UserCanWrite", false);
+                        metaFile = builder.build();
+                    }
+                    else {
+                        metaFile = builder.build();
+                    }
+                }
+                else {
+                    throw new NotAuthorizedException("Tidak sesuai dengan data sementara");
+                }
+            }
+            default -> {
+                filter = new Filter("id", registerDokumenDTO.getId());
+                fields_filter.add(filter);
+                filter = new Filter(
+                                "id_perusahaan", 
+                                registerDokumenDTO.getPerusahaan().getId()
+                            );
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(
+                                        false, null, 
+                                        fields_filter, null
+                                    );
+                regDokSementara = registerDokumenSementaraService
+                                        .getDaftarData(qFilter)
+                                        .getFirst();   
+                
+                if(regDokSementara != null) {
+                    metaFile = regDokSementara.getMetaFile();
+                }
+                else {
+                    throw new NotAuthorizedException("Tidak sesuai dengan data sementara");
+                }
+            } 
+        }
         
+        RegisterDokumen registerDokumen =  new RegisterDokumen(
+                registerDokumenDTO.getId(), 
+                registerDokumenDTO.getPerusahaan().toPerusahaan(), 
+                registerDokumenDTO.getDokumen().toDokumen(), 
+                null, 
+                otorisasi, 
+                registerDokumenDTO.getNama_file(), 
+                registerDokumenDTO.getStatus_dokumen().toStatusDokumen(),
+                null, 
+                registerDokumenDTO.getIs_validated(), 
+                metaFile, 
+                null
+        );
+        
+        registerDokumen = registerDokumenService.save(registerDokumen);
+        if(registerDokumen != null) {
+            registerDokumenSementaraService.delete(regDokSementara.getId());
+            return new RegisterDokumenDTO(registerDokumen);      
+        }
+        else {
+            try {
+                String subPathLocation = File.separator
+                        .concat(regDokSementara.getIdJenisDokumen());
+                localStorageService.delete(regDokSementara.getNamaFile(), subPathLocation);
+                registerDokumenSementaraService.delete(regDokSementara.getId());
+                throw new IllegalArgumentException("file dokumen tidak bisa disimpan");
+            } catch (IOException ex) {
+                registerDokumenSementaraService.delete(regDokSementara.getId());
+                throw new IllegalArgumentException("file dokumen tidak bisa disimpan");
+            }
+        }  
     }
     
     @Path("/{idLama}")
