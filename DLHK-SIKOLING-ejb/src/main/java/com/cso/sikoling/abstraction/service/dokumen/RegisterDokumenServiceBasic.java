@@ -7,7 +7,6 @@ import com.cso.sikoling.abstraction.repository.Repository;
 import java.sql.SQLException;
 import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
-import jakarta.json.JsonValue;
 import java.util.Date;
 
 
