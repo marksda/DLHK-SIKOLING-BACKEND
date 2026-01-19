@@ -38,6 +38,7 @@ import com.cso.sikoling.main.repository.perusahaan.PerusahaanData;
 import com.cso.sikoling.main.repository.security.HakAksesData;
 import com.cso.sikoling.main.repository.security.OtorisasiData;
 import com.cso.sikoling.main.repository.security.oauth2.RealmData;
+import com.cso.sikoling.main.util.GeneratorID;
 import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -262,7 +263,7 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
 
             TypedQuery<RegisterDokumenData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())
@@ -558,7 +559,9 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
         if(t != null) {
             registerDokumenData = new RegisterDokumenData();            
             String idRegisterDokumen = t.getId();
-            registerDokumenData.setId(idRegisterDokumen != null ? t.getId() : generateId());
+            registerDokumenData.setId(idRegisterDokumen != null ? 
+                    t.getId() : generateId(
+                            t.getPerusahaan().getId(), t.getDokumen().getId()));
             PerusahaanData perusahaanData = new PerusahaanData(t.getPerusahaan().getId());
             registerDokumenData.setPerusahaan(perusahaanData);
             DokumenData dokumenData = new DokumenData(t.getDokumen().getId());
@@ -578,30 +581,20 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
         return registerDokumenData;
     }
     
-    private String generateId() {
+    private String generateId(String idPerusahaan, String idDokumen) {
         int tahun = LocalDate.now().getYear();
-        String hasil;
-
-        Query q = entityManager.createQuery("SELECT MAX(rd.id) "
+        String hasil = idPerusahaan + idDokumen + Integer.toString(tahun);
+        Query q = entityManager.createQuery("SELECT COUNT(rd.id) "
                         + "FROM RegisterDokumenData rd "
-                        + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun");
+                        + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun"
+                        + " AND rd.dokumen.id = :idDokumen AND rd.perusahaan.id = :idPerusahaan");
 
         q.setParameter("tahun", tahun);
-
-        try {
-                hasil = (String) q.getSingleResult();
-                hasil = hasil.substring(0, 7);
-                Long idBaru = Long.parseLong(hasil)  + 1;
-                hasil = LPad(Long.toString(idBaru), 7, '0');
-                return hasil.concat(Integer.toString(tahun));
-        } catch (NumberFormatException e) {	
-                hasil = "0000001";			
-                return hasil.concat(Integer.toString(tahun));
-        }		
-    }
-    
-    private String LPad(String str, Integer length, char car) {
-        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
+        q.setParameter("idDokumen", idDokumen);
+        q.setParameter("idPerusahaan", idPerusahaan);
+        Long count = (Long) q.getSingleResult() + 1;
+        hasil = hasil + GeneratorID.LPad(Long.toString(count), 2, '0');        
+        return hasil;
     }
     
     private KategoriSkalaUsaha convertKategoriSkalaUsahaDataToKategoriSkalaUsaha(KategoriSkalaUsahaData d) {

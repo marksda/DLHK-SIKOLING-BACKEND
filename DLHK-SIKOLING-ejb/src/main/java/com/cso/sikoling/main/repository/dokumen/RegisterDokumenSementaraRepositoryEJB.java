@@ -51,8 +51,8 @@ public class RegisterDokumenSementaraRepositoryEJB implements RegisterDokumenRep
     }
 
     @Override
-    public String generateId() {
-        return repositoryJPA.generateId();
+    public String generateId(String idPerusahaan, String idDokumen) {
+        return repositoryJPA.generateId(idPerusahaan, idDokumen);
     }
     
 }

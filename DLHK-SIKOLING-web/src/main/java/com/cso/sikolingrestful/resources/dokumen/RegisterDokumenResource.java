@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
+import static com.cso.sikolingrestful.Role.ADMINISTRATOR;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.resources.FilterDTO;
@@ -98,11 +99,12 @@ public class RegisterDokumenResource {
         QueryParamFilters qFilter;
         RegisterDokumenSementara regDokSementara;
         Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
+        Role role = (Role) crc.getProperty("role");
         JsonObject metaFile;
         JsonObjectBuilder builder;
         
-        switch (otorisasi.getHak_akses().getId()) {
-            case "01" -> {
+        switch (role) {
+            case ADMINISTRATOR -> {
                 filter = new Filter("id", registerDokumenDTO.getId());
                 fields_filter.add(filter);
                 qFilter = new QueryParamFilters(
@@ -187,23 +189,109 @@ public class RegisterDokumenResource {
     @Path("/{idLama}")
     @PUT
     @RequiredAuthorization
-    @RequiredRole({Role.ADMINISTRATOR})
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public RegisterDokumenDTO update(@PathParam("idLama") String idLama, RegisterDokumenDTO registerDokumenDTO) throws SQLException {
+    public RegisterDokumenDTO update(
+            @Context ContainerRequestContext crc,
+            @PathParam("idLama") String idLama, 
+            RegisterDokumenDTO regDokDTOBaru) throws SQLException {
         
-        try {                
-            boolean isIdSame = idLama.equals(registerDokumenDTO.getId());
-            if(isIdSame) {
-                return new RegisterDokumenDTO(registerDokumenService.update(registerDokumenDTO.toRegisterDokumen()));
-            }
-            else {
-                throw new IllegalArgumentException("id lama dan baru register dokumen harus sama");
-            }
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json register dokumen harus disertakan di body put request");
+        Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
+        Role role = (Role) crc.getProperty("role");
+        Filter filter;
+        List<Filter> fields_filter = new ArrayList<>();
+        QueryParamFilters qFilter;
+        filter = new Filter("id", idLama);
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(
+                                        false, null, 
+                                        fields_filter, null
+                                    );
+        RegisterDokumen regDokLama =  registerDokumenService
+                                        .getDaftarData(qFilter)
+                                        .getFirst();
+        
+        if(regDokLama ==  null) {
+            throw new IllegalArgumentException("Register dokumen tidak terdaftar dalam sistem");
         }
         
+        if(!(regDokLama.getDokumen().getId().equals(regDokDTOBaru.getDokumen().getId())
+                && regDokLama.getPerusahaan().getId().equals(regDokDTOBaru.getPerusahaan().getId()))) {
+            throw new IllegalArgumentException("perusahaan dan jenis dokumen harus sama dengan data register dokumen lama");
+        }
+        
+        JsonObject metaFile;   
+        JsonObjectBuilder builder;
+        RegisterDokumen registerDokumenBaru;
+        
+        switch (role) {
+            case ADMINISTRATOR -> {
+                builder = Json.createObjectBuilder(regDokLama.getMetaFile());
+                builder.add("UserCanWrite", !regDokDTOBaru.getIs_validated());
+                metaFile = builder.build();
+                registerDokumenBaru =  new RegisterDokumen(
+                    regDokLama.getId(), 
+                    regDokLama.getPerusahaan(), 
+                    regDokLama.getDokumen(), 
+                    null, 
+                    otorisasi, 
+                    regDokLama.getNamaFile(), 
+                    regDokDTOBaru.getStatus_dokumen().toStatusDokumen(),
+                    null, 
+                    regDokDTOBaru.getIs_validated(), 
+                    metaFile, 
+                    null
+                );
+            }
+            default -> {
+                metaFile = regDokLama.getMetaFile();
+                registerDokumenBaru =  new RegisterDokumen(
+                    regDokLama.getId(), 
+                    regDokLama.getPerusahaan(), 
+                    regDokLama.getDokumen(), 
+                    null, 
+                    otorisasi, 
+                    regDokLama.getNamaFile(), 
+                    regDokDTOBaru.getStatus_dokumen().toStatusDokumen(),
+                    null, 
+                    regDokDTOBaru.getIs_validated(), 
+                    metaFile, 
+                    null
+                );
+            }
+        }
+        
+        registerDokumenBaru = registerDokumenService.update(registerDokumenBaru);
+        
+        fields_filter.clear();
+        filter.setField_name("id");
+        filter.setValue(registerDokumenBaru.getId());
+        fields_filter.add(filter);
+        qFilter.setFields_filter(fields_filter);
+        
+        RegisterDokumenSementara dokSementara = 
+                registerDokumenSementaraService.getDaftarData(qFilter).getFirst();
+        
+        if(dokSementara != null) {
+            try {
+                String subPathLocationTujuan = File.separator
+                        .concat(regDokLama.getDokumen().getId())
+                        .concat(File.separator)
+                        .concat(regDokLama.getNamaFile());
+                
+                String subPathLocationAsal = File.separator
+                        .concat(registerDokumenBaru.getDokumen().getId())
+                        .concat(File.separator)
+                        .concat(registerDokumenBaru.getNamaFile());
+                
+                localStorageService.move(subPathLocationAsal, subPathLocationTujuan);
+            } catch (IOException ex) {
+                System.getLogger(RegisterDokumenResource.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+        
+        return new RegisterDokumenDTO(registerDokumenBaru);        
     }
     
     @Path("/update_id/{idLama}")
@@ -212,20 +300,117 @@ public class RegisterDokumenResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public RegisterDokumenDTO updateId(@PathParam("idLama") String idLama, RegisterDokumenDTO registerDokumenDTO) throws SQLException {
+    public RegisterDokumenDTO updateId(
+            @Context ContainerRequestContext crc,
+            @PathParam("idLama") String idLama, 
+            RegisterDokumenDTO regDokDTOBaru) throws SQLException {
         
-        try {                
-            boolean isIdSame = idLama.equals(registerDokumenDTO.getId());
-
-            if(!isIdSame) {
-                return new RegisterDokumenDTO(registerDokumenService.updateId(idLama, registerDokumenDTO.toRegisterDokumen()));
-            }
-            else {
-                throw new IllegalArgumentException("id lama dan baru register harus beda");
-            }
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json register dokumen harus disertakan di body put request");
+        Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
+        Role role = (Role) crc.getProperty("role");
+        Filter filter;
+        List<Filter> fields_filter = new ArrayList<>();
+        QueryParamFilters qFilter;
+        filter = new Filter("id", idLama);
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(
+                                        false, null, 
+                                        fields_filter, null
+                                    );
+        RegisterDokumen regDokLama =  registerDokumenService
+                                        .getDaftarData(qFilter)
+                                        .getFirst();
+        
+        if(regDokLama ==  null) {
+            throw new IllegalArgumentException("Register dokumen tidak terdaftar dalam sistem");
         }
+        
+        if(!(regDokLama.getDokumen().getId().equals(regDokDTOBaru.getDokumen().getId())
+                || regDokLama.getPerusahaan().getId().equals(regDokDTOBaru.getPerusahaan().getId()))) {
+            throw new IllegalArgumentException("perusahaan atau jenis dokumen harus berbeda dengan data register dokumen lama");
+        }
+        
+        JsonObject metaFile;   
+        JsonObjectBuilder builder;
+        RegisterDokumen registerDokumenBaru;
+        
+        switch (role) {
+            case ADMINISTRATOR -> {
+                builder = Json.createObjectBuilder(regDokLama.getMetaFile());
+                builder.add("UserCanWrite", !regDokDTOBaru.getIs_validated());
+                metaFile = builder.build();
+                
+                registerDokumenBaru =  new RegisterDokumen(
+                    null, 
+                    regDokDTOBaru.getPerusahaan().toPerusahaan(), 
+                    regDokDTOBaru.getDokumen().toDokumen(), 
+                    null, 
+                    otorisasi, 
+                    regDokDTOBaru.getNama_file(), 
+                    regDokDTOBaru.getStatus_dokumen().toStatusDokumen(),
+                    null, 
+                    regDokDTOBaru.getIs_validated(), 
+                    metaFile, 
+                    null
+                );
+            }
+            default -> {
+                metaFile = regDokLama.getMetaFile();
+                registerDokumenBaru =  new RegisterDokumen(
+                    null, 
+                    regDokDTOBaru.getPerusahaan().toPerusahaan(), 
+                    regDokDTOBaru.getDokumen().toDokumen(), 
+                    null, 
+                    otorisasi, 
+                    regDokDTOBaru.getNama_file(), 
+                    regDokDTOBaru.getStatus_dokumen().toStatusDokumen(),
+                    null, 
+                    regDokDTOBaru.getIs_validated(), 
+                    metaFile, 
+                    null
+                );
+            }
+        }
+        
+        registerDokumenBaru = registerDokumenService.update(registerDokumenBaru);
+        
+        fields_filter.clear();
+        filter.setField_name("id");
+        filter.setValue(registerDokumenBaru.getId());
+        fields_filter.add(filter);
+        qFilter.setFields_filter(fields_filter);
+        
+        RegisterDokumenSementara dokSementara = 
+                registerDokumenSementaraService.getDaftarData(qFilter).getFirst();
+        
+        if(dokSementara ==  null) {
+            try {
+                String subPathLocationAsal = File.separator
+                        .concat(regDokLama.getDokumen().getId())
+                        .concat(File.separator)
+                        .concat(regDokLama.getNamaFile());
+
+                String subPathLocationTujuan = File.separator
+                        .concat(registerDokumenBaru.getDokumen().getId())
+                        .concat(File.separator)
+                        .concat(registerDokumenBaru.getNamaFile());
+
+                localStorageService.move(subPathLocationAsal, subPathLocationTujuan);
+            } catch (IOException ex) {
+                throw new IllegalArgumentException("file dokumen tidak bisa disimpan");
+            }
+        }
+        else {           
+            try {
+                localStorageService.delete(
+                        regDokLama.getNamaFile(),
+                        File.separator.concat(regDokLama.getDokumen().getId())
+                );
+            } catch (IOException ex) {
+                throw new IllegalArgumentException("file dokumen lama tidak bisa dihapus");
+            }
+        }
+        
+        return new RegisterDokumenDTO(registerDokumenBaru);
         
     } 
     

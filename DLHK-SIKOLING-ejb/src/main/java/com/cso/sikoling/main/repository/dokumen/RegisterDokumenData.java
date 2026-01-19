@@ -63,7 +63,7 @@ public class RegisterDokumenData implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 11)
+    @Size(min = 1, max = 16)
     @Column(name = "id")
     private String id;
     

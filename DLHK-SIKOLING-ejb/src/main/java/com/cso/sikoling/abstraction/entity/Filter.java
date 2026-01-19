@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Filter implements Serializable {
     
-    private final String field_name;
-    private final String value;
+    private String field_name;
+    private String value;
 
     public Filter(String fieldName, String value) {
             this.field_name = fieldName;
@@ -15,6 +15,14 @@ public class Filter implements Serializable {
 
     public String getField_name() {
             return field_name;
+    }
+
+    public void setField_name(String field_name) {
+        this.field_name = field_name;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getValue() {

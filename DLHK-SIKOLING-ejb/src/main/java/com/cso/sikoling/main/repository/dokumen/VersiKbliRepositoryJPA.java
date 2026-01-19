@@ -172,7 +172,7 @@ public class VersiKbliRepositoryJPA implements Repository<VersiKbli, QueryParamF
 
             TypedQuery<VersiKbliData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())

@@ -193,7 +193,7 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
 
             TypedQuery<UserData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())

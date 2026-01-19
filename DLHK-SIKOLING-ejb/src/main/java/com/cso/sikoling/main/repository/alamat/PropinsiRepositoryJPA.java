@@ -172,7 +172,7 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
 
             TypedQuery<PropinsiData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())

@@ -180,7 +180,7 @@ public class KabupatenRepositoryJPA implements Repository<Kabupaten, QueryParamF
 
             TypedQuery<KabupatenData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())

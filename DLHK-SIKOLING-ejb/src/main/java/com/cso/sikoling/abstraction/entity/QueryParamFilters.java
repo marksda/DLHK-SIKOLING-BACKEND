@@ -7,10 +7,10 @@ import java.util.Objects;
 
 public class QueryParamFilters implements Serializable {
     
-    private final boolean is_paging;
-    private final Paging paging;
-    private final List<Filter> fields_filter;
-    private final List<SortOrder> fields_sorter;
+    private boolean is_paging;
+    private Paging paging;
+    private List<Filter> fields_filter;
+    private List<SortOrder> fields_sorter;
 
     public QueryParamFilters(boolean is_paging, Paging paging, List<Filter> fields_filter, List<SortOrder> fields_sorter) {
         this.is_paging = is_paging;
@@ -19,21 +19,39 @@ public class QueryParamFilters implements Serializable {
         this.fields_sorter = fields_sorter;
     }
 
-    public boolean getIs_paging() {
+    public boolean isIs_paging() {
         return is_paging;
+    }
+
+    public void setIs_paging(boolean is_paging) {
+        this.is_paging = is_paging;
     }
 
     public Paging getPaging() {
         return paging;
     }
 
+    public void setPaging(Paging paging) {
+        this.paging = paging;
+    }
+
     public List<Filter> getFields_filter() {
         return fields_filter;
     }
 
+    public void setFields_filter(List<Filter> fields_filter) {
+        this.fields_filter = fields_filter;
+    }
+
     public List<SortOrder> getFields_sorter() {
         return fields_sorter;
-    }	
+    }
+
+    public void setFields_sorter(List<SortOrder> fields_sorter) {
+        this.fields_sorter = fields_sorter;
+    }
+
+    
     
     @Override
     public int hashCode() {
@@ -55,17 +73,7 @@ public class QueryParamFilters implements Serializable {
             return false;
         }
         
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        
-        final QueryParamFilters other = (QueryParamFilters) obj;
-        
-        if (!(Objects.equals(this.is_paging, other.getIs_paging()))) {
-            return false;
-        }
-        
-        return Objects.equals(this.paging, other.getPaging());
+        return getClass() == obj.getClass();
     }
     
 }

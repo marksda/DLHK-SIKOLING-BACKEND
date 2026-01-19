@@ -167,6 +167,7 @@ public class RegisterDokumenDTO {
             return false;
         }
         final RegisterDokumenDTO other = (RegisterDokumenDTO) obj;
+        
         return Objects.equals(this.id, other.id);
     }
     

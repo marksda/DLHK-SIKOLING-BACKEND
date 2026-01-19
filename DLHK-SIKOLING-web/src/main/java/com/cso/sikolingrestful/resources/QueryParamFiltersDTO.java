@@ -15,7 +15,7 @@ public class QueryParamFiltersDTO {
 	
     public QueryParamFiltersDTO(QueryParamFilters t) {
         if(t != null) {
-            this.is_paging = t.getIs_paging();
+            this.is_paging = t.isIs_paging();
             this.paging = t.getPaging() != null ? new PagingDTO(t.getPaging()) : null;
             this.fields_filter = t.getFields_filter() != null ?
                             t.getFields_filter()

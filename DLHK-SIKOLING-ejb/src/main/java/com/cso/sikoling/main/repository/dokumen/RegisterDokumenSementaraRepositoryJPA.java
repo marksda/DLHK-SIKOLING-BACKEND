@@ -12,7 +12,6 @@ import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -232,7 +231,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
 
             TypedQuery<RegisterDokumenSementaraData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())
@@ -359,37 +358,20 @@ public class RegisterDokumenSementaraRepositoryJPA implements
     }
     
     @Override
-    public String generateId() {
+    public String generateId(String idPerusahaan, String idDokumen) {
         int tahun = LocalDate.now().getYear();
-        String hasil;
-
-        Query q = entityManager.createQuery("SELECT MAX(rd.id) "
+        String hasil = idPerusahaan + idDokumen + Integer.toString(tahun);
+        Query q = entityManager.createQuery("SELECT COUNT(rd.id) "
                         + "FROM RegisterDokumenData rd "
-                        + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun");
+                        + "WHERE EXTRACT(YEAR FROM rd.tanggalRegistrasi) = :tahun"
+                        + " AND rd.dokumen.id = :idDokumen AND rd.perusahaan.id = :idPerusahaan");
 
-        q.setParameter("tahun", tahun);        
-        hasil = (String) q.getSingleResult();
-        if(hasil != null) {
-            hasil = hasil.substring(0, 7);
-            Long idBaru = Long.parseLong(hasil)  + 1;
-            hasil = GeneratorID.LPad(Long.toString(idBaru), 7, '0');
-            return hasil.concat(Integer.toString(tahun));
-        }
-        else {
-            hasil = "0000001";
-            return hasil.concat(Integer.toString(tahun));
-        }
-
-//        try {
-//            hasil = (String) q.getSingleResult();
-//            hasil = hasil.substring(0, 7);
-//            Long idBaru = Long.parseLong(hasil)  + 1;
-//            hasil = GeneratorID.LPad(Long.toString(idBaru), 7, '0');
-//            return hasil.concat(Integer.toString(tahun));
-//        } catch (NoResultException e) {	
-//                hasil = "0000001";			
-//                return hasil.concat(Integer.toString(tahun));
-//        }		
+        q.setParameter("tahun", tahun);
+        q.setParameter("idDokumen", idDokumen);
+        q.setParameter("idPerusahaan", idPerusahaan);
+        Long count = (Long) q.getSingleResult() + 1;
+        hasil = hasil + GeneratorID.LPad(Long.toString(count), 2, '0');        
+        return hasil;
     }
 
 }

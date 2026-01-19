@@ -26,7 +26,7 @@ public class RegisterDokumenSementaraServiceBasic implements Service<RegisterDok
     public RegisterDokumenSementara save(RegisterDokumenSementara t) throws SQLException {
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();      
-        String id = repository.generateId();
+        String id = repository.generateId(t.getIdPerusahaan(), t.getIdJenisDokumen());
         JsonObject metaFileOri = t.getMetaFile();
         JsonObjectBuilder builder = Json.createObjectBuilder(metaFileOri);
         String[] hasilSplit = metaFileOri.getString("BaseFileName").split("\\.");

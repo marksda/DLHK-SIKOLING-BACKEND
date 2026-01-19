@@ -64,7 +64,7 @@ public class OtorisasiFilter implements ContainerRequestFilter {
             List<Role> methodRoles = Optional.ofNullable(extractRoles(resourceMethod))
                                         .orElseThrow(() -> new NotAuthorizedException("Role not found"));
             try {
-                checkPermissions(methodRoles, otorisasi);
+                checkPermissions(methodRoles, otorisasi, crc);
                 crc.setProperty("otoritas", otorisasi);
             } catch (Exception e) {
                 throw new NotAuthorizedException(e.toString());
@@ -89,13 +89,14 @@ public class OtorisasiFilter implements ContainerRequestFilter {
         }
     }
     
-    private void checkPermissions(List<Role> allowedRoles, Otorisasi otorisasi) throws Exception {
+    private void checkPermissions(List<Role> allowedRoles, Otorisasi otorisasi, ContainerRequestContext crc) throws Exception {
         Iterator<Role> iterator = allowedRoles.iterator();  
         boolean allowRole = false; 
         
         while(iterator.hasNext()) {    		
             Role role = iterator.next();
             if(role.label().equalsIgnoreCase(otorisasi.getHak_akses().getId())) {
+                crc.setProperty("role", role);
                 allowRole = true;
                 break;
             }    		

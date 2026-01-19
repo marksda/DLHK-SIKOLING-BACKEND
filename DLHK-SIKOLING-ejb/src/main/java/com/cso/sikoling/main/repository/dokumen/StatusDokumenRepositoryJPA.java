@@ -172,7 +172,7 @@ public class StatusDokumenRepositoryJPA implements Repository<StatusDokumen, Que
 
             TypedQuery<StatusDokumenData> typedQuery;	
 
-            if( q.getIs_paging()) { 
+            if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())
