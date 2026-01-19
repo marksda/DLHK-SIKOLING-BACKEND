@@ -43,12 +43,48 @@ public class RegisterDokumenServiceBasic implements Service<RegisterDokumen> {
 
     @Override
     public RegisterDokumen update(RegisterDokumen t) throws SQLException {
-        return repository.update(t);
+        if(t.getTanggalRegistrasi() == null) {
+            RegisterDokumen regDok = new RegisterDokumen(
+                    t.getId(), 
+                    t.getPerusahaan(),
+                    t.getDokumen(), 
+                    new Date(), 
+                    t.getUploader(), 
+                    t.getNamaFile(), 
+                    t.getStatusDokumen(), 
+                    t.getIdLama(), 
+                    t.getIsValidated(), 
+                    t.getMetaFile(),
+                    t.getMetaInfo()
+                );
+            return repository.update(regDok);
+        }
+        else {
+            return repository.update(t);
+        }       
     }
 
     @Override
     public RegisterDokumen updateId(String idLama, RegisterDokumen t) throws SQLException {
-        return repository.updateId(idLama, t);
+        if(t.getTanggalRegistrasi() == null) {
+            RegisterDokumen regDok = new RegisterDokumen(
+                    t.getId(), 
+                    t.getPerusahaan(),
+                    t.getDokumen(), 
+                    new Date(), 
+                    t.getUploader(), 
+                    t.getNamaFile(), 
+                    t.getStatusDokumen(), 
+                    t.getIdLama(), 
+                    t.getIsValidated(), 
+                    t.getMetaFile(),
+                    t.getMetaInfo()
+                );
+            return repository.updateId(idLama, regDok);
+        }
+        else {
+            return repository.updateId(idLama, t);
+        }       
     }
 
     @Override
