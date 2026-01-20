@@ -30,6 +30,7 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import java.util.ArrayList;
 
@@ -47,22 +48,37 @@ public class DesaResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<DesaDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+        List<Desa> daftarDesa;
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return desaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                daftarDesa = desaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarDesa == null) {
+                    return null;
+                }
+                else {
+                    return daftarDesa
                         .stream()
                         .map(t -> new DesaDTO(t))
                         .collect(Collectors.toList());
+                }                
             }
             else {
-                return desaService.getDaftarData(null)
+                daftarDesa = desaService.getDaftarData(null);
+                
+                if(daftarDesa == null) {
+                    return null;
+                }
+                else {
+                    return daftarDesa
                         .stream()
                         .map(t -> new DesaDTO(t))
                         .collect(Collectors.toList());
+                }                
             }             
         } 
         catch (JsonbException e) {
@@ -76,7 +92,7 @@ public class DesaResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public DesaDTO save(DesaDTO desaDTO) throws SQLException { 
+    public DesaDTO save(DesaDTO desaDTO) throws SQLException, UnspecifiedException { 
         List<Filter> fields_filter = new ArrayList<>();
         fields_filter.add(
             new Filter("id", desaDTO.getId_kecamatan())
@@ -84,8 +100,15 @@ public class DesaResource {
         QueryParamFilters queryParamFilters = new QueryParamFilters(
                                             false, null, fields_filter, null);
         
-        Kecamatan kecamatan = kecamatanService.getDaftarData(queryParamFilters)
-                                              .getFirst();
+        List<Kecamatan> daftarKecamatan = kecamatanService.getDaftarData(queryParamFilters);
+        Kecamatan kecamatan;
+        
+        if(daftarKecamatan == null) {
+            throw new UnspecifiedException(500, "Data kecamatan tidak ada");
+        }
+        else {
+            kecamatan = daftarKecamatan.getFirst();
+        }
         
         Desa desa = new Desa(
                 desaDTO.getId(), 
@@ -110,44 +133,36 @@ public class DesaResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public DesaDTO update(@PathParam("idLama") String idLama, DesaDTO desaDTO) throws SQLException {
-                
-        boolean isDigit = idLama.matches("[0-9]+");
-
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(desaDTO.getId());
-                if(isIdSame) {
-                    List<Filter> fields_filter = new ArrayList<>();
-                    fields_filter.add(
-                        new Filter("id", desaDTO.getId_kecamatan())
-                    );        
-                    QueryParamFilters queryParamFilters = new QueryParamFilters(
+    public DesaDTO update(@PathParam("idLama") String idLama, DesaDTO desaDTO) throws SQLException, UnspecifiedException {
+        
+        if(idLama.equals(desaDTO.getId())) {
+            List<Filter> fields_filter = new ArrayList<>();
+            fields_filter.add(
+                new Filter("id", desaDTO.getId_kecamatan())
+            );        
+            QueryParamFilters queryParamFilters = new QueryParamFilters(
                                                         false, null, fields_filter, null);
-
-                    Kecamatan kecamatan = kecamatanService.getDaftarData(queryParamFilters)
-                                                          .getFirst();
-
-                    Desa desa = new Desa(
-                            desaDTO.getId(), 
-                            desaDTO.getNama(), 
-                            kecamatan.getId_propinsi(), 
-                            kecamatan.getId_kabupaten(), 
-                            kecamatan.getId()
-                        );
+            List<Kecamatan> daftarKecamatan = kecamatanService.getDaftarData(queryParamFilters);
+            
+            if(daftarKecamatan == null) {
+                throw new UnspecifiedException(500, "Data kecamatan tidak ada");
+            }
+            else {
+                Kecamatan kecamatan = daftarKecamatan.getFirst();
+                Desa desa = new Desa(
+                                desaDTO.getId(), 
+                                desaDTO.getNama(), 
+                                kecamatan.getId_propinsi(), 
+                                kecamatan.getId_kabupaten(), 
+                                kecamatan.getId()
+                            );
                     
-                    return new DesaDTO(desaService.update(desa));
-                }
-                else {
-                    throw new IllegalArgumentException("id kabupaten harus sama");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json desa harus disertakan di body put request");
+                return new DesaDTO(desaService.update(desa));
             }
         }
         else {
-            throw new IllegalArgumentException("id desa harus bilangan panjang 10 digit");
-        }  
+            throw new UnspecifiedException(500, "Id desa tidak sama");
+        }
         
     }
     
@@ -157,46 +172,39 @@ public class DesaResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public DesaDTO updateId(@PathParam("idLama") String idLama, DesaDTO desaDTO) throws SQLException {
+    public DesaDTO updateId(@PathParam("idLama") String idLama, 
+                DesaDTO desaDTO) throws SQLException, UnspecifiedException {
         
-        boolean isDigit = idLama.matches("[0-9]+");
-
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(desaDTO.getId());
-                
-                if(!isIdSame) {
-                    List<Filter> fields_filter = new ArrayList<>();
-                    fields_filter.add(
-                        new Filter("id", desaDTO.getId_kecamatan())
-                    );        
-                    QueryParamFilters queryParamFilters = 
-                        new QueryParamFilters(false, null, fields_filter, null);
-
-                    Kecamatan kecamatan = kecamatanService.getDaftarData(queryParamFilters)
-                                                          .getFirst();
-
-                    Desa desa = new Desa(
-                            desaDTO.getId(), 
-                            desaDTO.getNama(), 
-                            kecamatan.getId_propinsi(), 
-                            kecamatan.getId_kabupaten(), 
-                            kecamatan.getId()
-                        );
-                    
-                    return new DesaDTO(desaService.updateId(idLama, desa));
-                }
-                else {
-                    throw new IllegalArgumentException("id lama dan baru kabupaten harus beda");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json desa harus disertakan di body put request");
-            }
+        if(idLama.equals(desaDTO.getId())) {
+            throw new UnspecifiedException(500, "Id baru tidak boleh sama dengan id baru");
         }
         else {
-            throw new IllegalArgumentException("id desa harus bilangan panjang 10 digit");
+            List<Filter> fields_filter = new ArrayList<>();
+            fields_filter.add(
+                new Filter("id", desaDTO.getId_kecamatan())
+            );        
+            QueryParamFilters queryParamFilters = 
+                    new QueryParamFilters(false, null, fields_filter, null);
+            
+            List<Kecamatan> daftarKecamatan = kecamatanService.getDaftarData(queryParamFilters);
+            
+            if(daftarKecamatan == null) {
+                throw new UnspecifiedException(500, "Data kecamatan tidak ditemukan");
+            }
+            else {
+                Kecamatan kecamatan = daftarKecamatan.getFirst();
+                Desa desa = new Desa(
+                        desaDTO.getId(), 
+                        desaDTO.getNama(), 
+                        kecamatan.getId_propinsi(), 
+                        kecamatan.getId_kabupaten(), 
+                        kecamatan.getId()
+                    );
+
+                return new DesaDTO(desaService.updateId(idLama, desa));
+            }
         }
-        
+            
     } 
     
     @Path("/{idDesa}")
@@ -206,21 +214,12 @@ public class DesaResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idDesa") String idDesa) throws SQLException {
-        
-        boolean isDigit = idDesa.matches("[0-9]+");
-        
-        if(isDigit) {		
             
-            JsonObject model = Json.createObjectBuilder()
-                    .add("status", desaService.delete(idDesa) == true ? "sukses" : "gagal")
-                    .build();
-            
-            
-            return model;
-        }
-        else {
-            throw new IllegalArgumentException("id desa harus bilangan panjang 10 digit");
-        }        
+        JsonObject model = Json.createObjectBuilder()
+                .add("status", desaService.delete(idDesa) == true ? "sukses" : "gagal")
+                .build();
+
+        return model;
         
     }
     

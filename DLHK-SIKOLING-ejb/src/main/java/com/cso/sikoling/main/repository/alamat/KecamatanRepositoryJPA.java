@@ -112,6 +112,8 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
     @Override
     public List<Kecamatan> getDaftarData(QueryParamFilters q) {
         
+        List<KecamatanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KecamatanData> cq = cb.createQuery(KecamatanData.class);
@@ -191,17 +193,29 @@ public class KecamatanRepositoryJPA implements Repository<Kecamatan, QueryParamF
                 typedQuery = entityManager.createQuery(cq);
             }
 
-            return typedQuery.getResultList()
-                    .stream()
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                     .map(d -> convertKecamatanDataToKecamatan(d))
                     .collect(Collectors.toList());
+            } 
         }
         else {
-            return entityManager.createNamedQuery("KecamatanData.findAll", KecamatanData.class)
-                 .getResultList()
-                 .stream()
+            hasil = entityManager.createNamedQuery("KecamatanData.findAll", KecamatanData.class)
+                 .getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                  .map(d -> convertKecamatanDataToKecamatan(d))
                             .collect(Collectors.toList());
+            }                 
         }
         
     }

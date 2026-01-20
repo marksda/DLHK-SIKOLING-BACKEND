@@ -30,6 +30,7 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import java.util.ArrayList;
 
@@ -47,26 +48,42 @@ public class KecamatanResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<KecamatanDTO> getDaftarData(
-                    @QueryParam("filters") String queryParamsStr) {
+                    @QueryParam("filters") String queryParamsStr) throws UnspecifiedException {
+        
+        List<Kecamatan> daftarKecamatan;
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = 
                     jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return kecamatanService.getDaftarData(
-                            queryParamFiltersDTO.toQueryParamFilters()
-                        )
-                        .stream()
-                        .map(t -> new KecamatanDTO(t))
-                        .collect(Collectors.toList());
+                
+                daftarKecamatan = kecamatanService.getDaftarData(
+                                    queryParamFiltersDTO.toQueryParamFilters()
+                                );
+                
+                if(daftarKecamatan == null) {
+                    throw new UnspecifiedException(500, "daftar kecamatan tidak ada");
+                }
+                else {
+                    return daftarKecamatan
+                                .stream()
+                                .map(t -> new KecamatanDTO(t))
+                                .collect(Collectors.toList());
+                }                
             }
             else {
-                return kecamatanService.getDaftarData(null)
-                        .stream()
-                        .map(t -> new KecamatanDTO(t))
-                        .collect(Collectors.toList());
+                daftarKecamatan = kecamatanService.getDaftarData(null);
+                
+                if(daftarKecamatan == null) {
+                    throw new UnspecifiedException(500, "daftar kecamatan tidak ada");
+                }
+                else {
+                    return daftarKecamatan
+                                .stream()
+                                .map(t -> new KecamatanDTO(t))
+                                .collect(Collectors.toList());
+                }                
             }             
         } 
         catch (JsonbException e) {
@@ -80,16 +97,24 @@ public class KecamatanResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public KecamatanDTO save(KecamatanDTO kecamatanDTO) throws SQLException { 
+    public KecamatanDTO save(KecamatanDTO kecamatanDTO) throws SQLException, UnspecifiedException { 
+        
         List<Filter> fields_filter = new ArrayList<>();
         fields_filter.add(
             new Filter("id", kecamatanDTO.getId_kabupaten())
         );        
         QueryParamFilters queryParamFilters = new QueryParamFilters(
                                             false, null, fields_filter, null);        
-                
-        Kabupaten kabupaten = kabupatenService.getDaftarData(queryParamFilters)
-                                              .getFirst();
+        
+        List<Kabupaten> daftarKabupaten = kabupatenService.getDaftarData(queryParamFilters);
+        Kabupaten kabupaten;
+        
+        if(daftarKabupaten == null) {
+            throw new UnspecifiedException(500, "Data kabupaten tidak ada");
+        }
+        else {
+            kabupaten = daftarKabupaten.getFirst();
+        }
         
         Kecamatan kecamatan = new Kecamatan(
             kecamatanDTO.getId(), 
@@ -114,44 +139,35 @@ public class KecamatanResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public KecamatanDTO update(@PathParam("idLama") String idLama, 
-                            KecamatanDTO kecamatanDTO) throws SQLException {
-                
-        boolean isDigit = idLama.matches("[0-9]+");
-
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(kecamatanDTO.getId());
-                if(isIdSame) {
-                    List<Filter> fields_filter = new ArrayList<>();
-                    fields_filter.add(
-                        new Filter("id", kecamatanDTO.getId_kabupaten())
-                    );        
-                    QueryParamFilters queryParamFilters = 
-                        new QueryParamFilters(false, null, fields_filter, null);        
-
-                    Kabupaten kabupaten = kabupatenService
-                                            .getDaftarData(queryParamFilters)
-                                            .getFirst();
+                            KecamatanDTO kecamatanDTO) throws SQLException, UnspecifiedException {
+        
+        if(idLama.equals(kecamatanDTO.getId())) {
+            List<Filter> fields_filter = new ArrayList<>();
+            fields_filter.add(
+                new Filter("id", kecamatanDTO.getId_kabupaten())
+            );        
+            QueryParamFilters queryParamFilters = new QueryParamFilters(
+                                                        false, null, fields_filter, null);
+            List<Kabupaten> daftarKabupaten = kabupatenService.getDaftarData(queryParamFilters);
+            
+            if(daftarKabupaten == null) {
+                throw new UnspecifiedException(500, "Data kabupaten tidak ada");
+            }
+            else {
+                Kabupaten kabupaten = daftarKabupaten.getFirst();
+                Kecamatan kecamatan = new Kecamatan(
+                                kecamatanDTO.getId(), 
+                                kecamatanDTO.getNama(), 
+                                kabupaten.getId_propinsi(),
+                                kabupaten.getId()
+                            );
                     
-                    Kecamatan kecamatan = new Kecamatan(
-                        kecamatanDTO.getId(), 
-                        kecamatanDTO.getNama(), 
-                        kabupaten.getId_propinsi(), 
-                        kabupaten.getId()
-                    );
-                    
-                    return new KecamatanDTO(kecamatanService.update(kecamatan));
-                }
-                else {
-                    throw new IllegalArgumentException("id lama dan baru kabupaten harus sama");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json kecamatan harus disertakan di body put request");
+                return new KecamatanDTO(kecamatanService.update(kecamatan));
             }
         }
         else {
-            throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
-        }  
+            throw new UnspecifiedException(500, "Id baru tidak boleh sama dengan id baru");
+        }
         
     }
     
@@ -161,45 +177,35 @@ public class KecamatanResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public KecamatanDTO updateId(@PathParam("idLama") String idLama, KecamatanDTO kecamatanDTO) throws SQLException {
-        boolean isDigit = idLama.matches("[0-9]+");
-
-        if(isDigit) {
-            try {                
-                boolean isIdSame = idLama.equals(kecamatanDTO.getId());
-                
-                if(!isIdSame) {
-                    List<Filter> fields_filter = new ArrayList<>();
-                    fields_filter.add(
-                        new Filter("id", kecamatanDTO.getId_kabupaten())
-                    );        
-                    QueryParamFilters queryParamFilters = 
-                        new QueryParamFilters(false, null, fields_filter, null);        
-
-                    Kabupaten kabupaten = kabupatenService
-                                            .getDaftarData(queryParamFilters)
-                                            .getFirst();
-                    
-                    Kecamatan kecamatan = new Kecamatan(
-                        kecamatanDTO.getId(), 
-                        kecamatanDTO.getNama(), 
-                        kabupaten.getId_propinsi(), 
-                        kabupaten.getId()
-                    );
-                    
-                    return new KecamatanDTO(
-                            kecamatanService.updateId(idLama, kecamatan)
-                        );
-                }
-                else {
-                    throw new IllegalArgumentException("id lama dan baru kabupaten harus beda");
-                }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json kecamatan harus disertakan di body put request");
-            }
+    public KecamatanDTO updateId(@PathParam("idLama") String idLama, KecamatanDTO kecamatanDTO) throws SQLException, UnspecifiedException {
+        
+        if(idLama.equals(kecamatanDTO.getId())) {
+            throw new UnspecifiedException(500, "Id baru tidak boleh sama dengan id baru");
         }
         else {
-            throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
+            List<Filter> fields_filter = new ArrayList<>();
+            fields_filter.add(
+                new Filter("id", kecamatanDTO.getId_kabupaten())
+            );        
+            QueryParamFilters queryParamFilters = 
+                    new QueryParamFilters(false, null, fields_filter, null);
+            
+            List<Kabupaten> daftarKabupaten = kabupatenService.getDaftarData(queryParamFilters);
+            
+            if(daftarKabupaten == null) {
+                throw new UnspecifiedException(500, "Data kabupaten tidak ditemukan");
+            }
+            else {
+                Kabupaten kabupaten = daftarKabupaten.getFirst();
+                Kecamatan kecamatan = new Kecamatan(
+                        kecamatanDTO.getId(), 
+                        kecamatanDTO.getNama(),
+                        kabupaten.getId_propinsi(),
+                        kabupaten.getId()
+                    );
+
+                return new KecamatanDTO(kecamatanService.updateId(idLama, kecamatan));
+            }
         }
         
     } 
@@ -211,21 +217,12 @@ public class KecamatanResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idKecamatan") String idKecamatan) throws SQLException {
-        
-        boolean isDigit = idKecamatan.matches("[0-9]+");
-        
-        if(isDigit) {		
             
-            JsonObject model = Json.createObjectBuilder()
-                    .add("status", kecamatanService.delete(idKecamatan) == true ? "sukses" : "gagal")
-                    .build();
-            
-            
-            return model;
-        }
-        else {
-            throw new IllegalArgumentException("id kecamatan harus bilangan panjang 7 digit");
-        }        
+        JsonObject model = Json.createObjectBuilder()
+                .add("status", kecamatanService.delete(idKecamatan) == true ? "sukses" : "gagal")
+                .build();
+
+        return model;
         
     }
     

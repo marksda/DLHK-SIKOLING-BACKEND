@@ -44,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Optional;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @Stateless
@@ -270,8 +271,11 @@ public class RegisterDokumenResource {
         fields_filter.add(filter);
         qFilter.setFields_filter(fields_filter);
         
-        RegisterDokumenSementara dokSementara = 
-                registerDokumenSementaraService.getDaftarData(qFilter).getFirst();
+        List<RegisterDokumenSementara> daftarRegDokSementara = 
+                registerDokumenSementaraService.getDaftarData(qFilter);
+        
+        RegisterDokumenSementara dokSementara = daftarRegDokSementara != null ?
+                    daftarRegDokSementara.getFirst() : null;
         
         if(dokSementara != null) {
             try {
@@ -287,7 +291,7 @@ public class RegisterDokumenResource {
                 
                 localStorageService.move(subPathLocationAsal, subPathLocationTujuan);
             } catch (IOException ex) {
-                System.getLogger(RegisterDokumenResource.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                throw new IllegalArgumentException("gagal memindahkan file register dokuman");
             }
         }
         
@@ -379,8 +383,12 @@ public class RegisterDokumenResource {
         fields_filter.add(filter);
         qFilter.setFields_filter(fields_filter);
         
-        RegisterDokumenSementara dokSementara = 
-                registerDokumenSementaraService.getDaftarData(qFilter).getFirst();
+        
+        List<RegisterDokumenSementara> daftarRegDokSementara = 
+                registerDokumenSementaraService.getDaftarData(qFilter);
+        
+        RegisterDokumenSementara dokSementara = daftarRegDokSementara != null ?
+                    daftarRegDokSementara.getFirst() : null;
         
         if(dokSementara ==  null) {
             try {
@@ -417,7 +425,7 @@ public class RegisterDokumenResource {
     @Path("/{idRegisterDokumen}")
     @DELETE
     @RequiredAuthorization
-    @RequiredRole({Role.ADMINISTRATOR})
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idRegisterDokumen") String idRegisterDokumen) throws SQLException {

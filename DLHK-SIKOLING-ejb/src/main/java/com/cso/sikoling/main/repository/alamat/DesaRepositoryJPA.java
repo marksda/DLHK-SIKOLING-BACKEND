@@ -116,6 +116,7 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
 
     @Override
     public List<Desa> getDaftarData(QueryParamFilters q) {
+        List<DesaData> hasil;
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -197,17 +198,27 @@ public class DesaRepositoryJPA implements Repository<Desa, QueryParamFilters, Fi
                 typedQuery = entityManager.createQuery(cq);
             }
 
-            return typedQuery.getResultList()
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                    .map(d -> convertDesaDataToDesa(d))
+                    .collect(Collectors.toList());
+            }
+        }
+        else {
+            hasil = entityManager.createNamedQuery(
+                        "DesaData.findAll", 
+                        DesaData.class
+                    )
+                    .getResultList();
+            return hasil
                     .stream()
                     .map(d -> convertDesaDataToDesa(d))
                     .collect(Collectors.toList());
-        }
-        else {
-            return entityManager.createNamedQuery("DesaData.findAll", DesaData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertDesaDataToDesa(d))
-                            .collect(Collectors.toList());
         }
         
     }

@@ -123,6 +123,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
 
     @Override
     public List<RegisterDokumenSementara> getDaftarData(QueryParamFilters q) {
+        List<RegisterDokumenSementaraData> hasil;
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -240,18 +241,34 @@ public class RegisterDokumenSementaraRepositoryJPA implements
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertRegisterDokumenSementaraDataToRegisterDokumenSementara(d))
                             .collect(Collectors.toList());
+            }               
         }
         else {
-            return entityManager.createNamedQuery("RegisterDokumenSementaraData.findAll", RegisterDokumenSementaraData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertRegisterDokumenSementaraDataToRegisterDokumenSementara(d))
-                            .collect(Collectors.toList());
+            hasil = entityManager.createNamedQuery(
+                        "RegisterDokumenSementaraData.findAll", 
+                        RegisterDokumenSementaraData.class
+                    ).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil
+                        .stream()
+                        .map(d -> convertRegisterDokumenSementaraDataToRegisterDokumenSementara(d))
+                        .collect(Collectors.toList());
+            }
         }
         
     }
