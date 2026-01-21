@@ -46,7 +46,7 @@ public class RegisterDokumenData implements Serializable {
        
     @JoinColumn(name = "dokumen", referencedColumnName = "id")
     @ManyToOne
-    private DokumenData dokumen;
+    private MasterDokumenData dokumen;
     
     @Column(name = "tanggal_registrasi")
     @Temporal(TemporalType.DATE)
@@ -93,7 +93,7 @@ public class RegisterDokumenData implements Serializable {
         this.id = id;
     }
 
-    public RegisterDokumenData(String id, PerusahaanData perusahaan, DokumenData dokumen) {
+    public RegisterDokumenData(String id, PerusahaanData perusahaan, MasterDokumenData dokumen) {
         this.id = id;
         this.perusahaan = perusahaan;
         this.dokumen = dokumen;
@@ -107,11 +107,11 @@ public class RegisterDokumenData implements Serializable {
         this.perusahaan = perusahaan;
     }
 
-    public DokumenData getDokumen() {
+    public MasterDokumenData getDokumen() {
         return dokumen;
     }
 
-    public void setDokumen(DokumenData dokumen) {
+    public void setDokumen(MasterDokumenData dokumen) {
         this.dokumen = dokumen;
     }
 

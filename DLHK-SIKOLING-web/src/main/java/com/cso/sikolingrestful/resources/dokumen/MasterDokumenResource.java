@@ -22,41 +22,59 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import java.util.ArrayList;
 
 @Stateless
 @LocalBean
 @Path("dokumen")
-public class DokumenResource {
+public class MasterDokumenResource {
     
     @Inject
-    private Service<Dokumen> dokumenService;
+    private Service<MasterDokumen> masterDokumenService;
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<DokumenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<MasterDokumenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) throws UnspecifiedException {
+        
+        List<MasterDokumen> daftarMasterDokumen;
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return dokumenService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(
+                        queryParamsStr, QueryParamFiltersDTO.class);
+                daftarMasterDokumen = masterDokumenService.getDaftarData(
+                        queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarMasterDokumen == null) {
+                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                }
+                else {
+                    return daftarMasterDokumen
                         .stream()
-                        .map(t -> new DokumenDTO(t))
+                        .map(t -> new MasterDokumenDTO(t))
                         .collect(Collectors.toList());
+                }                        
             }
             else {
-                return dokumenService.getDaftarData(null)
+                daftarMasterDokumen = masterDokumenService.getDaftarData(null);
+                
+                if(daftarMasterDokumen == null) {
+                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                }
+                else {
+                    return daftarMasterDokumen
                         .stream()
-                        .map(t -> new DokumenDTO(t))
+                        .map(t -> new MasterDokumenDTO(t))
                         .collect(Collectors.toList());
+                } 
             }             
         } 
         catch (JsonbException e) {
@@ -70,10 +88,10 @@ public class DokumenResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public DokumenDTO save(DokumenDTO dokumenDTO) throws SQLException { 
+    public MasterDokumenDTO save(MasterDokumenDTO dokumenDTO) throws SQLException { 
         
         try {            
-            return new DokumenDTO(dokumenService.save(dokumenDTO.toDokumen()));
+            return new MasterDokumenDTO(masterDokumenService.save(dokumenDTO.toDokumen()));
         } 
         catch (NullPointerException e) {
             throw new IllegalArgumentException("data json dokumen harus disertakan di body post request");
@@ -87,12 +105,11 @@ public class DokumenResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public DokumenDTO update(@PathParam("idLama") String idLama, DokumenDTO dokumenDTO) throws SQLException {
+    public MasterDokumenDTO update(@PathParam("idLama") String idLama, MasterDokumenDTO dokumenDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(dokumenDTO.getId());
-            if(isIdSame) {
-                return new DokumenDTO(dokumenService.update(dokumenDTO.toDokumen()));
+            if(idLama.equals(dokumenDTO.getId())) {
+                return new MasterDokumenDTO(masterDokumenService.update(dokumenDTO.toDokumen()));
             }
             else {
                 throw new IllegalArgumentException("id lama dan baru dokumen harus sama");
@@ -109,16 +126,14 @@ public class DokumenResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public DokumenDTO updateId(@PathParam("idLama") String idLama, DokumenDTO dokumenDTO) throws SQLException {
+    public MasterDokumenDTO updateId(@PathParam("idLama") String idLama, MasterDokumenDTO dokumenDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(dokumenDTO.getId());
-
-            if(!isIdSame) {
-                return new DokumenDTO(dokumenService.updateId(idLama, dokumenDTO.toDokumen()));
+            if(idLama.equals(dokumenDTO.getId())) {
+                throw new IllegalArgumentException("id lama dan baru dokumen harus beda");
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru dokumen harus beda");
+                return new MasterDokumenDTO(masterDokumenService.updateId(idLama, dokumenDTO.toDokumen()));
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json dokumen harus disertakan di body put request");
@@ -133,21 +148,13 @@ public class DokumenResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idDokumen") String idDokumen) throws SQLException {
-        
-        boolean isDigit = idDokumen.matches("[0-9]+");
-        
-        if(isDigit) {		
             
-            JsonObject model = Json.createObjectBuilder()
-                    .add("status", dokumenService.delete(idDokumen) == true ? "sukses" : "gagal")
-                    .build();
-            
-            
-            return model;
-        }
-        else {
-            throw new IllegalArgumentException("id dokumen harus bilangan panjang 2 digit");
-        }        
+        JsonObject model = Json.createObjectBuilder()
+                .add("status", masterDokumenService.delete(idDokumen) == true ? "sukses" : "gagal")
+                .build();
+
+
+        return model;
         
     }
     
@@ -163,9 +170,8 @@ public class DokumenResource {
                 List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
                 
                 JsonObject model = Json.createObjectBuilder()
-                    .add(
-                        "jumlah", 
-                        dokumenService.getJumlahData(
+                    .add("jumlah", 
+                        masterDokumenService.getJumlahData(
                             filters
                                 .stream()
                                 .map(t -> t.toFilter())
@@ -178,7 +184,7 @@ public class DokumenResource {
             }
             else {
                 JsonObject model = Json.createObjectBuilder()
-                    .add("jumlah", dokumenService.getJumlahData(null))
+                    .add("jumlah", masterDokumenService.getJumlahData(null))
                     .build();            
             
                 return model;

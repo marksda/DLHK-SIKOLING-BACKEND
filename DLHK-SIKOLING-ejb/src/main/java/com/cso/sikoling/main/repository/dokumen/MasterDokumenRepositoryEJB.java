@@ -1,7 +1,7 @@
 package com.cso.sikoling.main.repository.dokumen;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 import com.cso.sikoling.main.Infrastructure;
@@ -15,23 +15,23 @@ import java.util.List;
 @Stateless
 @Local
 @Infrastructure
-public class DokumenRepositoryEJB implements Repository<Dokumen, QueryParamFilters, Filter> {
+public class MasterDokumenRepositoryEJB implements Repository<MasterDokumen, QueryParamFilters, Filter> {
     
     @Inject
-    private DokumenRepositoryJPA dokumenRepositoryJPA;
+    private MasterDokumenRepositoryJPA dokumenRepositoryJPA;
 
     @Override
-    public Dokumen updateId(String idLama, Dokumen t) throws SQLException {
+    public MasterDokumen updateId(String idLama, MasterDokumen t) throws SQLException {
         return dokumenRepositoryJPA.updateId(idLama, t);
     }
 
     @Override
-    public Dokumen save(Dokumen t) throws SQLException {
+    public MasterDokumen save(MasterDokumen t) throws SQLException {
         return dokumenRepositoryJPA.save(t);
     }
 
     @Override
-    public Dokumen update(Dokumen t) throws SQLException {
+    public MasterDokumen update(MasterDokumen t) throws SQLException {
         return dokumenRepositoryJPA.update(t);
     }
 
@@ -41,7 +41,7 @@ public class DokumenRepositoryEJB implements Repository<Dokumen, QueryParamFilte
     }
 
     @Override
-    public List<Dokumen> getDaftarData(QueryParamFilters q) {
+    public List<MasterDokumen> getDaftarData(QueryParamFilters q) {
         return dokumenRepositoryJPA.getDaftarData(q);
     }
 

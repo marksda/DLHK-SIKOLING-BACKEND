@@ -24,7 +24,7 @@ public class RegisterDokumenServiceBasic implements Service<RegisterDokumen> {
             RegisterDokumen regDok = new RegisterDokumen(
                     t.getId(), 
                     t.getPerusahaan(),
-                    t.getDokumen(), 
+                    t.getMasterDokumen(), 
                     new Date(), 
                     t.getUploader(), 
                     t.getNamaFile(), 
@@ -47,7 +47,7 @@ public class RegisterDokumenServiceBasic implements Service<RegisterDokumen> {
             RegisterDokumen regDok = new RegisterDokumen(
                     t.getId(), 
                     t.getPerusahaan(),
-                    t.getDokumen(), 
+                    t.getMasterDokumen(), 
                     new Date(), 
                     t.getUploader(), 
                     t.getNamaFile(), 
@@ -70,7 +70,7 @@ public class RegisterDokumenServiceBasic implements Service<RegisterDokumen> {
             RegisterDokumen regDok = new RegisterDokumen(
                     t.getId(), 
                     t.getPerusahaan(),
-                    t.getDokumen(), 
+                    t.getMasterDokumen(), 
                     new Date(), 
                     t.getUploader(), 
                     t.getNamaFile(), 

@@ -26,6 +26,7 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.QueryParamFiltersDTO;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import java.util.ArrayList;
@@ -40,23 +41,43 @@ public class PropinsiResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<PropinsiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<PropinsiDTO> getDaftarData(
+            @QueryParam("filters") String queryParamsStr) throws UnspecifiedException {
+        
+        List<Propinsi> daftarPropinsi;
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
 
-                return propinsiService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                daftarPropinsi = 
+                        propinsiService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarPropinsi == null) {
+                    throw new UnspecifiedException(500, "daftar Propinsi tidak ada");
+                }
+                else {
+                    return daftarPropinsi
                         .stream()
                         .map(t -> new PropinsiDTO(t))
                         .collect(Collectors.toList());
+                }                
             }
             else {
-                return propinsiService.getDaftarData(null)
-                        .stream()
-                        .map(t -> new PropinsiDTO(t))
-                        .collect(Collectors.toList());
+                daftarPropinsi = 
+                        propinsiService.getDaftarData(null);
+                
+                if(daftarPropinsi == null) {
+                    throw new UnspecifiedException(500, "daftar Propinsi tidak ada");
+                }
+                else {
+                    return daftarPropinsi
+                            .stream()
+                            .map(t -> new PropinsiDTO(t))
+                            .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {
@@ -87,15 +108,15 @@ public class PropinsiResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PropinsiDTO update(@PathParam("idLama") String idLama, PropinsiDTO propinsiDTO) throws SQLException {
+    public PropinsiDTO update(@PathParam("idLama") String idLama, 
+            PropinsiDTO propinsiDTO) throws SQLException, UnspecifiedException {
         
         try {                
-            boolean isIdSame = idLama.equals(propinsiDTO.getId());
-            if(isIdSame) {
+            if(idLama.equals(propinsiDTO.getId())) {
                 return new PropinsiDTO(propinsiService.update(propinsiDTO.toPropinsi()));
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru propinsi harus sama");
+                throw new UnspecifiedException(500, "Id baru tidak boleh sama dengan id baru");
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
@@ -109,19 +130,14 @@ public class PropinsiResource {
     @RequiredRole({Role.ADMINISTRATOR})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public PropinsiDTO updateId(@PathParam("idLama") String idLama, PropinsiDTO propinsiDTO) throws SQLException {
-        
-        try {                
-            boolean isIdSame = idLama.equals(propinsiDTO.getId());
-
-            if(!isIdSame) {
-                return new PropinsiDTO(propinsiService.updateId(idLama, propinsiDTO.toPropinsi()));
-            }
-            else {
-                throw new IllegalArgumentException("id lama dan baru propinsi harus beda");
-            }
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("data json propinsi harus disertakan di body put request");
+    public PropinsiDTO updateId(@PathParam("idLama") String idLama, 
+            PropinsiDTO propinsiDTO) throws SQLException, UnspecifiedException {
+                      
+        if(idLama.equals(propinsiDTO.getId())) {
+            throw new UnspecifiedException(500, "Id baru tidak boleh sama dengan id baru");
+        }
+        else {                
+            return new PropinsiDTO(propinsiService.updateId(idLama, propinsiDTO.toPropinsi()));
         }
         
     } 
@@ -160,7 +176,8 @@ public class PropinsiResource {
         try {
             if(qfilters != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                List<FilterDTO> filters = jsonb.fromJson(qfilters, new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
+                List<FilterDTO> filters = jsonb.fromJson(qfilters, 
+                        new ArrayList<FilterDTO>(){}.getClass().getGenericSuperclass());
                 
                 JsonObject model = Json.createObjectBuilder()
                     .add(

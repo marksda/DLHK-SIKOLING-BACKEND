@@ -58,7 +58,7 @@ public class WopiResource {
                     
             if(confCollaboraFileInfo == null) {
                 String subPathLocation = File.separator
-                        .concat(registerDokumen.getDokumen().getId());
+                        .concat(registerDokumen.getMasterDokumen().getId());
                 try {
                     tempFile = localStorageService
                             .download(registerDokumen.getNamaFile(), subPathLocation);
@@ -111,7 +111,7 @@ public class WopiResource {
             else {
                 RegisterDokumen registerDokumen = (RegisterDokumen) crc.getProperty("registerDokumen");
                 subPathLocation = File.separator
-                        .concat(registerDokumen.getDokumen().getId());
+                        .concat(registerDokumen.getMasterDokumen().getId());
                 tempFile = localStorageService
                         .download(registerDokumen.getNamaFile(), subPathLocation);
                 fileType = Files.probeContentType(tempFile.toPath());

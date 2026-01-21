@@ -12,7 +12,7 @@ public class RegisterDokumen implements Serializable {
     
     private final String id;
     private final Perusahaan perusahaan;
-    private final Dokumen dokumen;
+    private final MasterDokumen masterDokumen;
     private final Date tanggalRegistrasi;
     private final Otorisasi uploader;
     private final String namaFile;
@@ -22,12 +22,12 @@ public class RegisterDokumen implements Serializable {
     private final JsonObject metaFile;
     private final JsonObject metaInfo;
 
-    public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
+    public RegisterDokumen(String id, Perusahaan perusahaan, MasterDokumen masterDokumen, 
             Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
             StatusDokumen statusDokumen, String idLama, Boolean isValidated) {
         this.id = id;
         this.perusahaan = perusahaan;
-        this.dokumen = dokumen;
+        this.masterDokumen = masterDokumen;
         this.tanggalRegistrasi = tanggalRegistrasi;
         this.uploader = uploader;
         this.namaFile = namaFile;
@@ -38,13 +38,13 @@ public class RegisterDokumen implements Serializable {
         this.metaInfo = null;
     }        
     
-    public RegisterDokumen(String id, Perusahaan perusahaan, Dokumen dokumen, 
+    public RegisterDokumen(String id, Perusahaan perusahaan, MasterDokumen dokumen, 
             Date tanggalRegistrasi, Otorisasi uploader, String namaFile, 
             StatusDokumen statusDokumen, String idLama, Boolean isValidated, 
             JsonObject metaFile, JsonObject metaInfo) {
         this.id = id;
         this.perusahaan = perusahaan;
-        this.dokumen = dokumen;
+        this.masterDokumen = dokumen;
         this.tanggalRegistrasi = tanggalRegistrasi;
         this.uploader = uploader;
         this.namaFile = namaFile;
@@ -63,8 +63,8 @@ public class RegisterDokumen implements Serializable {
         return perusahaan;
     }
 
-    public Dokumen getDokumen() {
-        return dokumen;
+    public MasterDokumen getMasterDokumen() {
+        return masterDokumen;
     }
 
     public Date getTanggalRegistrasi() {

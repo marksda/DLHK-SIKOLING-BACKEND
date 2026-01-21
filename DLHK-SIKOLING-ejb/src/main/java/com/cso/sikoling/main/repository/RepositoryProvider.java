@@ -4,7 +4,7 @@ import com.cso.sikoling.main.repository.alamat.DesaRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KabupatenRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.KecamatanRepositoryJPA;
 import com.cso.sikoling.main.repository.alamat.PropinsiRepositoryJPA;
-import com.cso.sikoling.main.repository.dokumen.DokumenRepositoryJPA;
+import com.cso.sikoling.main.repository.dokumen.MasterDokumenRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.KategoriKbliRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.KbliRepositoryJPA;
 import com.cso.sikoling.main.repository.dokumen.RegisterDokumenRepositoryJPA;
@@ -155,8 +155,8 @@ public class RepositoryProvider {
     }
     
     @Produces
-    public DokumenRepositoryJPA getDokumenRepositoryJPA(EntityManager entityManager) {
-        return new DokumenRepositoryJPA(entityManager);
+    public MasterDokumenRepositoryJPA getDokumenRepositoryJPA(EntityManager entityManager) {
+        return new MasterDokumenRepositoryJPA(entityManager);
     }
     
     @Produces

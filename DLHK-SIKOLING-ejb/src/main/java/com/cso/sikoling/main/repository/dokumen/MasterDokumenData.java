@@ -21,7 +21,7 @@ import java.io.Serializable;
     @NamedQuery(name = "DokumenData.findByIdLama", query = "SELECT d FROM DokumenData d WHERE d.idLama = :idLama"),
     @NamedQuery(name = "DokumenData.findBySingkatan", query = "SELECT d FROM DokumenData d WHERE d.singkatan = :singkatan"),
     @NamedQuery(name = "DokumenData.updateId", query = "UPDATE DokumenData SET id = :idBaru WHERE id = :idLama")})
-public class DokumenData implements Serializable {
+public class MasterDokumenData implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,10 +42,10 @@ public class DokumenData implements Serializable {
     @Column(name = "singkatan")
     private String singkatan;
 
-    public DokumenData() {
+    public MasterDokumenData() {
     }
 
-    public DokumenData(String id) {
+    public MasterDokumenData(String id) {
         this.id = id;
     }
 
@@ -91,10 +91,10 @@ public class DokumenData implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DokumenData)) {
+        if (!(object instanceof MasterDokumenData)) {
             return false;
         }
-        DokumenData other = (DokumenData) object;
+        MasterDokumenData other = (MasterDokumenData) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

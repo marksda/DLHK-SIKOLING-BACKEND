@@ -1,7 +1,7 @@
 package com.cso.sikoling.abstraction.service.dokumen;
 
 import com.cso.sikoling.abstraction.entity.Filter;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.repository.Repository;
 
@@ -10,27 +10,27 @@ import java.util.List;
 import com.cso.sikoling.abstraction.service.Service;
 
 
-public class DokumenServiceBasic implements Service<Dokumen> {
+public class MasterDokumenServiceBasic implements Service<MasterDokumen> {
     
-    private final Repository<Dokumen, QueryParamFilters, Filter> repository;
+    private final Repository<MasterDokumen, QueryParamFilters, Filter> repository;
 
-    public DokumenServiceBasic(Repository repository) {
+    public MasterDokumenServiceBasic(Repository repository) {
         this.repository = repository;
     }
     
 
     @Override
-    public Dokumen save(Dokumen t) throws SQLException {
+    public MasterDokumen save(MasterDokumen t) throws SQLException {
         return repository.save(t);
     }
 
     @Override
-    public Dokumen update(Dokumen t) throws SQLException {
+    public MasterDokumen update(MasterDokumen t) throws SQLException {
         return repository.update(t);
     }
 
     @Override
-    public Dokumen updateId(String idLama, Dokumen t) throws SQLException {
+    public MasterDokumen updateId(String idLama, MasterDokumen t) throws SQLException {
         return repository.updateId(idLama, t);
     }
 
@@ -40,7 +40,7 @@ public class DokumenServiceBasic implements Service<Dokumen> {
     }
 
     @Override
-    public List<Dokumen> getDaftarData(QueryParamFilters queryParamFilters) {
+    public List<MasterDokumen> getDaftarData(QueryParamFilters queryParamFilters) {
         return repository.getDaftarData(queryParamFilters);
     }
 

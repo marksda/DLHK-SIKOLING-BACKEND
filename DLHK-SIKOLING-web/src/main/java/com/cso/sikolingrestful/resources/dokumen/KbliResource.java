@@ -27,6 +27,7 @@ import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import java.util.ArrayList;
 
@@ -40,23 +41,38 @@ public class KbliResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<KbliDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<KbliDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) throws UnspecifiedException {
+        
+        List<Kbli> daftarKbli;
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return kbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                daftarKbli = kbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarKbli == null) {
+                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                }
+                else {
+                    return daftarKbli
                         .stream()
                         .map(t -> new KbliDTO(t))
                         .collect(Collectors.toList());
+                }
+                
             }
             else {
-                return kbliService.getDaftarData(null)
+                daftarKbli = kbliService.getDaftarData(null);
+                if(daftarKbli == null) {
+                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                }
+                else {
+                    return daftarKbli
                         .stream()
                         .map(t -> new KbliDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {
@@ -90,8 +106,7 @@ public class KbliResource {
     public KbliDTO update(@PathParam("idLama") String idLama, KbliDTO kbliDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(kbliDTO.getId());
-            if(isIdSame) {
+            if(idLama.equals(kbliDTO.getId())) {
                 return new KbliDTO(kbliService.update(kbliDTO.toKbli()));
             }
             else {
@@ -112,13 +127,11 @@ public class KbliResource {
     public KbliDTO updateId(@PathParam("idLama") String idLama, KbliDTO kbliDTO) throws SQLException {
         
         try {                
-            boolean isIdSame = idLama.equals(kbliDTO.getId());
-
-            if(!isIdSame) {
-                return new KbliDTO(kbliService.updateId(idLama, kbliDTO.toKbli()));
+            if(idLama.equals(kbliDTO.getId())) {
+                throw new IllegalArgumentException("id lama dan baru kbli harus beda");
             }
             else {
-                throw new IllegalArgumentException("id lama dan baru kbli harus beda");
+                return new KbliDTO(kbliService.updateId(idLama, kbliDTO.toKbli()));
             }
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("data json kbli harus disertakan di body put request");
@@ -133,19 +146,12 @@ public class KbliResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject delete(@PathParam("idKbli") String idKbli) throws SQLException {
-        
-        boolean isDigit = idKbli.matches("[0-9]{5}");
-        
-        if(isDigit) {	
-            JsonObject model = Json.createObjectBuilder()
-                    .add("status", kbliService.delete(idKbli) == true ? "sukses" : "gagal")
-                    .build();            
-            
-            return model;
-        }
-        else {
-            throw new IllegalArgumentException("id kbli harus bilangan 5 digit");
-        }        
+       
+        JsonObject model = Json.createObjectBuilder()
+                .add("status", kbliService.delete(idKbli) == true ? "sukses" : "gagal")
+                .build();            
+
+        return model;
         
     }
     

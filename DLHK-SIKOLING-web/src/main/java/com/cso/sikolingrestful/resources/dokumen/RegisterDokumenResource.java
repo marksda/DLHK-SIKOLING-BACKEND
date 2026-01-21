@@ -4,6 +4,7 @@ import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumenSementara;
+import com.cso.sikoling.abstraction.entity.perusahaan.Pegawai;
 import com.cso.sikoling.abstraction.entity.security.Otorisasi;
 import com.cso.sikoling.abstraction.service.LocalStorageService;
 import jakarta.ejb.Stateless;
@@ -33,6 +34,7 @@ import com.cso.sikolingrestful.Role;
 import static com.cso.sikolingrestful.Role.ADMINISTRATOR;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
 import com.cso.sikolingrestful.annotation.RequiredRole;
+import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -61,25 +63,47 @@ public class RegisterDokumenResource {
     @Inject
     private LocalStorageService localStorageService;
     
+    @Inject
+    private Service<Pegawai> pegawaiService;
+    
     @GET
+    @RequiredAuthorization
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Produces({MediaType.APPLICATION_JSON})
-    public List<RegisterDokumenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
+    public List<RegisterDokumenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) throws UnspecifiedException {
+        
+        List<RegisterDokumen> daftarRegisterDokumen;
         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return registerDokumenService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
-                        .stream()
-                        .map(t -> new RegisterDokumenDTO(t))
-                        .collect(Collectors.toList());
+                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(
+                        queryParamsStr, QueryParamFiltersDTO.class);
+                daftarRegisterDokumen = registerDokumenService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarRegisterDokumen == null) {
+                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                }
+                else {
+                    return daftarRegisterDokumen
+                            .stream()
+                            .map(t -> new RegisterDokumenDTO(t))
+                            .collect(Collectors.toList());
+                }                           
             }
             else {
-                return registerDokumenService.getDaftarData(null)
-                        .stream()
-                        .map(t -> new RegisterDokumenDTO(t))
-                        .collect(Collectors.toList());
+                daftarRegisterDokumen = registerDokumenService.getDaftarData(null);
+                
+                if(daftarRegisterDokumen == null) {
+                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                }
+                else {
+                    return daftarRegisterDokumen
+                            .stream()
+                            .map(t -> new RegisterDokumenDTO(t))
+                            .collect(Collectors.toList());
+                } 
             }             
         } 
         catch (JsonbException e) {
@@ -151,6 +175,18 @@ public class RegisterDokumenResource {
                 else {
                     throw new NotAuthorizedException("Tidak sesuai dengan data sementara");
                 }
+                
+                fields_filter.clear();
+                filter = new Filter("id_person", otorisasi.getPerson().getId());
+                fields_filter.add(filter);
+                filter = new Filter("id_perusahaan", regDokSementara.getIdPerusahaan());
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(false, null, fields_filter, null);
+                List<Pegawai> daftarPegawai = pegawaiService.getDaftarData(qFilter);
+                
+                if(daftarPegawai == null) {
+                    throw new IllegalArgumentException("Akses ditolak");
+                }
             } 
         }
         
@@ -217,7 +253,7 @@ public class RegisterDokumenResource {
             throw new IllegalArgumentException("Register dokumen tidak terdaftar dalam sistem");
         }
         
-        if(!(regDokLama.getDokumen().getId().equals(regDokDTOBaru.getDokumen().getId())
+        if(!(regDokLama.getMasterDokumen().getId().equals(regDokDTOBaru.getDokumen().getId())
                 && regDokLama.getPerusahaan().getId().equals(regDokDTOBaru.getPerusahaan().getId()))) {
             throw new IllegalArgumentException("perusahaan dan jenis dokumen harus sama dengan data register dokumen lama");
         }
@@ -234,7 +270,7 @@ public class RegisterDokumenResource {
                 registerDokumenBaru =  new RegisterDokumen(
                     regDokLama.getId(), 
                     regDokLama.getPerusahaan(), 
-                    regDokLama.getDokumen(), 
+                    regDokLama.getMasterDokumen(), 
                     null, 
                     otorisasi, 
                     regDokLama.getNamaFile(), 
@@ -246,11 +282,23 @@ public class RegisterDokumenResource {
                 );
             }
             default -> {
+                fields_filter.clear();
+                filter = new Filter("id_person", otorisasi.getPerson().getId());
+                fields_filter.add(filter);
+                filter = new Filter("id_perusahaan", regDokLama.getPerusahaan().getId());
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(false, null, fields_filter, null);
+                List<Pegawai> daftarPegawai = pegawaiService.getDaftarData(qFilter);
+                
+                if(daftarPegawai == null) {
+                    throw new IllegalArgumentException("Akses ditolak");
+                }
+                
                 metaFile = regDokLama.getMetaFile();
                 registerDokumenBaru =  new RegisterDokumen(
                     regDokLama.getId(), 
                     regDokLama.getPerusahaan(), 
-                    regDokLama.getDokumen(), 
+                    regDokLama.getMasterDokumen(), 
                     null, 
                     otorisasi, 
                     regDokLama.getNamaFile(), 
@@ -280,12 +328,12 @@ public class RegisterDokumenResource {
         if(dokSementara != null) {
             try {
                 String subPathLocationTujuan = File.separator
-                        .concat(regDokLama.getDokumen().getId())
+                        .concat(regDokLama.getMasterDokumen().getId())
                         .concat(File.separator)
                         .concat(regDokLama.getNamaFile());
                 
                 String subPathLocationAsal = File.separator
-                        .concat(registerDokumenBaru.getDokumen().getId())
+                        .concat(registerDokumenBaru.getMasterDokumen().getId())
                         .concat(File.separator)
                         .concat(registerDokumenBaru.getNamaFile());
                 
@@ -315,11 +363,8 @@ public class RegisterDokumenResource {
         List<Filter> fields_filter = new ArrayList<>();
         QueryParamFilters qFilter;
         filter = new Filter("id", idLama);
-                fields_filter.add(filter);
-                qFilter = new QueryParamFilters(
-                                        false, null, 
-                                        fields_filter, null
-                                    );
+        fields_filter.add(filter);
+        qFilter = new QueryParamFilters(false, null, fields_filter, null);
         RegisterDokumen regDokLama =  registerDokumenService
                                         .getDaftarData(qFilter)
                                         .getFirst();
@@ -328,7 +373,7 @@ public class RegisterDokumenResource {
             throw new IllegalArgumentException("Register dokumen tidak terdaftar dalam sistem");
         }
         
-        if(!(regDokLama.getDokumen().getId().equals(regDokDTOBaru.getDokumen().getId())
+        if(!(regDokLama.getMasterDokumen().getId().equals(regDokDTOBaru.getDokumen().getId())
                 || regDokLama.getPerusahaan().getId().equals(regDokDTOBaru.getPerusahaan().getId()))) {
             throw new IllegalArgumentException("perusahaan atau jenis dokumen harus berbeda dengan data register dokumen lama");
         }
@@ -358,6 +403,18 @@ public class RegisterDokumenResource {
                 );
             }
             default -> {
+                fields_filter.clear();
+                filter = new Filter("id_person", otorisasi.getPerson().getId());
+                fields_filter.add(filter);
+                filter = new Filter("id_perusahaan", regDokLama.getPerusahaan().getId());
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(false, null, fields_filter, null);
+                List<Pegawai> daftarPegawai = pegawaiService.getDaftarData(qFilter);
+                
+                if(daftarPegawai == null) {
+                    throw new IllegalArgumentException("Akses ditolak");
+                }
+                
                 metaFile = regDokLama.getMetaFile();
                 registerDokumenBaru =  new RegisterDokumen(
                     null, 
@@ -393,12 +450,12 @@ public class RegisterDokumenResource {
         if(dokSementara ==  null) {
             try {
                 String subPathLocationAsal = File.separator
-                        .concat(regDokLama.getDokumen().getId())
+                        .concat(regDokLama.getMasterDokumen().getId())
                         .concat(File.separator)
                         .concat(regDokLama.getNamaFile());
 
                 String subPathLocationTujuan = File.separator
-                        .concat(registerDokumenBaru.getDokumen().getId())
+                        .concat(registerDokumenBaru.getMasterDokumen().getId())
                         .concat(File.separator)
                         .concat(registerDokumenBaru.getNamaFile());
 
@@ -411,7 +468,7 @@ public class RegisterDokumenResource {
             try {
                 localStorageService.delete(
                         regDokLama.getNamaFile(),
-                        File.separator.concat(regDokLama.getDokumen().getId())
+                        File.separator.concat(regDokLama.getMasterDokumen().getId())
                 );
             } catch (IOException ex) {
                 throw new IllegalArgumentException("file dokumen lama tidak bisa dihapus");
@@ -428,27 +485,60 @@ public class RegisterDokumenResource {
     @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject delete(@PathParam("idRegisterDokumen") String idRegisterDokumen) throws SQLException {
+    public JsonObject delete(
+            @Context ContainerRequestContext crc,
+            @PathParam("idRegisterDokumen") String idRegisterDokumen) throws SQLException {
         
-        boolean isDigit = idRegisterDokumen.matches("[0-9]{11}");
+        Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
+        Role role = (Role) crc.getProperty("role");
+        Filter filter;
+        List<Filter> fields_filter = new ArrayList<>();
+        QueryParamFilters qFilter;
+        filter = new Filter("id", idRegisterDokumen);
+        fields_filter.add(filter);
+        qFilter = new QueryParamFilters(false, null, fields_filter, null);
+        RegisterDokumen regDokLama =  registerDokumenService
+                                        .getDaftarData(qFilter)
+                                        .getFirst();
         
-        if(isDigit) {	
-            JsonObject model = Json.createObjectBuilder()
-                    .add("status", registerDokumenService.delete(idRegisterDokumen) == true ? "sukses" : "gagal")
-                    .build();            
-            
-            return model;
+        if(regDokLama ==  null) {
+            throw new IllegalArgumentException("Register dokumen tidak terdaftar dalam sistem");
         }
-        else {
-            throw new IllegalArgumentException("id register dokumen harus bilangan 11 digit");
-        }        
+        
+        boolean isSuksesHapus = false;
+        switch (role) {
+            case ADMINISTRATOR -> {
+                isSuksesHapus = registerDokumenService.delete(idRegisterDokumen);
+            }
+            default -> {
+                fields_filter.clear();
+                filter = new Filter("id_person", otorisasi.getPerson().getId());
+                fields_filter.add(filter);
+                filter = new Filter("id_perusahaan", regDokLama.getPerusahaan().getId());
+                fields_filter.add(filter);
+                qFilter = new QueryParamFilters(false, null, fields_filter, null);
+                List<Pegawai> daftarPegawai = pegawaiService.getDaftarData(qFilter);
+                
+                if(daftarPegawai == null) {
+                    throw new IllegalArgumentException("Akses ditolak");
+                }
+                
+                isSuksesHapus = registerDokumenService.delete(idRegisterDokumen);
+            }
+        }
+        
+        JsonObject model = Json.createObjectBuilder()
+                .add("status", isSuksesHapus == true ? "sukses" : "gagal")
+                .build();            
+
+        return model;
         
     }
     
     @Path("/jumlah")
     @GET
     @RequiredAuthorization
-    @RequiredRole({Role.ADMINISTRATOR})
+    @RequiredRole({Role.ADMINISTRATOR, Role.UMUM})
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getJumlahData(@QueryParam("filters") String qfilters) {
         try {
@@ -492,11 +582,31 @@ public class RegisterDokumenResource {
             @Context ContainerRequestContext crc,
             @FormDataParam("registerDokumenSementara") String registerDokumenSementara,
             @FormDataParam("fileDokumen") File fileDokumen ) throws SQLException {
+        
+        Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
+        Role role = (Role) crc.getProperty("role");
+        
         try {
-            Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
             Jsonb jsonb = JsonbBuilder.create();
             RegisterDokumenSementaraDTO registerDokumenSementaraDTO = jsonb.fromJson(
                                     registerDokumenSementara, RegisterDokumenSementaraDTO.class);   
+            
+            switch (role) {
+                case ADMINISTRATOR -> {/*allow access*/}
+                default -> {
+                    List<Filter> fields_filter = new ArrayList<>();
+                    Filter filter = new Filter("id_person", otorisasi.getPerson().getId());
+                    fields_filter.add(filter);
+                    filter = new Filter("id_perusahaan", registerDokumenSementaraDTO.getId_perusahaan());
+                    fields_filter.add(filter);
+                    QueryParamFilters qFilter = new QueryParamFilters(false, null, fields_filter, null);
+                    List<Pegawai> daftarPegawai = pegawaiService.getDaftarData(qFilter);
+
+                    if(daftarPegawai == null) {
+                        throw new IllegalArgumentException("Akses ditolak");
+                    }
+                }
+            }
                         
             InputStream uploadedInputStream = new FileInputStream(fileDokumen);
             String subPathLocation = File.separator

@@ -10,7 +10,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
 import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.alamat.Kontak;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.StatusDokumen;
 import com.cso.sikoling.abstraction.entity.person.JenisKelamin;
@@ -153,6 +153,8 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
     @Override
     public List<RegisterDokumen> getDaftarData(QueryParamFilters q) {
         
+        List<RegisterDokumenData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<RegisterDokumenData> cq = cb.createQuery(RegisterDokumenData.class);
@@ -272,18 +274,31 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertRegisterDokumenDataToRegisterDokumen(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("RegisterDokumenData.findAll", RegisterDokumenData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertRegisterDokumenDataToRegisterDokumen(d))
+            hasil = entityManager.createNamedQuery(
+                    "RegisterDokumenData.findAll", 
+                    RegisterDokumenData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertRegisterDokumenDataToRegisterDokumen(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }
@@ -432,9 +447,9 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
                         kontak, 
                         perusahaanData.getTanggalRegistrasi()
                     ) : null;
-            DokumenData dokumenData = d.getDokumen();
-            Dokumen dokumen = dokumenData != null ?
-                    new Dokumen(
+            MasterDokumenData dokumenData = d.getDokumen();
+            MasterDokumen dokumen = dokumenData != null ?
+                    new MasterDokumen(
                             dokumenData.getId(), 
                             dokumenData.getNama(), 
                             dokumenData.getSingkatan(), 
@@ -561,10 +576,10 @@ public class RegisterDokumenRepositoryJPA implements Repository<RegisterDokumen,
             String idRegisterDokumen = t.getId();
             registerDokumenData.setId(idRegisterDokumen != null ? 
                     t.getId() : generateId(
-                            t.getPerusahaan().getId(), t.getDokumen().getId()));
+                            t.getPerusahaan().getId(), t.getMasterDokumen().getId()));
             PerusahaanData perusahaanData = new PerusahaanData(t.getPerusahaan().getId());
             registerDokumenData.setPerusahaan(perusahaanData);
-            DokumenData dokumenData = new DokumenData(t.getDokumen().getId());
+            MasterDokumenData dokumenData = new MasterDokumenData(t.getMasterDokumen().getId());
             registerDokumenData.setDokumen(dokumenData);
             registerDokumenData.setTanggalRegistrasi(t.getTanggalRegistrasi());
             OtorisasiData otorisasiData = new OtorisasiData(t.getUploader().getId());

@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.Objects;
 
 
-public class Dokumen implements Serializable {
+public class MasterDokumen implements Serializable {
     
     private final String id;
     private final String nama;
     private final String singkatan;
     private final Short id_lama;
 
-    public Dokumen(String id, String nama, String singkatan, Short id_lama) {
+    public MasterDokumen(String id, String nama, String singkatan, Short id_lama) {
         this.id = id;
         this.nama = nama;
         this.singkatan = singkatan;
@@ -52,7 +52,7 @@ public class Dokumen implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Dokumen other = (Dokumen) obj;
+        final MasterDokumen other = (MasterDokumen) obj;
         return Objects.equals(this.id, other.id);
     }
     

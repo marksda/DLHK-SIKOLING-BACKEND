@@ -115,6 +115,8 @@ public class KbliRepositoryJPA implements Repository<Kbli, QueryParamFilters, Fi
     @Override
     public List<Kbli> getDaftarData(QueryParamFilters q) {
         
+        List<KbliData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KbliData> cq = cb.createQuery(KbliData.class);
@@ -201,18 +203,30 @@ public class KbliRepositoryJPA implements Repository<Kbli, QueryParamFilters, Fi
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKbliDataToKbli(d))
                             .collect(Collectors.toList());
+            } 
         }
         else {
-            return entityManager.createNamedQuery("KbliData.findAll", KbliData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKbliDataToKbli(d))
+            hasil = entityManager.createNamedQuery(
+                        "KbliData.findAll", KbliData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKbliDataToKbli(d))
                             .collect(Collectors.toList());
+            } 
         }
         
     }

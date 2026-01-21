@@ -342,7 +342,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
         RegisterDokumenSementara registerDokumenSementara = null;
 		
         if(d != null) {
-            DokumenData dokumenData = d.getDokumen();
+            MasterDokumenData dokumenData = d.getDokumen();
             PerusahaanData perusahaanData = d.getPerusahaan();            
             JsonObject metaFile = d.getMetaFile();
             registerDokumenSementara = new RegisterDokumenSementara(
@@ -364,7 +364,7 @@ public class RegisterDokumenSementaraRepositoryJPA implements
         if(t != null) {
             registerDokumenSementaraData = new RegisterDokumenSementaraData();  
             registerDokumenSementaraData.setId(t.getId());
-            registerDokumenSementaraData.setDokumen(new DokumenData(t.getIdJenisDokumen()));
+            registerDokumenSementaraData.setDokumen(new MasterDokumenData(t.getIdJenisDokumen()));
             registerDokumenSementaraData.setPerusahaan(new PerusahaanData(t.getIdPerusahaan()));
             registerDokumenSementaraData.setNamaFile(t.getNamaFile());
             registerDokumenSementaraData.setTanggal(t.getTanggal()); 

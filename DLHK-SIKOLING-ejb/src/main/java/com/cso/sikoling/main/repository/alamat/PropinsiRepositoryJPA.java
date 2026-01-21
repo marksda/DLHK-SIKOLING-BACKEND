@@ -113,6 +113,8 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
     @Override
     public List<Propinsi> getDaftarData(QueryParamFilters q) {
         
+        List<PropinsiData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<PropinsiData> cq = cb.createQuery(PropinsiData.class);
@@ -181,18 +183,31 @@ public class PropinsiRepositoryJPA implements Repository<Propinsi, QueryParamFil
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertPropinsiDataToPropinsi(d))
                             .collect(Collectors.toList());
+            } 
         }
         else {
-            return entityManager.createNamedQuery("PropinsiData.findAll", PropinsiData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertPropinsiDataToPropinsi(d))
+            hasil = entityManager.createNamedQuery(
+                        "PropinsiData.findAll", PropinsiData.class
+                    ).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertPropinsiDataToPropinsi(d))
                             .collect(Collectors.toList());
+            }   
         }
         
     }

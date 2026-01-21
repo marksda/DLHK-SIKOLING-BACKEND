@@ -1,19 +1,19 @@
 package com.cso.sikolingrestful.resources.dokumen;
 
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import java.util.Objects;
 
-public class DokumenDTO {
+public class MasterDokumenDTO {
 
     private String id;
     private String nama;
     private String singkatan;
     private Short id_lama;
 
-    public DokumenDTO() {
+    public MasterDokumenDTO() {
     }
     
-    public DokumenDTO(Dokumen t ) {
+    public MasterDokumenDTO(MasterDokumen t ) {
         if(t != null) {
             this.id = t.getId();
             this.nama = t.getNama();
@@ -54,14 +54,14 @@ public class DokumenDTO {
         this.id_lama = id_lama;
     }
     
-    public Dokumen toDokumen() {
+    public MasterDokumen toDokumen() {
         if( this.id == null || this.nama == null) {
             throw new IllegalArgumentException("format data json dokumen tidak sesuai");
         }
         else {
             boolean isDigit = this.id.matches("[0-9]+");
             if(isDigit) {
-                return new Dokumen(this.id, this.nama, this.singkatan, this.id_lama);
+                return new MasterDokumen(this.id, this.nama, this.singkatan, this.id_lama);
             }
             else {
                 throw new IllegalArgumentException("id dokumen harus bilangan panjang 2 digit");
@@ -87,7 +87,7 @@ public class DokumenDTO {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final DokumenDTO other = (DokumenDTO) obj;
+        final MasterDokumenDTO other = (MasterDokumenDTO) obj;
         return Objects.equals(this.id, other.id);
     }
     

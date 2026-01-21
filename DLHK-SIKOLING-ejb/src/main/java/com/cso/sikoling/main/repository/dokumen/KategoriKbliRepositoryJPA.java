@@ -114,6 +114,8 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
     @Override
     public List<KategoriKbli> getDaftarData(QueryParamFilters q) {
         
+        List<KategoriKbliData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KategoriKbliData> cq = cb.createQuery(KategoriKbliData.class);
@@ -200,18 +202,31 @@ public class KategoriKbliRepositoryJPA implements Repository<KategoriKbli, Query
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKategoriKbliDataToKategoriKbli(d))
                             .collect(Collectors.toList());
+            } 
         }
         else {
-            return entityManager.createNamedQuery("KategoriKbliData.findAll", KategoriKbliData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKategoriKbliDataToKategoriKbli(d))
+            hasil = entityManager.createNamedQuery(
+                    "KategoriKbliData.findAll", 
+                    KategoriKbliData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKategoriKbliDataToKategoriKbli(d))
                             .collect(Collectors.toList());
+            } 
         }
         
     }

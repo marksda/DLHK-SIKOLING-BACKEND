@@ -13,7 +13,7 @@ public class RegisterDokumenDTO {
 
     private String id;
     private PerusahaanDTO perusahaan;
-    private DokumenDTO dokumen;
+    private MasterDokumenDTO dokumen;
     private String tanggal_registrasi;
     private OtorisasiDTO uploader;
     private String nama_file;
@@ -29,8 +29,8 @@ public class RegisterDokumenDTO {
             this.id = t.getId();
             this.perusahaan = t.getPerusahaan() != null ?
                     new PerusahaanDTO(t.getPerusahaan()) : null;
-            this.dokumen = t.getDokumen() != null ?
-                    new DokumenDTO(t.getDokumen()) : null;
+            this.dokumen = t.getMasterDokumen() != null ?
+                    new MasterDokumenDTO(t.getMasterDokumen()) : null;
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             Date tmpTglReg = t.getTanggalRegistrasi();
             this.tanggal_registrasi = tmpTglReg != null ? 
@@ -61,11 +61,11 @@ public class RegisterDokumenDTO {
         this.perusahaan = perusahaan;
     }
 
-    public DokumenDTO getDokumen() {
+    public MasterDokumenDTO getDokumen() {
         return dokumen;
     }
 
-    public void setDokumen(DokumenDTO dokumen) {
+    public void setDokumen(MasterDokumenDTO dokumen) {
         this.dokumen = dokumen;
     }
 

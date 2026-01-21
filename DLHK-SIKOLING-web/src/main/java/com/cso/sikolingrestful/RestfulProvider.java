@@ -7,7 +7,7 @@ import com.cso.sikoling.abstraction.entity.alamat.Kabupaten;
 import com.cso.sikoling.abstraction.entity.alamat.Kecamatan;
 import com.cso.sikoling.abstraction.entity.alamat.Propinsi;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import com.cso.sikoling.abstraction.entity.dokumen.KategoriKbli;
 import com.cso.sikoling.abstraction.entity.dokumen.Kbli;
 import com.cso.sikoling.abstraction.entity.dokumen.RegisterDokumen;
@@ -47,7 +47,7 @@ import jakarta.enterprise.inject.Produces;
 import com.cso.sikoling.abstraction.service.alamat.DesaServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KabupatenServiceBasic;
 import com.cso.sikoling.abstraction.service.alamat.KecamatanServiceBasic;
-import com.cso.sikoling.abstraction.service.dokumen.DokumenServiceBasic;
+import com.cso.sikoling.abstraction.service.dokumen.MasterDokumenServiceBasic;
 import com.cso.sikoling.abstraction.service.permohonan.KategoriPengurusPermohonanServiceBasic;
 import com.cso.sikoling.abstraction.service.permohonan.KategoriPermohonanServiceBasic;
 import com.cso.sikoling.abstraction.service.person.JenisKelaminServiceBasic;
@@ -209,9 +209,9 @@ public class RestfulProvider {
     }
     
     @Produces
-    public Service<Dokumen> getDokumenService(
-            @Infrastructure Repository<Dokumen, QueryParamFilters, Filter> dokumenRepository) {
-        return new DokumenServiceBasic(dokumenRepository);
+    public Service<MasterDokumen> getMasterDokumenService(
+            @Infrastructure Repository<MasterDokumen, QueryParamFilters, Filter> masterDokumenRepository) {
+        return new MasterDokumenServiceBasic(masterDokumenRepository);
     }
     
     @Produces

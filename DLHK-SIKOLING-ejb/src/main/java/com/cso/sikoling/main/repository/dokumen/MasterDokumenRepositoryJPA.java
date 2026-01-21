@@ -2,7 +2,7 @@ package com.cso.sikoling.main.repository.dokumen;
 
 import com.cso.sikoling.abstraction.entity.Filter;
 import com.cso.sikoling.abstraction.entity.Paging;
-import com.cso.sikoling.abstraction.entity.dokumen.Dokumen;
+import com.cso.sikoling.abstraction.entity.dokumen.MasterDokumen;
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.repository.Repository;
@@ -22,18 +22,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilters, Filter> {
+public class MasterDokumenRepositoryJPA implements Repository<MasterDokumen, QueryParamFilters, Filter> {
     
     private final EntityManager entityManager;
 
-    public DokumenRepositoryJPA(EntityManager entityManager) {
+    public MasterDokumenRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
     @Override
-    public Dokumen save(Dokumen t) throws SQLException {   
+    public MasterDokumen save(MasterDokumen t) throws SQLException {   
         try {
-            DokumenData dokumenData = convertDokumenToDokumenData(t);
+            MasterDokumenData dokumenData = convertDokumenToDokumenData(t);
             entityManager.persist(dokumenData);
             entityManager.flush();             
             return convertDokumenDataToDokumen(dokumenData);  
@@ -47,10 +47,10 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
     }
 
     @Override
-    public Dokumen update(Dokumen t) throws SQLException {
+    public MasterDokumen update(MasterDokumen t) throws SQLException {
         
         try {
-            DokumenData dokumenData = convertDokumenToDokumenData(t);  
+            MasterDokumenData dokumenData = convertDokumenToDokumenData(t);  
             dokumenData = entityManager.merge(dokumenData);
             return convertDokumenDataToDokumen(dokumenData);   
         }         
@@ -64,7 +64,7 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
     }
 
     @Override
-    public Dokumen updateId(String idLama, Dokumen t) throws SQLException {
+    public MasterDokumen updateId(String idLama, MasterDokumen t) throws SQLException {
         
         Query query = entityManager.createNamedQuery("DokumenData.updateId");
         query.setParameter("idBaru", t.getId());
@@ -91,7 +91,7 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
     public boolean delete(String id) throws SQLException {
         
         try {
-            DokumenData dokumenData = entityManager.find(DokumenData.class, id);
+            MasterDokumenData dokumenData = entityManager.find(MasterDokumenData.class, id);
             if(dokumenData != null) {
                 entityManager.remove(dokumenData);	
                 entityManager.flush();
@@ -111,12 +111,14 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
     }
 
     @Override
-    public List<Dokumen> getDaftarData(QueryParamFilters q) {
+    public List<MasterDokumen> getDaftarData(QueryParamFilters q) {
+        
+        List<MasterDokumenData> hasil;
         
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<DokumenData> cq = cb.createQuery(DokumenData.class);
-            Root<DokumenData> root = cq.from(DokumenData.class);		
+            CriteriaQuery<MasterDokumenData> cq = cb.createQuery(MasterDokumenData.class);
+            Root<MasterDokumenData> root = cq.from(MasterDokumenData.class);		
 
             // where clause
             if(q.getFields_filter() != null) {
@@ -170,7 +172,7 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
             }
 
 
-            TypedQuery<DokumenData> typedQuery;	
+            TypedQuery<MasterDokumenData> typedQuery;	
 
             if( q.isIs_paging()) { 
                 Paging paging = q.getPaging();
@@ -182,17 +184,30 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
                 typedQuery = entityManager.createQuery(cq);
             }
 
-            return typedQuery.getResultList()
-                            .stream()
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertDokumenDataToDokumen(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("DokumenData.findAll", DokumenData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertDokumenDataToDokumen(d))
+            hasil = entityManager.createNamedQuery(
+                    "DokumenData.findAll", 
+                    MasterDokumenData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertDokumenDataToDokumen(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }
@@ -202,7 +217,7 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
         
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<DokumenData> root = cq.from(DokumenData.class);		
+        Root<MasterDokumenData> root = cq.from(MasterDokumenData.class);		
 
         // where clause
         Iterator<Filter> iterFilter = f.iterator();
@@ -230,21 +245,21 @@ public class DokumenRepositoryJPA implements Repository<Dokumen, QueryParamFilte
         
     }
     
-    private Dokumen convertDokumenDataToDokumen(DokumenData d) {
-        Dokumen dokumen = null;
+    private MasterDokumen convertDokumenDataToDokumen(MasterDokumenData d) {
+        MasterDokumen dokumen = null;
 		
         if(d != null) {
-            dokumen = new Dokumen(d.getId(), d.getNama(), d.getSingkatan(), d.getIdLama());
+            dokumen = new MasterDokumen(d.getId(), d.getNama(), d.getSingkatan(), d.getIdLama());
         }
 
         return dokumen;	
     }
     
-    private DokumenData convertDokumenToDokumenData(Dokumen t) {
-        DokumenData dokumenData = null;
+    private MasterDokumenData convertDokumenToDokumenData(MasterDokumen t) {
+        MasterDokumenData dokumenData = null;
 		
         if(t != null) {
-            dokumenData = new DokumenData();
+            dokumenData = new MasterDokumenData();
             dokumenData.setId(t.getId());
             dokumenData.setNama(t.getNama());
             dokumenData.setSingkatan(t.getSingkatan());

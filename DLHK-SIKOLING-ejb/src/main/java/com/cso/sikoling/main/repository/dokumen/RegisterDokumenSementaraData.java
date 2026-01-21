@@ -49,7 +49,7 @@ public class RegisterDokumenSementaraData implements Serializable {
     
     @JoinColumn(name = "dokumen", referencedColumnName = "id")
     @ManyToOne
-    private DokumenData dokumen;
+    private MasterDokumenData dokumen;
     
     @JoinColumn(name = "perusahaan", referencedColumnName = "id")
     @ManyToOne
@@ -90,11 +90,11 @@ public class RegisterDokumenSementaraData implements Serializable {
         this.tanggal = tanggal;
     }
 
-    public DokumenData getDokumen() {
+    public MasterDokumenData getDokumen() {
         return dokumen;
     }
 
-    public void setDokumen(DokumenData dokumen) {
+    public void setDokumen(MasterDokumenData dokumen) {
         this.dokumen = dokumen;
     }
 
