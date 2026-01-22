@@ -120,8 +120,8 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
             Root<KategoriPelakuUsahaData> root = cq.from(KategoriPelakuUsahaData.class);		
 
             // where clause
-            if(q.getFields_filter() != null) {
-                Iterator<Filter> iterFilter = q.getFields_filter().iterator();
+            if(q.getDaftarFieldFilter() != null) {
+                Iterator<Filter> iterFilter = q.getDaftarFieldFilter().iterator();
                 ArrayList<Predicate> daftarPredicate = new ArrayList<>();
                 while (iterFilter.hasNext()) {
                     Filter filter = (Filter) iterFilter.next();
@@ -144,8 +144,8 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
             }        
 
             // sort clause
-            if(q.getFields_sorter() != null) {
-                Iterator<SortOrder> iterSort = q.getFields_sorter().iterator();
+            if(q.getDaftarFieldsSorter() != null) {
+                Iterator<SortOrder> iterSort = q.getDaftarFieldsSorter().iterator();
                 while (iterSort.hasNext()) {
                     SortOrder sort = (SortOrder) iterSort.next();
                     switch (sort.getField_name()) {
@@ -182,7 +182,7 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
 
             TypedQuery<KategoriPelakuUsahaData> typedQuery;	
 
-            if( q.isIs_paging()) { 
+            if( q.isIsPaging()) { 
                 Paging paging = q.getPaging();
                 typedQuery = entityManager.createQuery(cq)
                                 .setMaxResults(paging.getPage_size())

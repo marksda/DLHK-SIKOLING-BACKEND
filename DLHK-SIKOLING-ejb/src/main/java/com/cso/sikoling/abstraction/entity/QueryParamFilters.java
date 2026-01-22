@@ -7,24 +7,25 @@ import java.util.Objects;
 
 public class QueryParamFilters implements Serializable {
     
-    private boolean is_paging;
+    private boolean isPaging;
     private Paging paging;
-    private List<Filter> fields_filter;
-    private List<SortOrder> fields_sorter;
+    private List<Filter> daftarFieldFilter;
+    private List<SortOrder> daftarFieldsSorter;
 
-    public QueryParamFilters(boolean is_paging, Paging paging, List<Filter> fields_filter, List<SortOrder> fields_sorter) {
-        this.is_paging = is_paging;
+    public QueryParamFilters(boolean isPaging, Paging paging, 
+            List<Filter> daftarFieldFilter, List<SortOrder> daftarFieldsSorter) {
+        this.isPaging = isPaging;
         this.paging = paging;
-        this.fields_filter = fields_filter;
-        this.fields_sorter = fields_sorter;
+        this.daftarFieldFilter = daftarFieldFilter;
+        this.daftarFieldsSorter = daftarFieldsSorter;
     }
 
-    public boolean isIs_paging() {
-        return is_paging;
+    public boolean isIsPaging() {
+        return isPaging;
     }
 
-    public void setIs_paging(boolean is_paging) {
-        this.is_paging = is_paging;
+    public void setIsPaging(boolean isPaging) {
+        this.isPaging = isPaging;
     }
 
     public Paging getPaging() {
@@ -35,20 +36,20 @@ public class QueryParamFilters implements Serializable {
         this.paging = paging;
     }
 
-    public List<Filter> getFields_filter() {
-        return fields_filter;
+    public List<Filter> getDaftarFieldFilter() {
+        return daftarFieldFilter;
     }
 
-    public void setFields_filter(List<Filter> fields_filter) {
-        this.fields_filter = fields_filter;
+    public void setDaftarFieldFilter(List<Filter> daftarFieldFilter) {
+        this.daftarFieldFilter = daftarFieldFilter;
     }
 
-    public List<SortOrder> getFields_sorter() {
-        return fields_sorter;
+    public List<SortOrder> getDaftarFieldsSorter() {
+        return daftarFieldsSorter;
     }
 
-    public void setFields_sorter(List<SortOrder> fields_sorter) {
-        this.fields_sorter = fields_sorter;
+    public void setDaftarFieldsSorter(List<SortOrder> daftarFieldsSorter) {
+        this.daftarFieldsSorter = daftarFieldsSorter;
     }
 
     
@@ -56,10 +57,10 @@ public class QueryParamFilters implements Serializable {
     @Override
     public int hashCode() {
         int hash = 737;
-        hash = 171 * hash + Objects.hashCode(this.is_paging);
+        hash = 171 * hash + Objects.hashCode(this.isPaging);
         hash = 171 * hash + Objects.hashCode(this.paging);
-        hash = 171 * hash + Objects.hashCode(this.fields_filter);
-        hash = 171 * hash + Objects.hashCode(this.fields_sorter);
+        hash = 171 * hash + Objects.hashCode(this.daftarFieldFilter);
+        hash = 171 * hash + Objects.hashCode(this.daftarFieldsSorter);
         return hash;
     }
     

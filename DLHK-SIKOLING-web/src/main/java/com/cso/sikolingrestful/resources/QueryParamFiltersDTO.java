@@ -15,15 +15,15 @@ public class QueryParamFiltersDTO {
 	
     public QueryParamFiltersDTO(QueryParamFilters t) {
         if(t != null) {
-            this.is_paging = t.isIs_paging();
+            this.is_paging = t.isIsPaging();
             this.paging = t.getPaging() != null ? new PagingDTO(t.getPaging()) : null;
-            this.fields_filter = t.getFields_filter() != null ?
-                            t.getFields_filter()
+            this.fields_filter = t.getDaftarFieldFilter() != null ?
+                            t.getDaftarFieldFilter()
                             .stream()
                             .map(i -> new FilterDTO(i))
                             .collect(Collectors.toList()) : null;
-            this.fields_sorter = t.getFields_sorter()!= null ?
-                            t.getFields_sorter()
+            this.fields_sorter = t.getDaftarFieldsSorter()!= null ?
+                            t.getDaftarFieldsSorter()
                             .stream()
                             .map(i -> new SortOrderDTO(i))
                             .collect(Collectors.toList()) : null;
