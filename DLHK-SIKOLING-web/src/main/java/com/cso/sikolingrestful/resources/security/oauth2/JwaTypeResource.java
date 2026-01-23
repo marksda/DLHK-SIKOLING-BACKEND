@@ -42,21 +42,38 @@ public class JwaTypeResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<JwaTypeDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<JwaType> daftarJwaType;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return jwaTypeService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarJwaType = jwaTypeService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarJwaType == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJwaType
                         .stream()
                         .map(t -> new JwaTypeDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return jwaTypeService.getDaftarData(null)
+                daftarJwaType = jwaTypeService.getDaftarData(null);
+                
+                if(daftarJwaType == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJwaType
                         .stream()
                         .map(t -> new JwaTypeDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

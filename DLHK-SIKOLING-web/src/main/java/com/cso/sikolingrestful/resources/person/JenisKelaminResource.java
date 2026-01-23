@@ -42,21 +42,38 @@ public class JenisKelaminResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<JenisKelaminDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<JenisKelamin> daftarJenisKelamin;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return jenisKelaminService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarJenisKelamin = jenisKelaminService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarJenisKelamin == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJenisKelamin
                         .stream()
                         .map(t -> new JenisKelaminDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return jenisKelaminService.getDaftarData(null)
+                daftarJenisKelamin = jenisKelaminService.getDaftarData(null);
+                
+                if(daftarJenisKelamin == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJenisKelamin
                         .stream()
                         .map(t -> new JenisKelaminDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

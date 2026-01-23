@@ -1,5 +1,6 @@
 package com.cso.sikolingrestful.resources.dokumen;
 
+import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.LocalBean;
 import jakarta.ws.rs.Path;
@@ -42,21 +43,37 @@ public class StatusDokumenResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<StatusDokumenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<StatusDokumen> daftarDokumen;        
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return statusDokumenService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
-                        .stream()
-                        .map(t -> new StatusDokumenDTO(t))
-                        .collect(Collectors.toList());
+                
+                daftarDokumen = statusDokumenService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarDokumen == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarDokumen
+                            .stream()
+                            .map(t -> new StatusDokumenDTO(t))
+                            .collect(Collectors.toList());
+                } 
             }
             else {
-                return statusDokumenService.getDaftarData(null)
-                        .stream()
-                        .map(t -> new StatusDokumenDTO(t))
-                        .collect(Collectors.toList());
+                daftarDokumen = statusDokumenService.getDaftarData(null);
+                
+                if(daftarDokumen == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarDokumen
+                            .stream()
+                            .map(t -> new StatusDokumenDTO(t))
+                            .collect(Collectors.toList());
+                } 
             }             
         } 
         catch (JsonbException e) {

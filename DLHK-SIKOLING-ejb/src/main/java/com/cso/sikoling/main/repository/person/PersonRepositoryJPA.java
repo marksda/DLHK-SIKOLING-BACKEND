@@ -130,6 +130,8 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
     @Override
     public List<Person> getDaftarData(QueryParamFilters q) {
         
+        List<PersonData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<PersonData> cq = cb.createQuery(PersonData.class);
@@ -222,18 +224,30 @@ public class PersonRepositoryJPA implements Repository<Person, QueryParamFilters
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertPersonDataToPerson(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("PersonData.findAll", PersonData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertPersonDataToPerson(d))
+            hasil = entityManager.createNamedQuery(
+                    "PersonData.findAll", PersonData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertPersonDataToPerson(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

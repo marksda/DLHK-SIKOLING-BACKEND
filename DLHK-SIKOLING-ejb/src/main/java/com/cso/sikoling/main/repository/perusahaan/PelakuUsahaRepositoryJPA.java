@@ -116,6 +116,8 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
     @Override
     public List<PelakuUsaha> getDaftarData(QueryParamFilters q) {
         
+        List<DetailPelakuUsahaData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<DetailPelakuUsahaData> cq = cb.createQuery(DetailPelakuUsahaData.class);
@@ -186,18 +188,31 @@ public class PelakuUsahaRepositoryJPA implements Repository<PelakuUsaha, QueryPa
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertPelakuUsahaDataToPelakuUsaha(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("DetailPelakuUsahaData.findAll", DetailPelakuUsahaData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertPelakuUsahaDataToPelakuUsaha(d))
+            hasil = entityManager.createNamedQuery(
+                    "DetailPelakuUsahaData.findAll", 
+                    DetailPelakuUsahaData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertPelakuUsahaDataToPelakuUsaha(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

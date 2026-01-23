@@ -134,6 +134,8 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
     @Override
     public List<Pegawai> getDaftarData(QueryParamFilters q) {
         
+        List<PegawaiPerusahaanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<PegawaiPerusahaanData> cq = cb.createQuery(PegawaiPerusahaanData.class);
@@ -222,18 +224,31 @@ public class PegawaiRepositoryJPA implements Repository<Pegawai, QueryParamFilte
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertPegawaiPerusahaanDataToPegawai(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("PegawaiPerusahaanData.findAll", PegawaiPerusahaanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertPegawaiPerusahaanDataToPegawai(d))
+            hasil = entityManager.createNamedQuery(
+                    "PegawaiPerusahaanData.findAll", 
+                    PegawaiPerusahaanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertPegawaiPerusahaanDataToPegawai(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

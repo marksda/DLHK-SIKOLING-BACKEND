@@ -44,21 +44,38 @@ public class OtorisasiResource {
     @RequiredRole({Role.ADMINISTRATOR})
     public List<OtorisasiDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<Otorisasi> daftarOtorisasi;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return otorisasiService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarOtorisasi = otorisasiService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarOtorisasi == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarOtorisasi
                         .stream()
                         .map(t -> new OtorisasiDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return otorisasiService.getDaftarData(null)
+                daftarOtorisasi = otorisasiService.getDaftarData(null);
+                
+                if(daftarOtorisasi == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarOtorisasi
                         .stream()
                         .map(t -> new OtorisasiDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

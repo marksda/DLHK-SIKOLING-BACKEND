@@ -6,6 +6,7 @@ import com.cso.sikoling.abstraction.entity.permohonan.KategoriPengurusPermohonan
 import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.main.util.GeneratorID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -113,6 +114,8 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
     @Override
     public List<KategoriPengurusPermohonan> getDaftarData(QueryParamFilters q) {
         
+        List<KategoriPengurusPermohonanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KategoriPengurusPermohonanData> cq = cb.createQuery(KategoriPengurusPermohonanData.class);
@@ -181,18 +184,31 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("KategoriPengurusPermohonanData.findAll", KategoriPengurusPermohonanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(d))
+            hasil = entityManager.createNamedQuery(
+                    "KategoriPengurusPermohonanData.findAll", 
+                    KategoriPengurusPermohonanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKategoriPengurusPermohonanDataToKategoriPengurusPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }
@@ -261,17 +277,12 @@ public class KategoriPengurusPermohonanRepositoryJPA implements Repository<Kateg
         try {
                 hasil = (String) q.getSingleResult();
                 Long idBaru = Long.parseLong(hasil)  + 1;
-                hasil = LPad(Long.toString(idBaru), 2, '0');
+                hasil = GeneratorID.LPad(Long.toString(idBaru), 2, '0');
                 return hasil;
         } catch (NumberFormatException e) {	
                 hasil = "01";			
                 return hasil;
         }		
     }
-    
-    private String LPad(String str, Integer length, char car) {
-        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
-    }
-
 
 }

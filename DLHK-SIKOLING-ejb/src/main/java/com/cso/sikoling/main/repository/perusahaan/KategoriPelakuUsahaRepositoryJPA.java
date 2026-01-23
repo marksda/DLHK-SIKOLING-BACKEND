@@ -114,6 +114,8 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
     @Override
     public List<KategoriPelakuUsaha> getDaftarData(QueryParamFilters q) {
         
+        List<KategoriPelakuUsahaData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KategoriPelakuUsahaData> cq = cb.createQuery(KategoriPelakuUsahaData.class);
@@ -191,18 +193,31 @@ public class KategoriPelakuUsahaRepositoryJPA implements Repository<KategoriPela
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKategoriPelakuUsahaDataToKategoriPelakuUsaha(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("KategoriPelakuUsahaData.findAll", KategoriPelakuUsahaData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKategoriPelakuUsahaDataToKategoriPelakuUsaha(d))
+            hasil = entityManager.createNamedQuery(
+                    "KategoriPelakuUsahaData.findAll", 
+                    KategoriPelakuUsahaData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKategoriPelakuUsahaDataToKategoriPelakuUsaha(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

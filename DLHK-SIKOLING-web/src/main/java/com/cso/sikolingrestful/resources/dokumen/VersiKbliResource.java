@@ -42,21 +42,38 @@ public class VersiKbliResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<VersiKbliDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<VersiKbli> daftarVersiKbli;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return versiKbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(
+                        queryParamsStr, QueryParamFiltersDTO.class);
+                
+                daftarVersiKbli = versiKbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarVersiKbli == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarVersiKbli
                         .stream()
                         .map(t -> new VersiKbliDTO(t))
                         .collect(Collectors.toList());
+                }  
             }
             else {
-                return versiKbliService.getDaftarData(null)
+                daftarVersiKbli = versiKbliService.getDaftarData(null);
+                
+                if(daftarVersiKbli == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarVersiKbli
                         .stream()
                         .map(t -> new VersiKbliDTO(t))
                         .collect(Collectors.toList());
+                }  
             }             
         } 
         catch (JsonbException e) {

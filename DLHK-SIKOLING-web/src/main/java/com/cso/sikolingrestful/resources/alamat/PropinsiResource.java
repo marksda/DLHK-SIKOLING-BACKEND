@@ -56,7 +56,7 @@ public class PropinsiResource {
                         propinsiService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
                 
                 if(daftarPropinsi == null) {
-                    throw new UnspecifiedException(500, "daftar Propinsi tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarPropinsi
@@ -70,7 +70,7 @@ public class PropinsiResource {
                         propinsiService.getDaftarData(null);
                 
                 if(daftarPropinsi == null) {
-                    throw new UnspecifiedException(500, "daftar Propinsi tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarPropinsi

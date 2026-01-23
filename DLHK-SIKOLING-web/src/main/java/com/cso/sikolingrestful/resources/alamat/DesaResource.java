@@ -58,7 +58,7 @@ public class DesaResource {
                 daftarDesa = desaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
                 
                 if(daftarDesa == null) {
-                    return null;
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarDesa
@@ -71,7 +71,7 @@ public class DesaResource {
                 daftarDesa = desaService.getDaftarData(null);
                 
                 if(daftarDesa == null) {
-                    return null;
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarDesa

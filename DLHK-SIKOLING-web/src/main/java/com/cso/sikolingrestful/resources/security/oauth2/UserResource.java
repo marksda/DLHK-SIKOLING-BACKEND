@@ -68,21 +68,38 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<UserDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<User> daftarUser;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return userService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarUser = userService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarUser == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarUser
                         .stream()
                         .map(t -> new UserDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return userService.getDaftarData(null)
+                daftarUser = userService.getDaftarData(null);
+                
+                if(daftarUser == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarUser
                         .stream()
                         .map(t -> new UserDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

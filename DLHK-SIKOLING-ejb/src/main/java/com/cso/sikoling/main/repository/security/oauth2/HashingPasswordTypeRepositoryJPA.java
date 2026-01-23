@@ -113,6 +113,8 @@ public class HashingPasswordTypeRepositoryJPA implements Repository<HashingPassw
     @Override
     public List<HashingPasswordType> getDaftarData(QueryParamFilters q) {
         
+        List<HashingPasswordTypeData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<HashingPasswordTypeData> cq = cb.createQuery(HashingPasswordTypeData.class);
@@ -181,18 +183,31 @@ public class HashingPasswordTypeRepositoryJPA implements Repository<HashingPassw
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertHashingPasswordTypeDataToHashingPasswordType(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("HashingPasswordTypeData.findAll", HashingPasswordTypeData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertHashingPasswordTypeDataToHashingPasswordType(d))
+            hasil = entityManager.createNamedQuery(
+                    "HashingPasswordTypeData.findAll", 
+                    HashingPasswordTypeData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertHashingPasswordTypeDataToHashingPasswordType(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

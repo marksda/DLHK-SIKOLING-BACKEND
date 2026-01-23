@@ -6,6 +6,7 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.entity.permohonan.PosisiTahapPemberkasan;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.main.util.GeneratorID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -113,6 +114,8 @@ public class PosisiTahapPemberkasanRepositoryJPA implements Repository<PosisiTah
     @Override
     public List<PosisiTahapPemberkasan> getDaftarData(QueryParamFilters q) {
         
+        List<PosisiTahapPemberkasanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<PosisiTahapPemberkasanData> cq = cb.createQuery(PosisiTahapPemberkasanData.class);
@@ -181,18 +184,31 @@ public class PosisiTahapPemberkasanRepositoryJPA implements Repository<PosisiTah
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("PosisiTahapPemberkasanData.findAll", PosisiTahapPemberkasanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(d))
+            hasil = entityManager.createNamedQuery(
+                    "PosisiTahapPemberkasanData.findAll", 
+                    PosisiTahapPemberkasanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertPosisiTahapPemberkasanDataToPosisiTahapPemberkasan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }
@@ -262,16 +278,12 @@ public class PosisiTahapPemberkasanRepositoryJPA implements Repository<PosisiTah
         try {
                 hasil = (String) q.getSingleResult();
                 Long idBaru = Long.parseLong(hasil)  + 1;
-                hasil = LPad(Long.toString(idBaru), 2, '0');
+                hasil = GeneratorID.LPad(Long.toString(idBaru), 2, '0');
                 return hasil;
         } catch (NumberFormatException e) {	
                 hasil = "01";			
                 return hasil;
         }		
-    }
-    
-    private String LPad(String str, Integer length, char car) {
-        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
     }
 
 }

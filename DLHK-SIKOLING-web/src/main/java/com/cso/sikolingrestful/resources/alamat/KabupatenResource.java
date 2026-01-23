@@ -60,7 +60,7 @@ public class KabupatenResource {
                         .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
                 
                 if(daftarKabupaten == null) {
-                    throw new UnspecifiedException(500, "daftar Kabupate tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKabupaten.stream()
@@ -72,7 +72,7 @@ public class KabupatenResource {
                 daftarKabupaten = kabupatenService.getDaftarData(null);
                 
                 if(daftarKabupaten == null) {
-                    throw new UnspecifiedException(500, "daftar Kabupate tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKabupaten.stream()

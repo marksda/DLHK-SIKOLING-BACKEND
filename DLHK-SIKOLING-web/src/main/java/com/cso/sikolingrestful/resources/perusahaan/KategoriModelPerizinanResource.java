@@ -42,21 +42,39 @@ public class KategoriModelPerizinanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<KategoriModelPerizinanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<KategoriModelPerizinan> daftarKategoriModelPerizinan;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return kategoriModelPerizinanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarKategoriModelPerizinan = 
+                        kategoriModelPerizinanService.getDaftarData(
+                                queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarKategoriModelPerizinan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKategoriModelPerizinan
                         .stream()
                         .map(t -> new KategoriModelPerizinanDTO(t))
                         .collect(Collectors.toList());
+                }                
             }
             else {
-                return kategoriModelPerizinanService.getDaftarData(null)
+                daftarKategoriModelPerizinan = kategoriModelPerizinanService.getDaftarData(null);
+                
+                if(daftarKategoriModelPerizinan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKategoriModelPerizinan
                         .stream()
                         .map(t -> new KategoriModelPerizinanDTO(t))
                         .collect(Collectors.toList());
+                } 
             }             
         } 
         catch (JsonbException e) {

@@ -52,7 +52,7 @@ public class KbliResource {
                 daftarKbli = kbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
                 
                 if(daftarKbli == null) {
-                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKbli
@@ -65,7 +65,7 @@ public class KbliResource {
             else {
                 daftarKbli = kbliService.getDaftarData(null);
                 if(daftarKbli == null) {
-                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKbli

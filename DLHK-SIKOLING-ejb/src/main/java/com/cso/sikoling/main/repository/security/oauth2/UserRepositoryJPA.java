@@ -110,6 +110,8 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
     @Override
     public List<User> getDaftarData(QueryParamFilters q) {
         
+        List<UserData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<UserData> cq = cb.createQuery(UserData.class);
@@ -202,18 +204,30 @@ public class UserRepositoryJPA implements Repository<User, QueryParamFilters, Fi
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertUserDataToUser(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("UserData.findAll", UserData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertUserDataToUser(d))
+            hasil = entityManager.createNamedQuery(
+                    "UserData.findAll", UserData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertUserDataToUser(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

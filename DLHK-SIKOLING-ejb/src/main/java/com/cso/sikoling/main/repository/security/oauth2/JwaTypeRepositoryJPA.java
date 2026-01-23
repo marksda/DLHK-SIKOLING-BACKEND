@@ -113,6 +113,8 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
     @Override
     public List<JwaType> getDaftarData(QueryParamFilters q) {
         
+        List<JwaTypeData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<JwaTypeData> cq = cb.createQuery(JwaTypeData.class);
@@ -181,18 +183,30 @@ public class JwaTypeRepositoryJPA implements Repository<JwaType, QueryParamFilte
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertJwaTypeDataToJwaType(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("JwaTypeData.findAll", JwaTypeData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertJwaTypeDataToJwaType(d))
+            hasil = entityManager.createNamedQuery(
+                    "JwaTypeData.findAll", JwaTypeData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertJwaTypeDataToJwaType(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

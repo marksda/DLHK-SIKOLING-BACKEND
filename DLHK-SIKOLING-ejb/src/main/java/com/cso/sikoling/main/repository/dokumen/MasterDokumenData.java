@@ -15,12 +15,12 @@ import java.io.Serializable;
 @Entity
 @Table(name = "master.tbl_dokumen")
 @NamedQueries({
-    @NamedQuery(name = "DokumenData.findAll", query = "SELECT d FROM DokumenData d"),
-    @NamedQuery(name = "DokumenData.findById", query = "SELECT d FROM DokumenData d WHERE d.id = :id"),
-    @NamedQuery(name = "DokumenData.findByNama", query = "SELECT d FROM DokumenData d WHERE d.nama = :nama"),
-    @NamedQuery(name = "DokumenData.findByIdLama", query = "SELECT d FROM DokumenData d WHERE d.idLama = :idLama"),
-    @NamedQuery(name = "DokumenData.findBySingkatan", query = "SELECT d FROM DokumenData d WHERE d.singkatan = :singkatan"),
-    @NamedQuery(name = "DokumenData.updateId", query = "UPDATE DokumenData SET id = :idBaru WHERE id = :idLama")})
+    @NamedQuery(name = "MasterDokumenData.findAll", query = "SELECT d FROM MasterDokumenData d"),
+    @NamedQuery(name = "MasterDokumenData.findById", query = "SELECT d FROM MasterDokumenData d WHERE d.id = :id"),
+    @NamedQuery(name = "MasterDokumenData.findByNama", query = "SELECT d FROM MasterDokumenData d WHERE d.nama = :nama"),
+    @NamedQuery(name = "MasterDokumenData.findByIdLama", query = "SELECT d FROM MasterDokumenData d WHERE d.idLama = :idLama"),
+    @NamedQuery(name = "MasterDokumenData.findBySingkatan", query = "SELECT d FROM MasterDokumenData d WHERE d.singkatan = :singkatan"),
+    @NamedQuery(name = "MasterDokumenData.updateId", query = "UPDATE MasterDokumenData SET id = :idBaru WHERE id = :idLama")})
 public class MasterDokumenData implements Serializable {
 
     private static final long serialVersionUID = 1L;

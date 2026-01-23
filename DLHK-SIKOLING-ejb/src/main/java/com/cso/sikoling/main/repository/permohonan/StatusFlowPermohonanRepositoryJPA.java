@@ -113,6 +113,8 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
     @Override
     public List<StatusFlowPermohonan> getDaftarData(QueryParamFilters q) {
         
+        List<StatusFlowPermohonanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<StatusFlowPermohonanData> cq = cb.createQuery(StatusFlowPermohonanData.class);
@@ -181,18 +183,31 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertStatusFlowPermohonanDataToStatusFlowPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("StatusFlowPermohonanData.findAll", StatusFlowPermohonanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertStatusFlowPermohonanDataToStatusFlowPermohonan(d))
+            hasil = entityManager.createNamedQuery(
+                    "StatusFlowPermohonanData.findAll", 
+                    StatusFlowPermohonanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertStatusFlowPermohonanDataToStatusFlowPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }
@@ -268,9 +283,5 @@ public class StatusFlowPermohonanRepositoryJPA implements Repository<StatusFlowP
                 return hasil;
         }		
     }
-    
-//    private String LPad(String str, Integer length, char car) {
-//        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
-//    }
 
 }

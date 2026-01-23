@@ -134,6 +134,8 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
     @Override
     public List<Perusahaan> getDaftarData(QueryParamFilters q) {
         
+        List<PerusahaanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<PerusahaanData> cq = cb.createQuery(PerusahaanData.class);
@@ -226,18 +228,31 @@ public class PerusahaanRepositoryJPA implements Repository<Perusahaan, QueryPara
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertPerusahaanDataToPerusahaan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("PerusahaanData.findAll", PerusahaanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertPerusahaanDataToPerusahaan(d))
+            hasil = entityManager.createNamedQuery(
+                    "PerusahaanData.findAll", 
+                    PerusahaanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertPerusahaanDataToPerusahaan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

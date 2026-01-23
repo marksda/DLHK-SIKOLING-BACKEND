@@ -113,6 +113,8 @@ public class HakAksesRepositoryJPA implements Repository<HakAkses, QueryParamFil
     @Override
     public List<HakAkses> getDaftarData(QueryParamFilters q) {
         
+        List<HakAksesData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<HakAksesData> cq = cb.createQuery(HakAksesData.class);
@@ -181,18 +183,30 @@ public class HakAksesRepositoryJPA implements Repository<HakAkses, QueryParamFil
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertHakAksesDataToHakAkses(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("HakAksesData.findAll", HakAksesData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertHakAksesDataToHakAkses(d))
+            hasil = entityManager.createNamedQuery(
+                    "HakAksesData.findAll", HakAksesData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertHakAksesDataToHakAkses(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

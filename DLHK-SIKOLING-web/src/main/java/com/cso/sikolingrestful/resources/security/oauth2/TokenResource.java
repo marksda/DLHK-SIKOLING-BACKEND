@@ -55,10 +55,7 @@ public class TokenResource {
     private UserService<User> userService;
     
     @Inject
-    private KeyService<Key> keyService;    
-        
-//    @Inject
-//    private SecurityContext SecurityContext;
+    private KeyService<Key> keyService;  
   
     @GET
     @RequiredAuthorization
@@ -66,21 +63,38 @@ public class TokenResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<TokenDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<Token> daftarToken;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return tokenService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarToken = tokenService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarToken == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarToken
                         .stream()
                         .map(t -> new TokenDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return tokenService.getDaftarData(null)
+                daftarToken = tokenService.getDaftarData(null);
+                
+                if(daftarToken == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarToken
                         .stream()
                         .map(t -> new TokenDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

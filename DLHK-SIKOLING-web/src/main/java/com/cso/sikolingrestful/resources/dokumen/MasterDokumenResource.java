@@ -54,7 +54,7 @@ public class MasterDokumenResource {
                         queryParamFiltersDTO.toQueryParamFilters());
                 
                 if(daftarMasterDokumen == null) {
-                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarMasterDokumen
@@ -67,7 +67,7 @@ public class MasterDokumenResource {
                 daftarMasterDokumen = masterDokumenService.getDaftarData(null);
                 
                 if(daftarMasterDokumen == null) {
-                    throw new UnspecifiedException(500, "daftar kbli tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarMasterDokumen

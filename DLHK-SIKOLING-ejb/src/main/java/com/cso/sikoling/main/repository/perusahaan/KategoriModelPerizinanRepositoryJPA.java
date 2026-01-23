@@ -113,6 +113,8 @@ public class KategoriModelPerizinanRepositoryJPA implements Repository<KategoriM
     @Override
     public List<KategoriModelPerizinan> getDaftarData(QueryParamFilters q) {
         
+        List<KategoriModelPerizinanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KategoriModelPerizinanData> cq = cb.createQuery(KategoriModelPerizinanData.class);
@@ -181,18 +183,31 @@ public class KategoriModelPerizinanRepositoryJPA implements Repository<KategoriM
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKategoriModelPerizinanDataToKategoriModelPerizinan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("KategoriModelPerizinanData.findAll", KategoriModelPerizinanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKategoriModelPerizinanDataToKategoriModelPerizinan(d))
+            hasil = entityManager.createNamedQuery(
+                    "KategoriModelPerizinanData.findAll", 
+                    KategoriModelPerizinanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKategoriModelPerizinanDataToKategoriModelPerizinan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

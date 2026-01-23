@@ -114,6 +114,8 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
     @Override
     public List<Jwa> getDaftarData(QueryParamFilters q) {
         
+        List<JwaData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<JwaData> cq = cb.createQuery(JwaData.class);
@@ -191,18 +193,30 @@ public class JwaRepositoryJPA implements Repository<Jwa, QueryParamFilters, Filt
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertJwaDataToJwa(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("JwaData.findAll", JwaData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertJwaDataToJwa(d))
+            hasil = entityManager.createNamedQuery(
+                    "JwaData.findAll", JwaData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertJwaDataToJwa(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

@@ -113,6 +113,8 @@ public class StatusDokumenRepositoryJPA implements Repository<StatusDokumen, Que
     @Override
     public List<StatusDokumen> getDaftarData(QueryParamFilters q) {
         
+        List<StatusDokumenData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<StatusDokumenData> cq = cb.createQuery(StatusDokumenData.class);
@@ -181,18 +183,30 @@ public class StatusDokumenRepositoryJPA implements Repository<StatusDokumen, Que
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertStatusDokumenDataToStatusDokumen(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("StatusDokumenData.findAll", StatusDokumenData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertStatusDokumenDataToStatusDokumen(d))
+            hasil = entityManager.createNamedQuery(
+                    "StatusDokumenData.findAll", 
+                    StatusDokumenData.class).getResultList();
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertStatusDokumenDataToStatusDokumen(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

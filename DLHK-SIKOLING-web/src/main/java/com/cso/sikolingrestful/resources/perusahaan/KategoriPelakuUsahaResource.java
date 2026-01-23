@@ -42,21 +42,38 @@ public class KategoriPelakuUsahaResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<KategoriPelakuUsahaDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<KategoriPelakuUsaha> daftarKategoriPelakuUsaha;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return kategoriPelakuUsahaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarKategoriPelakuUsaha = kategoriPelakuUsahaService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarKategoriPelakuUsaha == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKategoriPelakuUsaha
                         .stream()
                         .map(t -> new KategoriPelakuUsahaDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return kategoriPelakuUsahaService.getDaftarData(null)
+                daftarKategoriPelakuUsaha = kategoriPelakuUsahaService.getDaftarData(null);
+                
+                if(daftarKategoriPelakuUsaha == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKategoriPelakuUsaha
                         .stream()
                         .map(t -> new KategoriPelakuUsahaDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

@@ -23,7 +23,6 @@ import jakarta.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.cso.sikoling.abstraction.entity.security.oauth2.Realm;
 import com.cso.sikoling.abstraction.service.Service;
 import com.cso.sikolingrestful.Role;
 import com.cso.sikolingrestful.annotation.RequiredAuthorization;
@@ -43,21 +42,38 @@ public class JwaResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<JwaDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<Jwa> daftarJwa;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return jwaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarJwa = jwaService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarJwa == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJwa
                         .stream()
                         .map(t -> new JwaDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return jwaService.getDaftarData(null)
+                daftarJwa = jwaService.getDaftarData(null);
+                
+                if(daftarJwa == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJwa
                         .stream()
                         .map(t -> new JwaDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

@@ -42,21 +42,38 @@ public class JabatanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<JabatanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<Jabatan> daftarJabatan;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return jabatanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarJabatan = jabatanService.getDaftarData(
+                        queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarJabatan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJabatan
                         .stream()
                         .map(t -> new JabatanDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return jabatanService.getDaftarData(null)
+                daftarJabatan = jabatanService.getDaftarData(null);
+                
+                if(daftarJabatan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarJabatan
                         .stream()
                         .map(t -> new JabatanDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

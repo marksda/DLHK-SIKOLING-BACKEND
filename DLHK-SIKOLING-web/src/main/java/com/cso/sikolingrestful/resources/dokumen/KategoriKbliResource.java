@@ -53,7 +53,7 @@ public class KategoriKbliResource {
                 daftarKategoriKbli = kategoriKbliService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
                 
                 if(daftarKategoriKbli == null) {
-                    throw new UnspecifiedException(500, "daftar kategori kbli tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKategoriKbli
@@ -66,7 +66,7 @@ public class KategoriKbliResource {
                 daftarKategoriKbli = kategoriKbliService.getDaftarData(null);
                 
                 if(daftarKategoriKbli == null) {
-                    throw new UnspecifiedException(500, "daftar kategori kbli tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKategoriKbli

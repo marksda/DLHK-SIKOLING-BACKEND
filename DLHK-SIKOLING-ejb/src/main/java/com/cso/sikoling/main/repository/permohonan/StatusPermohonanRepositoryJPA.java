@@ -6,6 +6,7 @@ import com.cso.sikoling.abstraction.entity.QueryParamFilters;
 import com.cso.sikoling.abstraction.entity.SortOrder;
 import com.cso.sikoling.abstraction.entity.permohonan.StatusPermohonan;
 import com.cso.sikoling.abstraction.repository.Repository;
+import com.cso.sikoling.main.util.GeneratorID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -113,6 +114,8 @@ public class StatusPermohonanRepositoryJPA implements Repository<StatusPermohona
     @Override
     public List<StatusPermohonan> getDaftarData(QueryParamFilters q) {
         
+        List<StatusPermohonanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<StatusPermohonanData> cq = cb.createQuery(StatusPermohonanData.class);
@@ -181,18 +184,31 @@ public class StatusPermohonanRepositoryJPA implements Repository<StatusPermohona
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertStatusPermohonanDataToStatusPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("StatusPermohonanData.findAll", StatusPermohonanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertStatusPermohonanDataToStatusPermohonan(d))
+            hasil = entityManager.createNamedQuery(
+                    "StatusPermohonanData.findAll", 
+                    StatusPermohonanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertStatusPermohonanDataToStatusPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }
@@ -261,7 +277,7 @@ public class StatusPermohonanRepositoryJPA implements Repository<StatusPermohona
         try {
                 hasil = (String) q.getSingleResult();
                 Long idBaru = Long.parseLong(hasil)  + 1;
-                hasil = LPad(Long.toString(idBaru), 2, '0');                
+                hasil = GeneratorID.LPad(Long.toString(idBaru), 2, '0');                
                 return hasil;
         } catch (NumberFormatException e) {	
                 hasil = "0";			
@@ -269,8 +285,4 @@ public class StatusPermohonanRepositoryJPA implements Repository<StatusPermohona
         }		
     }
     
-    private String LPad(String str, Integer length, char car) {
-        return (String.format("%" + length + "s", "").replace(" ", String.valueOf(car)) + str).substring(str.length(), length + str.length());
-    }
-
 }

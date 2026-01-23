@@ -113,6 +113,8 @@ public class KategoriPermohonanRepositoryJPA implements Repository<KategoriPermo
     @Override
     public List<KategoriPermohonan> getDaftarData(QueryParamFilters q) {
         
+        List<KategoriPermohonanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KategoriPermohonanData> cq = cb.createQuery(KategoriPermohonanData.class);
@@ -181,18 +183,31 @@ public class KategoriPermohonanRepositoryJPA implements Repository<KategoriPermo
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKategoriPermohonanDataToKategoriPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("KategoriPermohonanData.findAll", KategoriPermohonanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKategoriPermohonanDataToKategoriPermohonan(d))
+            hasil = entityManager.createNamedQuery(
+                    "KategoriPermohonanData.findAll", 
+                    KategoriPermohonanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKategoriPermohonanDataToKategoriPermohonan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

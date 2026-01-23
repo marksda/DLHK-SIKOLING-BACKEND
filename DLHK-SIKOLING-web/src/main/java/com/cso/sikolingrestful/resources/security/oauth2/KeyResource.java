@@ -127,21 +127,38 @@ public class KeyResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<KeyDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) throws UnspecifiedException {
         
+        List<Key> daftarKey;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return keyService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarKey = keyService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarKey == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKey
                         .stream()
                         .map(t -> new KeyDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return keyService.getDaftarData(null)
+                daftarKey = keyService.getDaftarData(null);
+                
+                if(daftarKey == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKey
                         .stream()
                         .map(t -> new KeyDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

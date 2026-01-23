@@ -42,21 +42,38 @@ public class StatusFlowPermohonanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<StatusFlowPermohonanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<StatusFlowPermohonan> daftarStatusFlowPermohonan;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return statusFlowPermohonanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarStatusFlowPermohonan = statusFlowPermohonanService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarStatusFlowPermohonan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarStatusFlowPermohonan
                         .stream()
                         .map(t -> new StatusFlowPermohonanDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return statusFlowPermohonanService.getDaftarData(null)
+                daftarStatusFlowPermohonan = statusFlowPermohonanService.getDaftarData(null);
+                
+                if(daftarStatusFlowPermohonan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarStatusFlowPermohonan
                         .stream()
                         .map(t -> new StatusFlowPermohonanDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

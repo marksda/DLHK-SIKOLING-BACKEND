@@ -44,21 +44,38 @@ public class HakAksesResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<HakAksesDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<HakAkses> daftarHakAkses;
+         
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return hakAksesService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarHakAkses = hakAksesService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarHakAkses == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarHakAkses
                         .stream()
                         .map(t -> new HakAksesDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return hakAksesService.getDaftarData(null)
+                daftarHakAkses = hakAksesService.getDaftarData(null);
+                
+                if(daftarHakAkses == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarHakAkses
                         .stream()
                         .map(t -> new HakAksesDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

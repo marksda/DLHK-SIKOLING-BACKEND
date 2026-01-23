@@ -42,21 +42,38 @@ public class PosisiTahapPemberkasanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<PosisiTahapPemberkasanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<PosisiTahapPemberkasan> daftarPosisiTahapPemberkasan;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return posisiTahapPemberkasanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarPosisiTahapPemberkasan = posisiTahapPemberkasanService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarPosisiTahapPemberkasan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarPosisiTahapPemberkasan
                         .stream()
                         .map(t -> new PosisiTahapPemberkasanDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return posisiTahapPemberkasanService.getDaftarData(null)
+                daftarPosisiTahapPemberkasan = posisiTahapPemberkasanService.getDaftarData(null);
+                
+                if(daftarPosisiTahapPemberkasan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarPosisiTahapPemberkasan
                         .stream()
                         .map(t -> new PosisiTahapPemberkasanDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

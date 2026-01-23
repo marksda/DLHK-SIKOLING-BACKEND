@@ -126,6 +126,8 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
     @Override
     public List<Key> getDaftarData(QueryParamFilters q) {
         
+        List<KeyData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<KeyData> cq = cb.createQuery(KeyData.class);
@@ -234,18 +236,30 @@ public class KeyRepositoryJPA implements Repository<Key, QueryParamFilters, Filt
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertKeyDataToKey(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("KeyData.findAll", KeyData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertKeyDataToKey(d))
+            hasil = entityManager.createNamedQuery(
+                    "KeyData.findAll", KeyData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertKeyDataToKey(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

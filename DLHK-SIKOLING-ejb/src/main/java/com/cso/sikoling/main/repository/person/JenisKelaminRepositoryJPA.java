@@ -113,6 +113,8 @@ public class JenisKelaminRepositoryJPA implements Repository<JenisKelamin, Query
     @Override
     public List<JenisKelamin> getDaftarData(QueryParamFilters q) {
         
+        List<JenisKelaminData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<JenisKelaminData> cq = cb.createQuery(JenisKelaminData.class);
@@ -181,18 +183,31 @@ public class JenisKelaminRepositoryJPA implements Repository<JenisKelamin, Query
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertJenisKelaminDataToJenisKelamin(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("JenisKelaminData.findAll", JenisKelaminData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertJenisKelaminDataToJenisKelamin(d))
+            hasil = entityManager.createNamedQuery(
+                    "JenisKelaminData.findAll", 
+                    JenisKelaminData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertJenisKelaminDataToJenisKelamin(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

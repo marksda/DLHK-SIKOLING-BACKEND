@@ -42,21 +42,38 @@ public class StatusPermohonanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<StatusPermohonanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<StatusPermohonan> daftarStatusPermohonan;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return statusPermohonanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarStatusPermohonan = statusPermohonanService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarStatusPermohonan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarStatusPermohonan
                         .stream()
                         .map(t -> new StatusPermohonanDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return statusPermohonanService.getDaftarData(null)
+                daftarStatusPermohonan = statusPermohonanService.getDaftarData(null);
+                
+                if(daftarStatusPermohonan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarStatusPermohonan
                         .stream()
                         .map(t -> new StatusPermohonanDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

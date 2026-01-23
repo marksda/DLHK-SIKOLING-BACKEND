@@ -42,21 +42,38 @@ public class RealmResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<RealmDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<Realm> daftarRealm; 
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return realmService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarRealm = realmService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarRealm == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarRealm
                         .stream()
                         .map(t -> new RealmDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return realmService.getDaftarData(null)
+                daftarRealm = realmService.getDaftarData(null);
+                
+                if(daftarRealm == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarRealm
                         .stream()
                         .map(t -> new RealmDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

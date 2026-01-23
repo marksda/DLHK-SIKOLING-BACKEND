@@ -138,6 +138,8 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
     @Override
     public List<Otorisasi> getDaftarData(QueryParamFilters q) {
         
+        List<OtorisasiData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<OtorisasiData> cq = cb.createQuery(OtorisasiData.class);
@@ -240,18 +242,31 @@ public class OtorisasiRepositoryJPA implements Repository<Otorisasi, QueryParamF
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertOtorisasiDataToOtorisasi(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("OtorisasiData.findAll", OtorisasiData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertOtorisasiDataToOtorisasi(d))
+            hasil = entityManager.createNamedQuery(
+                    "OtorisasiData.findAll", 
+                    OtorisasiData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertOtorisasiDataToOtorisasi(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

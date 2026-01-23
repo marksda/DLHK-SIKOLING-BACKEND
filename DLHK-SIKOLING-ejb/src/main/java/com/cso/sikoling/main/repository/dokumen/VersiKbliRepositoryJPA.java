@@ -113,6 +113,8 @@ public class VersiKbliRepositoryJPA implements Repository<VersiKbli, QueryParamF
     @Override
     public List<VersiKbli> getDaftarData(QueryParamFilters q) {
         
+        List<VersiKbliData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<VersiKbliData> cq = cb.createQuery(VersiKbliData.class);
@@ -181,18 +183,31 @@ public class VersiKbliRepositoryJPA implements Repository<VersiKbli, QueryParamF
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertVersiKbliDataToVersiKbli(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("VersiKbliData.findAll", VersiKbliData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertVersiKbliDataToVersiKbli(d))
+            hasil = entityManager.createNamedQuery(
+                    "VersiKbliData.findAll", 
+                    VersiKbliData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertVersiKbliDataToVersiKbli(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

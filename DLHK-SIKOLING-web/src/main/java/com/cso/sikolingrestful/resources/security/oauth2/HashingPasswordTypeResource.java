@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.cso.sikoling.abstraction.entity.security.oauth2.HashingPasswordType;
 import com.cso.sikoling.abstraction.service.Service;
+import java.util.ArrayList;
 
 @Stateless
 @LocalBean
@@ -37,21 +38,38 @@ public class HashingPasswordTypeResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<HashingPasswordTypeDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<HashingPasswordType> daftarHashingPasswordType;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return hashingPasswordTypeService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarHashingPasswordType = hashingPasswordTypeService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarHashingPasswordType == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarHashingPasswordType
                         .stream()
                         .map(t -> new HashingPasswordTypeDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return hashingPasswordTypeService.getDaftarData(null)
+                daftarHashingPasswordType = hashingPasswordTypeService.getDaftarData(null);
+                
+                if(daftarHashingPasswordType == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarHashingPasswordType
                         .stream()
                         .map(t -> new HashingPasswordTypeDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

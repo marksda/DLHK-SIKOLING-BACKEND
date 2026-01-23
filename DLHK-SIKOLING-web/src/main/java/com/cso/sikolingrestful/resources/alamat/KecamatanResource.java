@@ -63,7 +63,7 @@ public class KecamatanResource {
                                 );
                 
                 if(daftarKecamatan == null) {
-                    throw new UnspecifiedException(500, "daftar kecamatan tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKecamatan
@@ -76,7 +76,7 @@ public class KecamatanResource {
                 daftarKecamatan = kecamatanService.getDaftarData(null);
                 
                 if(daftarKecamatan == null) {
-                    throw new UnspecifiedException(500, "daftar kecamatan tidak ada");
+                    return new ArrayList<>();
                 }
                 else {
                     return daftarKecamatan

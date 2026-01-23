@@ -42,21 +42,36 @@ public class KategoriPengurusPermohonanResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<KategoriPengurusPermohonanDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<KategoriPengurusPermohonan> daftarKategoriPengurusPermohonan;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
                 QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return kategoriPengurusPermohonanService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                daftarKategoriPengurusPermohonan = kategoriPengurusPermohonanService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarKategoriPengurusPermohonan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKategoriPengurusPermohonan
                         .stream()
                         .map(t -> new KategoriPengurusPermohonanDTO(t))
                         .collect(Collectors.toList());
+                } 
             }
             else {
-                return kategoriPengurusPermohonanService.getDaftarData(null)
+                daftarKategoriPengurusPermohonan = kategoriPengurusPermohonanService.getDaftarData(null);
+                if(daftarKategoriPengurusPermohonan == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarKategoriPengurusPermohonan
                         .stream()
                         .map(t -> new KategoriPengurusPermohonanDTO(t))
                         .collect(Collectors.toList());
+                } 
             }             
         } 
         catch (JsonbException e) {

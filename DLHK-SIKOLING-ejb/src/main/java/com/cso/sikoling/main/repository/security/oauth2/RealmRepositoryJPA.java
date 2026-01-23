@@ -113,6 +113,8 @@ public class RealmRepositoryJPA implements Repository<Realm, QueryParamFilters, 
     @Override
     public List<Realm> getDaftarData(QueryParamFilters q) {
         
+        List<RealmData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<RealmData> cq = cb.createQuery(RealmData.class);
@@ -181,18 +183,30 @@ public class RealmRepositoryJPA implements Repository<Realm, QueryParamFilters, 
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertRealmDataToRealm(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("RealmData.findAll", RealmData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertRealmDataToRealm(d))
+            hasil = entityManager.createNamedQuery(
+                    "RealmData.findAll", RealmData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertRealmDataToRealm(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

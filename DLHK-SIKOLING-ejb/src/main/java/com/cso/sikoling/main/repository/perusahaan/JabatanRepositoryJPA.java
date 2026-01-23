@@ -114,6 +114,8 @@ public class JabatanRepositoryJPA implements Repository<Jabatan, QueryParamFilte
     @Override
     public List<Jabatan> getDaftarData(QueryParamFilters q) {
         
+        List<JabatanData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<JabatanData> cq = cb.createQuery(JabatanData.class);
@@ -182,18 +184,31 @@ public class JabatanRepositoryJPA implements Repository<Jabatan, QueryParamFilte
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertJabatanDataToJabatan(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("JabatanData.findAll", JabatanData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertJabatanDataToJabatan(d))
+            hasil = entityManager.createNamedQuery(
+                    "JabatanData.findAll", 
+                    JabatanData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertJabatanDataToJabatan(d))
                             .collect(Collectors.toList());
+            }
         }
         
     }

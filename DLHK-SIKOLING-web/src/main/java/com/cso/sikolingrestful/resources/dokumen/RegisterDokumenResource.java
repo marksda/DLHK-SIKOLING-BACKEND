@@ -37,7 +37,6 @@ import com.cso.sikolingrestful.annotation.RequiredRole;
 import com.cso.sikolingrestful.exception.UnspecifiedException;
 import com.cso.sikolingrestful.resources.FilterDTO;
 import jakarta.json.JsonObjectBuilder;
-import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import java.io.File;
@@ -46,7 +45,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Optional;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @Stateless
@@ -99,12 +97,12 @@ public class RegisterDokumenResource {
                                             .getDaftarData(queryParamFilters);
             }
             default -> {                
-                throw new UnspecifiedException(500, "Akses ditolak");
+                throw new UnspecifiedException(401, "Akses ditolak");
             }
         }
         
         if(daftarRegisterDokumen == null) {
-            throw new UnspecifiedException(500, "daftar dokumen tidak ada");
+            return new ArrayList<>();
         }
         
         return daftarRegisterDokumen
@@ -610,7 +608,7 @@ public class RegisterDokumenResource {
                 jsonb.fromJson(registerDokumenSementara, RegisterDokumenSementaraDTO.class); 
         
         switch (role) {
-            case ADMIN -> {}
+            case ADMINISTRATOR -> {}
             case UMUM ->{
                 List<Filter> fields_filter = new ArrayList<>();
                 Filter filter = new Filter("id_person", otorisasi.getPerson().getId());

@@ -42,21 +42,38 @@ public class PelakuUsahaResource {
     @Produces({MediaType.APPLICATION_JSON})
     public List<PelakuUsahaDTO> getDaftarData(@QueryParam("filters") String queryParamsStr) {
         
+        List<PelakuUsaha> daftarPelakuUsaha;
+        
         try {            
             if(queryParamsStr != null) {
                 Jsonb jsonb = JsonbBuilder.create();
-                QueryParamFiltersDTO queryParamFiltersDTO = jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
-
-                return pelakuUsahaService.getDaftarData(queryParamFiltersDTO.toQueryParamFilters())
+                QueryParamFiltersDTO queryParamFiltersDTO = 
+                        jsonb.fromJson(queryParamsStr, QueryParamFiltersDTO.class);
+                daftarPelakuUsaha = pelakuUsahaService
+                        .getDaftarData(queryParamFiltersDTO.toQueryParamFilters());
+                
+                if(daftarPelakuUsaha == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarPelakuUsaha
                         .stream()
                         .map(t -> new PelakuUsahaDTO(t))
                         .collect(Collectors.toList());
+                }
             }
             else {
-                return pelakuUsahaService.getDaftarData(null)
+                daftarPelakuUsaha = pelakuUsahaService.getDaftarData(null);
+                
+                if(daftarPelakuUsaha == null) {
+                    return new ArrayList<>();
+                }
+                else {
+                    return daftarPelakuUsaha
                         .stream()
                         .map(t -> new PelakuUsahaDTO(t))
                         .collect(Collectors.toList());
+                }
             }             
         } 
         catch (JsonbException e) {

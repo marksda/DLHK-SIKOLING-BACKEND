@@ -111,6 +111,9 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
 
     @Override
     public List<Token> getDaftarData(QueryParamFilters q) {
+        
+        List<TokenData> hasil;
+        
         if(q != null) {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<TokenData> cq = cb.createQuery(TokenData.class);
@@ -226,18 +229,30 @@ public class TokenRepositoryJPA implements Repository<Token, QueryParamFilters, 
             else {
                 typedQuery = entityManager.createQuery(cq);
             }
-
-            return typedQuery.getResultList()
-                            .stream()
+            
+            hasil = typedQuery.getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
                             .map(d -> convertTokenDataToToken(d))
                             .collect(Collectors.toList());
+            }
         }
         else {
-            return entityManager.createNamedQuery("TokenData.findAll", TokenData.class)
-                 .getResultList()
-                 .stream()
-                 .map(d -> convertTokenDataToToken(d))
+            hasil = entityManager.createNamedQuery(
+                    "TokenData.findAll", TokenData.class).getResultList();
+            
+            if(hasil.isEmpty()) {
+                return null;
+            }
+            else {
+                return hasil.stream()
+                            .map(d -> convertTokenDataToToken(d))
                             .collect(Collectors.toList());
+            }
         }
     }
 
