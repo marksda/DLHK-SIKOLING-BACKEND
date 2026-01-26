@@ -48,7 +48,18 @@ public class RegisterDokumenSementaraServiceBasic implements Service<RegisterDok
 
     @Override
     public RegisterDokumenSementara update(RegisterDokumenSementara t) throws SQLException {
-        return repository.update(t);
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        
+        RegisterDokumenSementara tTemp = new RegisterDokumenSementara(
+                t.getId(), 
+                t.getIdJenisDokumen(), 
+                t.getIdPerusahaan(),
+                t.getNamaFile(), 
+                today,
+                t.getMetaFile()
+            );
+        return repository.update(tTemp);
     }
 
     @Override

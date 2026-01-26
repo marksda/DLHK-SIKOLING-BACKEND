@@ -260,7 +260,7 @@ public class RegisterDokumenResource {
         JsonObject metaFile;   
         JsonObjectBuilder builder;
         RegisterDokumen registerDokumenBaru;
-        
+                                                            
         switch (role) {
             case ADMINISTRATOR -> {
                 builder = Json.createObjectBuilder(regDokLama.getMetaFile());
@@ -601,11 +601,25 @@ public class RegisterDokumenResource {
             @FormDataParam("registerDokumenSementara") String registerDokumenSementara,
             @FormDataParam("fileDokumen") File fileDokumen ) throws SQLException, UnspecifiedException {
         
+        if(registerDokumenSementara == null || fileDokumen == null) {
+            throw new UnspecifiedException(
+                    400, "permintaaan ditolak karena data yang dikirim tidak sesuai");
+        }
+        
         Otorisasi otorisasi = (Otorisasi) crc.getProperty("otoritas");
         Role role = (Role) crc.getProperty("role");
         Jsonb jsonb = JsonbBuilder.create();
-        RegisterDokumenSementaraDTO registerDokumenSementaraDTO = 
-                jsonb.fromJson(registerDokumenSementara, RegisterDokumenSementaraDTO.class); 
+        
+        RegisterDokumenSementaraDTO registerDokumenSementaraDTO;
+        try {
+            registerDokumenSementaraDTO = 
+                jsonb.fromJson(registerDokumenSementara, 
+                        RegisterDokumenSementaraDTO.class); 
+        }
+        catch(JsonbException | NullPointerException  e) {
+            throw new UnspecifiedException(
+                    400, "permintaaan ditolak karena format json tidak sesuai");
+        }
         
         switch (role) {
             case ADMINISTRATOR -> {}
@@ -623,23 +637,28 @@ public class RegisterDokumenResource {
                 }
             }
             default -> {
-                throw new UnspecifiedException(500, "Akses ditolak");
+                throw new UnspecifiedException(400, "permintaaan ditolak karena role tidak sesuai");
             }
         }
         
-        try {                        
-            InputStream uploadedInputStream = new FileInputStream(fileDokumen);
-            String subPathLocation = File.separator
-                    .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
-            
+        InputStream uploadedInputStream;
+        String subPathLocation;
+        JsonObject metaFile;        
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        RegisterDokumenSementara regDokSementara;
+        
+        if(registerDokumenSementaraDTO.getId() == null) {   
             try {
-                JsonObject metaFile = Json.createObjectBuilder()
-                        .add("BaseFileName", registerDokumenSementaraDTO.getNama_file())
+                uploadedInputStream = new FileInputStream(fileDokumen);
+                subPathLocation = File.separator
+                        .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
+                metaFile = 
+                    builder.add("BaseFileName", registerDokumenSementaraDTO.getNama_file())
                         .add("UserId", otorisasi.getId_user())
                         .add("UserFriendlyName", otorisasi.getPerson().getNama())
                         .add("UserCanWrite", true)
                         .build();
-                RegisterDokumenSementara dokSementara =
+                regDokSementara =
                         new RegisterDokumenSementara(
                                 registerDokumenSementaraDTO.getId(), 
                                 registerDokumenSementaraDTO.getId_jenis_dokumen(), 
@@ -648,24 +667,107 @@ public class RegisterDokumenResource {
                                 null, 
                                 metaFile
                         );
-                        
-                dokSementara = registerDokumenSementaraService.save(dokSementara);
-                localStorageService.upload(
-                        dokSementara.getNamaFile(), 
+                regDokSementara = registerDokumenSementaraService.save(regDokSementara);
+                localStorageService.upload(regDokSementara.getNamaFile(), 
                         uploadedInputStream, 
                         subPathLocation
                     ); 
-                
-                return new RegisterDokumenSementaraDTO(dokSementara);
-            } 
-            catch (NullPointerException e) {
-                throw new IllegalArgumentException("data json dokumen sementara harus disertakan di body post request");
+                return new RegisterDokumenSementaraDTO(regDokSementara);
+            } catch (FileNotFoundException ex) {
+                throw new UnspecifiedException(
+                    500, "permintaaan ditolak karena data file gagal dibuat");
             } catch (IOException ex) {
-                throw new IllegalArgumentException("file dokumen sementara tidak bisa disimpan");
-            } 
-        } catch (JsonbException | FileNotFoundException e) {
-            throw new JsonbException("file error");
+                throw new UnspecifiedException(
+                    500, "permintaaan ditolak karena data file gagal disimpan");
+            }
         }
+        else {
+            Filter filter;
+            List<Filter> fields_filter = new ArrayList<>();
+            QueryParamFilters qFilter;
+            List<RegisterDokumenSementara> daftarRegDokTmp;
+            filter = new Filter("id", registerDokumenSementaraDTO.getId());
+            fields_filter.add(filter);
+            qFilter = new QueryParamFilters(false, null, fields_filter, null);
+            daftarRegDokTmp = registerDokumenSementaraService.getDaftarData(qFilter);
+
+            if(daftarRegDokTmp == null) {
+                throw new UnspecifiedException(
+                    400, "permintaaan ditolak karena data yang dikirim tidak sesuai");
+            }
+            else {
+                regDokSementara =  daftarRegDokTmp.getFirst();
+                
+                if(regDokSementara
+                        .getIdPerusahaan()
+                        .equalsIgnoreCase(
+                            registerDokumenSementaraDTO.getId_perusahaan()
+                        ) 
+                    && regDokSementara
+                        .getIdJenisDokumen()
+                        .equalsIgnoreCase(
+                            registerDokumenSementaraDTO.getId_jenis_dokumen()
+                        )                            
+                ) {
+                    try {
+                        regDokSementara = registerDokumenSementaraService.save(regDokSementara);
+                        uploadedInputStream = new FileInputStream(fileDokumen);
+                        subPathLocation = File.separator
+                        .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
+                        localStorageService.upload(regDokSementara.getNamaFile(),
+                                uploadedInputStream,
+                                subPathLocation 
+                        );
+                        return new RegisterDokumenSementaraDTO(regDokSementara);
+                    } catch (IOException ex) {
+                        throw new UnspecifiedException(
+                            500, "permintaaan ditolak karena data file gagal disimpan");
+                    }                    
+                }
+                else {
+                    String idRegDokSementaraLama = regDokSementara.getId();
+                    if(registerDokumenSementaraService
+                            .delete(idRegDokSementaraLama)) {                        
+                        try {
+                            uploadedInputStream = new FileInputStream(fileDokumen);
+                            subPathLocation = File.separator
+                                    .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());
+                            metaFile =
+                                    builder.add("BaseFileName", registerDokumenSementaraDTO.getNama_file())
+                                            .add("UserId", otorisasi.getId_user())
+                                            .add("UserFriendlyName", otorisasi.getPerson().getNama())
+                                            .add("UserCanWrite", true)
+                                            .build();
+                            regDokSementara =
+                                    new RegisterDokumenSementara(
+                                            registerDokumenSementaraDTO.getId(),
+                                            registerDokumenSementaraDTO.getId_jenis_dokumen(),
+                                            registerDokumenSementaraDTO.getId_perusahaan(),
+                                            registerDokumenSementaraDTO.getNama_file(),
+                                            null,
+                                            metaFile
+                                    );
+                            regDokSementara = registerDokumenSementaraService.save(regDokSementara);
+                            localStorageService.upload(regDokSementara.getNamaFile(),
+                                    uploadedInputStream,
+                                    subPathLocation
+                            );
+                            return new RegisterDokumenSementaraDTO(regDokSementara);
+                        } catch (FileNotFoundException ex) {
+                            throw new UnspecifiedException(
+                                500, "permintaaan ditolak karena data file tidak bisa dibuat");
+                        } catch (IOException ex) {
+                            throw new UnspecifiedException(
+                                500, "permintaaan ditolak karena data file tidak bisa disimpan");
+                        }
+                    }
+                    else {
+                        throw new UnspecifiedException(
+                            500, "permintaaan ditolak karena data lama gagal dihapus");
+                    }
+                }
+            }            
+        }  
     }
     
 }
