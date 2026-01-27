@@ -710,7 +710,7 @@ public class RegisterDokumenResource {
                         )                            
                 ) {
                     try {
-                        regDokSementara = registerDokumenSementaraService.save(regDokSementara);
+//                        regDokSementara = registerDokumenSementaraService.save(regDokSementara);
                         uploadedInputStream = new FileInputStream(fileDokumen);
                         subPathLocation = File.separator
                         .concat(registerDokumenSementaraDTO.getId_jenis_dokumen());

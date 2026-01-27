@@ -70,6 +70,7 @@ public class WopiResource {
                         .add("UserId", otorisasi.getId_user())
                         .add("UserFriendlyName", otorisasi.getPerson().getNama())
                         .add("UserCanWrite", !registerDokumen.getIsValidated())
+                        .add("PostMessageOrigin", "cso.ddns.net")
                         .build(); 
                 } catch (IOException ex) {
                     throw new  UnspecifiedException(500, "Gagal meload file dokumen");
